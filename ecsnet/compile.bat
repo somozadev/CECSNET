@@ -25,12 +25,12 @@ if not exist %BUILD_DIR% (
 REM Build executable
 if "%MODE%"=="1" (
     echo Building executable...
-    %CC% %CFLAGS% src\*.c -o %BUILD_DIR%\ecsnet.exe
+    %CC% %CFLAGS% src\*.c -o %BUILD_DIR%\ecsnet.exe -lws2_32
     if errorlevel 1 (
         echo ERROR compiling executable
         exit /b 1
     )
-    echo Executable built: %BUILD_DIR%\ecsnet.exe
+    echo Executable built: %BUILD_DIR%\ecsnet.exe 
     exit /b 0
 )
 
@@ -51,7 +51,7 @@ if "%MODE%"=="2" (
 REM Build dynamic library (.dll)
 if "%MODE%"=="3" (
     echo Building dynamic library...
-    %CC% -shared -o %BUILD_DIR%\ecsnet.dll src\ecs.c src\net.c -Iinclude
+    %CC% -shared -o %BUILD_DIR%\ecsnet.dll src\ecs.c src\net.c -Iinclude -lws2_32
     if errorlevel 1 (
         echo ERROR building DLL
         exit /b 1

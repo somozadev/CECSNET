@@ -1,0 +1,60 @@
++--------------------+
+|      NetSocket     |  <--- Abstracción de socket TCP/UDP
++--------------------+
+| - type: SocketType  |
+| - sockfd: int       |
++--------------------+
+| + create(type)      |
+| + connect(ip, port) |
+| + send(data)        |
+| + receive(buffer)   |
+| + close()           |
++--------------------+
+
+           ^
+           |
+           |
+
++----------------------+
+|   ConnectionManager   |  <--- Manejo de conexiones, peers, etc.
++----------------------+
+| - sockets[]           |
+| - peers[]             |
+| - event_callbacks     |
++----------------------+
+| + add_connection()    |
+| + remove_connection() |
+| + send_to(peer, data) |
+| + receive()           |
+| + handle_events()     |
++----------------------+
+
+           ^
+           |
+           |
+
++-----------------------+
+|   ProtocolHandler      |  <--- Formato y lógica de mensajes
++-----------------------+
+| - serialize()          |
+| - deserialize()        |
+| - handle_message()     |
++-----------------------+
+| + pack_message()       |
+| + unpack_message()     |
++-----------------------+
+
+           ^
+           |
+           |
+
++-------------------------+
+|      ECSNetworkSync      |  <--- Sincronización ECS sobre red
++-------------------------+
+| - entity_states[]        |
+| - diff_buffers           |
++-------------------------+
+| + track_changes()        |
+| + send_updates()         |
+| + apply_updates()        |
++-------------------------+
