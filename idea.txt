@@ -1,13 +1,13 @@
 +--------------------+
-|      NetSocket     |  <--- Abstracción de socket TCP/UDP
+|      NetSocket     |  <--- Abstraction of TCP/UDP sockets
 +--------------------+
 | - type: SocketType  |
 | - sockfd: int       |
 +--------------------+
-| + create(type)      |
-| + connect(ip, port) |
-| + send(data)        |
-| + receive(buffer)   |
+| + create()          |
+| + connect()         |
+| + send()            |
+| + receive()         |
 | + close()           |
 +--------------------+
 
@@ -16,7 +16,7 @@
            |
 
 +----------------------+
-|   ConnectionManager   |  <--- Manejo de conexiones, peers, etc.
+|   ConnectionManager   |  <--- Manages connections & peers
 +----------------------+
 | - sockets[]           |
 | - peers[]             |
@@ -24,8 +24,9 @@
 +----------------------+
 | + add_connection()    |
 | + remove_connection() |
-| + send_to(peer, data) |
-| + receive()           |
+| + send_to_peer()      |
+| + broadcast()         |
+| + receive_from_peers()|
 | + handle_events()     |
 +----------------------+
 
@@ -34,7 +35,7 @@
            |
 
 +-----------------------+
-|   ProtocolHandler      |  <--- Formato y lógica de mensajes
+|    ProtocolHandler     |  <--- Message serialization & parsing
 +-----------------------+
 | - serialize()          |
 | - deserialize()        |
@@ -42,6 +43,7 @@
 +-----------------------+
 | + pack_message()       |
 | + unpack_message()     |
+| + validate_message()   |
 +-----------------------+
 
            ^
@@ -49,7 +51,7 @@
            |
 
 +-------------------------+
-|      ECSNetworkSync      |  <--- Sincronización ECS sobre red
+|      ECSNetworkSync      |  <--- Syncs ECS state via network
 +-------------------------+
 | - entity_states[]        |
 | - diff_buffers           |
@@ -58,3 +60,54 @@
 | + send_updates()         |
 | + apply_updates()        |
 +-------------------------+
+
+           ^
+           |
+           |
+
++------------------------------+
+|    NetworkArchitectureBase    |  <--- Abstract base for network model
++------------------------------+
+| + initialize()               |
+| + connect_peers()            |
+| + send_data()                |
+| + receive_data()             |
+| + update()                  |
++------------------------------+
+
+           ^
+           |
+           |
+
++-------------------------+       +----------------------+     +---------------------------+     +-----------------------------+
+|  ClientServerNetwork    |       | PeerToPeerNetwork      |     | SnapshotSyncManager        |     | ServerAuthoritativeManager   |
++-------------------------+       +----------------------+     +---------------------------+     +-----------------------------+
+| - server_socket          |       | - peer_list[]          |     | - snapshot_interval        |     | - authoritative_state       |
+| - client_sockets[]       |       | - udp_sockets[]        |     | - last_snapshot_time       |     | - client_input_buffers      |
++-------------------------+       +----------------------+     +---------------------------+     +-----------------------------+
+| + initialize_server()    |       | + discover_peers()     |     | + generate_snapshot()      |     | + validate_input()           |
+| + accept_connections()   |       | + connect_to_peers()   |     | + send_snapshot()          |     | + apply_authoritative_state()|
+| + send_state_to_clients()|       | + send_state_to_peers()|     | + receive_snapshot()       |     | + send_state_to_clients()    |
+| + receive_client_input() |       | + receive_peer_data()  |     | + interpolate_state()      |     | + reject_invalid_input()     |
+| + update_game_state()    |       | + update_peer_states() |     |                           |     |                             |
++-------------------------+       +----------------------+     +---------------------------+     +-----------------------------+
+
+
+NetSocket: Low-level abstraction for TCP/UDP to open, connect, send, and receive data.
+
+ConnectionManager: General management of active connections and peers, independent of the type.
+
+ProtocolHandler: Encoding, decoding, validation, and processing of messages.
+
+ECSNetworkSync: Manages the states and diffs of entities to replicate the ECS state.
+
+NetworkArchitectureBase: Common interface/structure for different network models (client-server, p2p, etc.).
+
+ClientServerNetwork: Implements specific logic for the client-server model, with sockets for server and clients, and functions to handle inputs and states.
+
+PeerToPeerNetwork: Manages multiple peers, UDP/TCP connections, discovery, and synchronization between peers.
+
+SnapshotSyncManager: Responsible for generating, sending, receiving, and interpolating periodic snapshots of the game state.
+
+ServerAuthoritativeManager: Controls input validation, server authority, and propagation of the validated state.
+
