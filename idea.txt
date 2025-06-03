@@ -111,3 +111,7 @@ SnapshotSyncManager: Responsible for generating, sending, receiving, and interpo
 
 ServerAuthoritativeManager: Controls input validation, server authority, and propagation of the validated state.
 
+
+
+Coding standards for C - Clean code - Rober R. Martin
+ ->snake_case

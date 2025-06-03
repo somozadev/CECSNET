@@ -17,6 +17,7 @@ set CC=gcc
 set AR=ar
 set CFLAGS=-Wall -Iinclude
 set BUILD_DIR=build
+set SOURCES=src\main.c src\net\net_socket.c src\net\connection_manager.c
 
 if not exist %BUILD_DIR% (
     mkdir %BUILD_DIR%
@@ -25,7 +26,7 @@ if not exist %BUILD_DIR% (
 REM Build executable
 if "%MODE%"=="1" (
     echo Building executable...
-    %CC% %CFLAGS% src\*.c -o %BUILD_DIR%\ecsnet.exe -lws2_32
+    %CC% %CFLAGS% %SOURCES% -o %BUILD_DIR%\ecsnet.exe -lws2_32 -mconsole
     if errorlevel 1 (
         echo ERROR compiling executable
         exit /b 1

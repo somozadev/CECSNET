@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "stdio.h": "c"
-    }
+        "stdio.h": "c",
+        "net_socket.h": "c",
+        "connection_manager.h": "c",
+        "string.h": "c"
+    },
+    "cmake.sourceDirectory": "F:/PROYECTOS_QUE_VALEN_LA_PENA/CECSNET/Playdate/Example"
 }
