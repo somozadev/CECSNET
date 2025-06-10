@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "ecs.h"
+#include "../include/ecs.h"
 #include "test_ecs.h"
 
 bool test_ecs()

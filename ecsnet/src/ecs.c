@@ -19,6 +19,9 @@ static entity_meta_t entities[MAX_ENTITIES];
 static component_storage_t components[MAX_COMPONENTS];
 static uint32_t registered_component_count = 0;
 
+static system_func_t systems[MAX_SYSTEMS];
+static int system_count = 0;
+
 void ecs_init()
 {
     memset(entities, 0, sizeof(entity_meta_t));
@@ -27,6 +30,7 @@ void ecs_init()
     ecs_register_builtin_components();
 }
 
+#pragma region ENTITIES
 entity_t ecs_create_entity()
 {
     for (entity_t i = 0; i < MAX_ENTITIES; ++i)
@@ -52,7 +56,8 @@ void ecs_destroy_entity(entity_t entity)
             components[i].used[entity] = false;
     }
 }
-
+#pragma endregion
+#pragma region COMPONENTS
 component_t ecs_register_component(component_descriptor_t descriptor)
 {
     if (registered_component_count >= MAX_COMPONENTS)
@@ -75,7 +80,6 @@ bool ecs_add_component(entity_t entity, component_t component, void *data)
     return true;
 }
 
-
 void* ecs_get_component(entity_t entity, component_t component) {
     if (entity >= MAX_ENTITIES || component >= registered_component_count)
         return NULL;
@@ -96,7 +100,20 @@ bool ecs_remove_component(entity_t entity, component_t component) {
     components[component].used[entity] = false;
     return true;
 }
+#pragma endregion 
+#pragma region SYSTEMS
+void ecs_register_system(system_func_t func)
+{
+    if(system_count < MAX_SYSTEMS)
+        systems[system_count++] = func;
+}
+void ecs_run_systems(float dt)
+{
+    for(int i=0; i<system_count; ++i)
+        systems[i](dt);
+}
+#pragma endregion
 
 void ecs_update(float dt) {
-    // Vacío por ahora
+    ecs_run_systems(dt);
 }

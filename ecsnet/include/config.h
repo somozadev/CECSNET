@@ -1,7 +1,9 @@
 #pragma once
 
+//should be here or in ecs.h
 #define MAX_ENTITIES 1024
 #define MAX_COMPONENTS 32
+#define MAX_SYSTEMS 64
 
 
 #define NETWORK_BUFFER_SIZE 4096

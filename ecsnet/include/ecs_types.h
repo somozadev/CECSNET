@@ -4,6 +4,7 @@
 
 typedef uint32_t entity_t;
 typedef uint32_t component_t;
+typedef (*system_func_t)(float dt);
 
 typedef struct
 {
