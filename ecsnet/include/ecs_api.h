@@ -13,8 +13,8 @@ bool ecs_remove_component(entity_t entity, component_t component);
 
 component_t ecs_register_component(component_descriptor_t component_descriptor);
 
-
 void ecs_register_system(system_func_t func);
-void ecs_run_systems(float dt);
 
-void ecs_update(float dt);
+static void ecs_run_systems(float dt);
+
+void ecs_update(float dt); 

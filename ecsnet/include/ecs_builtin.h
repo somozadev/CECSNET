@@ -28,14 +28,14 @@ typedef struct
 
 void ecs_register_builtin_systems();
 
-void system_movement(float dt);
+static void system_movement(float dt);
 
 void ecs_register_builtin_components();
-void serialize_position(const void *data, uint8_t *out);
-void deserialize_position(const uint8_t *in, void *data);
+static void serialize_position(const void *data, uint8_t *out);
+static void deserialize_position(const uint8_t *in, void *data);
 
-void serialize_rotation(const void *data, uint8_t *out);
-void deserialize_rotation(const uint8_t *in, void *data);
+static void serialize_rotation(const void *data, uint8_t *out);
+static void deserialize_rotation(const uint8_t *in, void *data);
 
-void serialize_transform(const void *data, uint8_t *out);
-void deserialize_transform(const uint8_t *in, void *data);
+static void serialize_transform(const void *data, uint8_t *out);
+static void deserialize_transform(const uint8_t *in, void *data);
