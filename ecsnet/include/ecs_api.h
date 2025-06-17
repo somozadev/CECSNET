@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ecs_types.h"
 
 void ecs_init(void);

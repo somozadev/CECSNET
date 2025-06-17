@@ -26,11 +26,11 @@ typedef struct
     float x, y;
 } velocity_t;
 
-void ecs_register_builtin_systems();
+void ecs_register_builtin_systems(void);
 
 static void system_movement(float dt);
 
-void ecs_register_builtin_components();
+void ecs_register_builtin_components(void);
 static void serialize_position(const void *data, uint8_t *out);
 static void deserialize_position(const uint8_t *in, void *data);
 
@@ -39,3 +39,6 @@ static void deserialize_rotation(const uint8_t *in, void *data);
 
 static void serialize_transform(const void *data, uint8_t *out);
 static void deserialize_transform(const uint8_t *in, void *data);
+
+static void serialize_velocity(const void *data, uint8_t *out);
+static void deserialize_velocity(const uint8_t *in, void *data);

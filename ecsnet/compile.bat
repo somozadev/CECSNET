@@ -49,15 +49,38 @@ if "%MODE%"=="2" (
     exit /b 0
 )
 
-REM Build dynamic library (.dll)
+REM Build dynamic library (.dll) + linker (.a)
 if "%MODE%"=="3" (
     echo Building dynamic library...
-    %CC% -shared -o %BUILD_DIR%\ecsnet.dll src\ecs.c src\net.c -Iinclude -lws2_32
+    REM Building DLL first
+    %CC% -shared -o %BUILD_DIR%\ecsnet.dll src\ecs.c src\ecs_builtin.c -Iinclude -lws2_32 -DECSNET_EXPORTS -Wl,--out-implib,%BUILD_DIR%\libecsnet.a
     if errorlevel 1 (
-        echo ERROR building DLL
+        echo ERROR compiling DLL
         exit /b 1
     )
+     REM Move to build folder to call  gendef and dlltool
+    pushd %BUILD_DIR%
+    REM Generate .def from the DLL //// pacman -S mingw-w64-x86_64-tools is the command to install gendef from MINGW
+    gendef ecsnet.dll 
+
+    if errorlevel 1 (
+        echo ERROR generating .def file
+        popd
+        exit /b 1
+    )
+   REM Create .lib file for Visual Studio Standards from the .def
+    dlltool -D ecsnet.dll -d ecsnet.def -l ecsnet.lib
+    if errorlevel 1 (
+        echo ERROR generating .lib file
+        popd
+        exit /b 1
+    )
+
+    popd
+
     echo Dynamic library built: %BUILD_DIR%\ecsnet.dll
+    echo Import library built: %BUILD_DIR%\ecsnet.lib
+    
     exit /b 0
 )
 REM Clear build folder
