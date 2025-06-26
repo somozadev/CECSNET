@@ -33,7 +33,8 @@
         "ecs_types.h": "c",
         "ecs_api.h": "c",
         "ws2def.h": "c",
-        "config.h": "c"
+        "config.h": "c",
+        "io_context": "c"
     },
     "cmake.sourceDirectory": "F:/PROYECTOS_QUE_VALEN_LA_PENA/CECSNET/Playdate/Example"
 }

@@ -19,7 +19,7 @@ net_socket_t net_socket_create(socket_type_t type)
         net_socket.fd = socket(AF_INET, protocol, 0);
 }
 
-net_socket_connect(net_socket_t *net_socket, const char *ip, uint16_t port)
+int net_socket_connect(net_socket_t *net_socket, const char *ip, uint16_t port)
 {
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
@@ -29,4 +29,34 @@ net_socket_connect(net_socket_t *net_socket, const char *ip, uint16_t port)
         return connect((SOCKET)net_socket->fd, (struct sockaddr *)&addr, sizeof(addr));
     else
         return connect(net_socket->fd, (struct sockaddr *)&addr, sizeof(addr));
+}
+
+int net_socket_send(net_socket_t *net_socket, const char *ip, uint16_t port)
+{
+    if (PLATFORM_NAME == "Windows")
+        return send((SOCKET)net_socket->fd, data, len, 0);
+    else
+        return send(net_socket->fd, data, len, 0);
+}
+
+int net_socket_receive(net_socket_t *net_socket, const void *buffer, int max_len)
+{
+    if (PLATFORM_NAME == "Windows")
+        return recv((SOCKET)net_socket->fd, buffer, max_len, 0);
+    else
+        return recv(net_socket->fd, buffer, max_len, 0);
+}
+
+int net_socket_close(net_socket_t *socket)
+{
+    if (PLATFORM_NAME == "Windows")
+        return closesocket((SOCKET)net_socket->fd);
+    else
+        return close(net_socket->fd);
+}
+
+void net_socket_cleanup(void)
+{
+    if (PLATFORM_NAME == "Windows")
+        WSACleanup();
 }
