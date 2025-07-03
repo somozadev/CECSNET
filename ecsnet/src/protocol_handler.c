@@ -44,3 +44,25 @@ void handle_message(const message_t* message) {
             break;
     }
 }
+
+
+
+int pack_entity_update(package_message_t* message, uint16_t entity_id, uint8_t mask, void* data_in, int len)
+{
+    if(!message || ! data_in || len > sizeof(message->payload)) return -1;
+    message->type = MSG_ENTITY_UPDATE;
+    message->entity_id = entity_id; 
+    message->component_mask = mask; 
+    memcpy(message->payload, data_in, len);
+    return 0;
+}
+
+int unpack_entity_update(package_message_t* message, uint16_t* entity_id, uint8_t* mask, void* data_out)
+{
+    if(!message || !entity_id || !mask || !data_out) return -1; 
+
+    *entity_id = message->entity_id; 
+    *mask = message->component_mask; 
+    memcpy(data_out, message->payload, sizeof(message->payload));
+    return 0;
+}
