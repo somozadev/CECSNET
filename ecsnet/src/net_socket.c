@@ -31,28 +31,28 @@ int net_socket_connect(net_socket_t *net_socket, const char *ip, uint16_t port)
         return connect(net_socket->fd, (struct sockaddr *)&addr, sizeof(addr));
 }
 
-int net_socket_send(net_socket_t *net_socket, const char *ip, uint16_t port)
+int net_socket_send(net_socket_t *socket, const void* data, int len)
 {
     if (PLATFORM_NAME == "Windows")
-        return send((SOCKET)net_socket->fd, data, len, 0);
+        return send((SOCKET)socket->fd, data, len, 0);
     else
-        return send(net_socket->fd, data, len, 0);
+        return send(socket->fd, data, len, 0);
 }
 
-int net_socket_receive(net_socket_t *net_socket, const void *buffer, int max_len)
+int net_socket_receive(net_socket_t *socket, const void *buffer, int max_len)
 {
     if (PLATFORM_NAME == "Windows")
-        return recv((SOCKET)net_socket->fd, buffer, max_len, 0);
+        return recv((SOCKET)socket->fd, buffer, max_len, 0);
     else
-        return recv(net_socket->fd, buffer, max_len, 0);
+        return recv(socket->fd, buffer, max_len, 0);
 }
 
 int net_socket_close(net_socket_t *socket)
 {
     if (PLATFORM_NAME == "Windows")
-        return closesocket((SOCKET)net_socket->fd);
+        return closesocket((SOCKET)socket->fd);
     else
-        return close(net_socket->fd);
+        return close(socket->fd);
 }
 
 void net_socket_cleanup(void)

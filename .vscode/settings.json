@@ -34,7 +34,24 @@
         "ecs_api.h": "c",
         "ws2def.h": "c",
         "config.h": "c",
-        "io_context": "c"
+        "io_context": "c",
+        "any": "c",
+        "filesystem": "c",
+        "complex": "c",
+        "bitset": "c",
+        "deque": "c",
+        "format": "c",
+        "initializer_list": "c",
+        "list": "c",
+        "random": "c",
+        "regex": "c",
+        "stack": "c",
+        "stacktrace": "c",
+        "utility": "c",
+        "valarray": "c",
+        "xtree": "c",
+        "rope": "c",
+        "slist": "c"
     },
-    "cmake.sourceDirectory": "F:/PROYECTOS_QUE_VALEN_LA_PENA/CECSNET/Playdate/Example"
+    "cmake.sourceDirectory": "C:/Users/mesom/Documents/GitHub/CECSNET/Playdate/Example"
 }
