@@ -62,7 +62,7 @@ int connection_manager_send_to_peer(connection_manager_t *connection_manager, co
             return net_socket_send(&connection_manager->peers[i].net_socket, data, len);
         }
     }
-    return -1;
+    return -1;  
 }
 
 int connection_manager_broadcast(connection_manager_t *connection_manager, const void *data, int len)

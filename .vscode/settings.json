@@ -51,7 +51,9 @@
         "valarray": "c",
         "xtree": "c",
         "rope": "c",
-        "slist": "c"
+        "slist": "c",
+        "network_architecture.h": "c",
+        "protocol_handler.h": "c"
     },
     "cmake.sourceDirectory": "C:/Users/mesom/Documents/GitHub/CECSNET/Playdate/Example"
 }
