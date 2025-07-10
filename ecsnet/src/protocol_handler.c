@@ -1,6 +1,7 @@
 #include "protocol_handler.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 int pack_message(const message_t* message, uint8_t* out_buffer, int max_len) {
     if (!message || !out_buffer || max_len < 3 + message->size) return -1;
