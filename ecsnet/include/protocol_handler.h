@@ -3,7 +3,11 @@
 #include <stdbool.h>
 
 #define MAX_PAYLOAD_SIZE 512
-
+typedef struct {
+    int (*pack)(const message_t*, uint8_t*, int);
+    int (*unpack)(const uint8_t*, int, message_t*);
+    bool (*validate)(const message_t*);
+} protocol_handler_t;
 typedef enum { 
     MSG_TYPE_INPUT = 1,
     MSG_TYPE_SNAPSHOT=2,

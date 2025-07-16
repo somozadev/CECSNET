@@ -5,7 +5,6 @@
 
 typedef struct
 {
-    connection_manager_t* connection_manager; 
     void (*initialize)(void *self);
     void (*send_data)(void *self);
     void (*receive_data)(void *self);
@@ -14,9 +13,16 @@ typedef struct
 } network_architecture_t;
 
 typedef struct { 
-    connection_manager_t connection_manager;
     net_socket_t server_socket;
+    connection_manager_t* connection_manager; 
+
 } network_architecture_client_server_t; 
+
+typedef struct { 
+    net_socket_t server_socket;
+    connection_manager_t* connection_manager; 
+
+} network_architecture_peer_to_peer_t; 
 
 
 void ecs_network_architecture_init(network_architecture_t *network_architecture);
@@ -26,5 +32,9 @@ void ecs_network_architecture_update(network_architecture_t *network_architectur
 
 
 network_architecture_t create_client_server_architecture();
-void client_server_init();
-void client_server_update();
+void client_server_init(void* self);
+void client_server_update(void* self);
+
+network_architecture_t create_peer_to_peer_architecture();
+void peer_to_peer_init(void* self);
+void peer_to_peer_update(void* self);
