@@ -8,7 +8,8 @@ typedef struct
     void (*initialize)(void *self);
     void (*send_data)(void *self);
     void (*receive_data)(void *self);
-    void (*update)(void *self);
+    void (*update)(void *self);    
+    void (*destroy)(void*);
     void *implemented_architecture;
 } network_architecture_t;
 
@@ -29,12 +30,15 @@ void ecs_network_architecture_init(network_architecture_t *network_architecture)
 void ecs_network_architecture_send(network_architecture_t *network_architecture);
 void ecs_network_architecture_receive(network_architecture_t *network_architecture);
 void ecs_network_architecture_update(network_architecture_t *network_architecture);
+void ecs_network_architecture_destroy(network_architecture_t *network_architecture);
 
 
-network_architecture_t create_client_server_architecture();
+network_architecture_t* create_client_server_architecture();
 void client_server_init(void* self);
 void client_server_update(void* self);
+void destroy_client_server_architecture(void *self);
 
-network_architecture_t create_peer_to_peer_architecture();
+network_architecture_t* create_peer_to_peer_architecture();
 void peer_to_peer_init(void* self);
 void peer_to_peer_update(void* self);
+void destroy_peer_to_peer_architecture(void *self);
