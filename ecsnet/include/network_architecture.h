@@ -26,11 +26,11 @@ typedef struct {
 } network_architecture_peer_to_peer_t; 
 
 
-void ecs_network_architecture_init(network_architecture_t *network_architecture);
-void ecs_network_architecture_send(network_architecture_t *network_architecture);
-void ecs_network_architecture_receive(network_architecture_t *network_architecture);
-void ecs_network_architecture_update(network_architecture_t *network_architecture);
-void ecs_network_architecture_destroy(network_architecture_t *network_architecture);
+void ecs_network_architecture_init(void *self);
+void ecs_network_architecture_send(void *self);
+void ecs_network_architecture_receive(void *self);
+void ecs_network_architecture_update(void *self);
+void ecs_network_architecture_destroy(void *self);
 
 
 network_architecture_t* create_client_server_architecture();

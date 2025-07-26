@@ -16,7 +16,7 @@ typedef struct
 //Creates a new net socket with TCP or UDP configuration
 net_socket_t net_socket_create(socket_type_t type);
 //Connects the net socket to a given ip and port
-int net_socket_connect(net_socket_t* socket, const char* ip, uint16_t port);
+int net_socket_connect(net_socket_t* socket,  char* ip, uint16_t port);
 //Sends data over the socket connection with a given lenght
 int net_socket_send(net_socket_t* socket, const void* data, int len);
 //Receives a data buffer over the socket connection with a given maximum lenght

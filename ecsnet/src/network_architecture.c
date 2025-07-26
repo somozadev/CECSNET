@@ -1,31 +1,40 @@
 #include "network_architecture.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "protocol_handler.h"
 
 #include <string.h>
 
 #pragma region NET_ARCH_BASE
-void ecs_network_architecture_init(network_architecture_t *network_architecture)
+void ecs_network_architecture_init(void *self)
 {
+    network_architecture_t* network_architecture = (network_architecture_t *)self;
     if (network_architecture && network_architecture->initialize)
         network_architecture->initialize(network_architecture->implemented_architecture);
 }
-void ecs_network_architecture_send(network_architecture_t *network_architecture)
+void ecs_network_architecture_send(void *self)
 {
+    network_architecture_t* network_architecture = (network_architecture_t *)self;
     if (network_architecture && network_architecture->send_data)
         network_architecture->send_data(network_architecture->implemented_architecture);
 }
-void ecs_network_architecture_receive(network_architecture_t *network_architecture)
+void ecs_network_architecture_receive(void *self)
 {
+    network_architecture_t* network_architecture = (network_architecture_t *)self;
     if (network_architecture && network_architecture->receive_data)
         network_architecture->receive_data(network_architecture->implemented_architecture);
 }
-void ecs_network_architecture_update(network_architecture_t *network_architecture)
+void ecs_network_architecture_update(void *self)
 {
+    network_architecture_t* network_architecture = (network_architecture_t *)self;
     if (network_architecture && network_architecture->update)
         network_architecture->update(network_architecture->implemented_architecture);
 }
-void ecs_network_architecture_destroy(network_architecture_t *network_architecture)
+void ecs_network_architecture_destroy(void *self)
 {
+    network_architecture_t* network_architecture = (network_architecture_t *)self;
     if (network_architecture && network_architecture->destroy)
         network_architecture->destroy(network_architecture->implemented_architecture);
     free(network_architecture);
@@ -59,7 +68,7 @@ network_architecture_t *create_client_server_architecture()
     }
     connection_manager_init(client_server->connection_manager);
     client_server->server_socket = net_socket_create(SOCKET_TYPE_UDP);
-    net_socket_connect(&client_server->server_socket, 12345, 12);
+    net_socket_connect(&client_server->server_socket, "12345", 12);
     network_architecture_t *interface = malloc(sizeof(network_architecture_t));
     if (!interface)
     {
@@ -104,7 +113,7 @@ void client_server_init(void *self)
 
     client_server->server_socket = net_socket_create(SOCKET_TYPE_UDP);
     // ip n port shall be provided ?
-    net_socket_connect(&client_server->server_socket, 12345, 12);
+    net_socket_connect(&client_server->server_socket, "12345", 12);
     printf("[ClientServer] Initialized\n");
 }
 
@@ -149,7 +158,7 @@ network_architecture_t *create_peer_to_peer_architecture()
     connection_manager_init(p2p->connection_manager);
 
     p2p->server_socket = net_socket_create(SOCKET_TYPE_UDP);
-    net_socket_connect(&p2p->server_socket, 12345, 11);
+    net_socket_connect(&p2p->server_socket, "12345", 11);
 
     network_architecture_t *interface = malloc(sizeof(network_architecture_t));
     if (!interface)
@@ -195,7 +204,7 @@ void peer_to_peer_init(void *self)
 
     p2p->server_socket = net_socket_create(SOCKET_TYPE_UDP);
     // ip n port shall be provided ?
-    net_socket_connect(&p2p->server_socket, 12345, 11);
+    net_socket_connect(&p2p->server_socket, "12345", 11);
     printf("[PeerToPeer] Initialized\n");
 }
 
