@@ -22,6 +22,8 @@ void system_movement(float dt)
 
             pos->x += vel->x * dt;
             pos->y += vel->y * dt;
+
+            ecs_mark_component_dirty(e, COMPONENT_POSITION);
         }
     }
 }

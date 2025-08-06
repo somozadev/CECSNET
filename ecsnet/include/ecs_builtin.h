@@ -12,34 +12,36 @@ extern component_t COMPONENT_POSITION;
 extern component_t COMPONENT_ROTATION;
 //Default transform component
 extern component_t COMPONENT_TRANSFORM;
+//Default velocity component
+extern component_t COMPONENT_VELOCITY;
 
-//Definition  for position's component data
+//Definition  for positions component data
 typedef struct
 {
     float x, y;
 } position_t;
 
-//Definition  for rotation's component data
+//Definition  for rotations component data
 typedef struct
 {
     float x, y, z, w;
 } rotation_t;
 
-//Definition  for transform's component data
+//Definition  for transforms component data
 typedef struct
 {
     position_t position;
     rotation_t rotation;
 } transform_t;
 
-//Definition  for velocity's component data
+//Definition  for velocitys component data
 typedef struct
 {
     float x, y;
 } velocity_t;
 
 //Registers the default systems into the ecs engine 
-void ecs_register_buiiltin_systems(void);
+void ecs_register_builtin_systems(void);
 
 //Definition for movement system
 static void system_movement(float dt);
