@@ -12,14 +12,11 @@ set(SOURCES
         src/net_socket.c
         src/network_architecture.c
         src/protocol_handler.c
-        src/ecs_sync.cpp
-        include/ecs_sync.h
 )
 
 # Ejecutable principal
 add_executable(ecsnet ${SOURCES}
-        src/ecs_sync.cpp
-        include/ecs_sync.h)
+        include/ecs_internal.h)
 target_include_directories(ecsnet PRIVATE include)
 
 # Librerías para Windows
@@ -32,8 +29,6 @@ add_executable(test_ecs
         tests/test_ecs.c
         tests/test.c
         ${SOURCES}
-        src/ecs_sync.cpp
-        include/ecs_sync.h
         tests/test_net.h
         tests/test_net.c
 )

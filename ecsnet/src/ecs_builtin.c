@@ -1,5 +1,12 @@
 #include "ecs_builtin.h"
+#include "ecs.h"
 #include <string.h>
+
+//Macro to write floats into memory with a given destination, offset (bytes) and size(bytes)
+#define WRITE_FLOAT(out, offset, value) memcpy((out) + (offset), &(value), sizeof(float))
+//Macro to read floats from memory with a given output, offset (bytes) and size(bytes)
+#define READ_FLOAT(var, in, offset) memcpy(&(var), (in) + (offset), sizeof(float))
+
 
 component_t COMPONENT_POSITION = (component_t)-1;
 component_t COMPONENT_ROTATION = (component_t)-1;

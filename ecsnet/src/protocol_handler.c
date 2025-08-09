@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "ecs_api.h"
+#include "ecs.h"
 
 void protocol_handler_init(protocol_handler_t* handler)
 {

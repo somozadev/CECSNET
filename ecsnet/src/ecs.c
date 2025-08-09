@@ -1,29 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ecs.h"
-#include "ecs_builtin.h"
+#include "ecs_internal.h"
 
-typedef struct
-{
-    bool in_use;
-} entity_meta_t;
-
-typedef struct
-{
-    component_descriptor_t descriptor;
-    void *data;
-    bool used[MAX_ENTITIES];
-    bool is_dirty[MAX_ENTITIES]; //will tell the NET layer which components have been modified
-} component_storage_t;
-
-
-
-static entity_meta_t entities[MAX_ENTITIES];
-static component_storage_t components[MAX_COMPONENTS];
-static uint32_t registered_component_count = 0;
-
-static system_func_t systems[MAX_SYSTEMS];
-static int system_count = 0;
 
 void ecs_init()
 {

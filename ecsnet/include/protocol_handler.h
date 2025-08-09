@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "connection_manager.h"
+#include "ecs.h"
 #include "ecs_types.h"
 
 #define MAX_PACKET_SIZE 1024
