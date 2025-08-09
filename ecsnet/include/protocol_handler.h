@@ -2,53 +2,47 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define MAX_PAYLOAD_SIZE 512
+#include "connection_manager.h"
+#include "ecs_types.h"
+
+#define MAX_PACKET_SIZE 1024
+#define MESSAGE_HEADER_SIZE (sizeof(uint8_t) + sizeof(uint16_t))
 
 typedef enum {
-    MSG_TYPE_INPUT = 1,
-    MSG_TYPE_SNAPSHOT = 2,
-    MSG_TYPE_ACK = 3
+    MSG_TYPE_INVALID = 0,
+    MSG_TYPE_ENTITY_SNAPSHOT,
+    MSG_TYPE_ENTITY_CREATE,
+    MSG_TYPE_ENTITY_DESTROY,
+    MSG_TYPE_INPUT,
+    MSG_TYPE_ACK
 } message_type_t;
 
 typedef struct {
     message_type_t type;
     uint16_t size;
-    uint8_t payload[MAX_PAYLOAD_SIZE
-    ];
-} message_t;
+} packet_header_t;
 
 typedef struct {
-    int (*pack)(const message_t *, uint8_t *, int);
+    packet_header_t header;
+    uint8_t payload[MAX_PACKET_SIZE - sizeof(packet_header_t)];
+} network_packet_t;
 
-    int (*unpack)(const uint8_t *, int, message_t *);
 
-    bool (*validate)(const message_t *);
+typedef struct {
+    network_packet_t out_packet;
+    //int (*on_receive_packet)(connection_manager_t*, peer_t*, network_packet_t*);
 } protocol_handler_t;
 
 
-int pack_message(const message_t *message, uint8_t *out_bufer, int max_len);
-
-int unpack_message(const uint8_t *buffer, int length, message_t *out_message);
-
-bool validate_message(const message_t *message);
-
-void handle_message(const message_t *message);
-
-typedef enum {
-    MSG_ENTITY_CREATE = 0x01,
-    MSG_ENTITY_UPDATE = 0x02,
-    MSG_ENTITY_REMOVE = 0x03
-} ecs_message_type_t;
-
-typedef struct {
-    uint8_t type; // ECS message type
-    uint16_t entity_id; // Unique entity identifier
-    uint8_t component_mask; // Bitmask representing which components are included
-    uint8_t payload[128]; // Serialized component data
-} package_message_t;
-
-// Packs a message for entity update/create with a given component mask and raw data.
-int pack_entity_update(package_message_t *message, uint16_t entity_id, uint8_t mask, void *data_in, int len);
-
-// Unpacks a received message and extracts the entity ID, mask and component data.
-int unpack_entity_update( package_message_t *message, uint16_t *entity_id, uint8_t *mask, void *data_out);
+// Inicializa el Protocol Handler
+void protocol_handler_init(protocol_handler_t* handler);
+// Empaqueta los cambios 'dirty' de una entidad en el paquete de salida.
+// Devuelve el tamaño empaquetado o un código de error si el paquete está lleno.
+int protocol_handler_pack_entity_update(protocol_handler_t* handler, entity_t entity, uint8_t* serialized_data, size_t data_size);
+// Envía el paquete de salida actual a un peer. El paquete se resetea después del envío.
+int protocol_handler_send_packet(protocol_handler_t* handler, connection_manager_t* cm, peer_t* peer);
+// Procesa un paquete de red entrante.
+// Esta es la función que se pasará como callback a connection_manager_t::on_receive.
+void protocol_handler_process_received_data(peer_t* peer, const void* data, int len);
+// Se asume que tienes esta función en otro lugar para obtener el handler global
+protocol_handler_t* get_protocol_handler();

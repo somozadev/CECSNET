@@ -34,6 +34,8 @@ add_executable(test_ecs
         ${SOURCES}
         src/ecs_sync.cpp
         include/ecs_sync.h
+        tests/test_net.h
+        tests/test_net.c
 )
 target_include_directories(test_ecs PRIVATE include)
 set_property(TARGET test_ecs PROPERTY C_STANDARD 11)
