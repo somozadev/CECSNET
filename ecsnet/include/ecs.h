@@ -1,83 +1,174 @@
+#ifndef ECS_H
+#define ECS_H
+
 #pragma once
 #include <stdint.h>
 #include <stdbool.h>
+#include "ecs_types.h"
 #include "config.h"
 #include "ecs_builtin.h"
 
-
-
-//Definition of entity, an integer working as an identifier
-typedef uint32_t entity_t;
-//Definition of component, an integer working as an identifier
-typedef uint32_t component_t;
-//Definition of system, a function with a delta time input, ment to be used in an update loop
-typedef void (*system_func_t)(float dt);
-
-//Definition of serialize component function, ment to be implemented for any specific component
-typedef void (*serialize_func_t)(const void *data_in, uint8_t *buffer_out);
-//Definition of deserialize component function, ment to be implemented for any specific component
-typedef void (*deserialize_func_t)(const uint8_t *buffer_in, void *data_out);
-
-
-//Definition holding description of the component for qol and implementation of serialization over networks functions
-typedef struct
-{
-    size_t size;
-    const char *name;
-    serialize_func_t serialize;
-    deserialize_func_t deserialize;
-} component_descriptor_t;
-//Dirty flag used by the networking layer to sync ECS data, marks weather an entity/component has been modified
+/**
+ * @brief Dirty flag used by the networking layer to sync ECS data.
+ * It marks whether an entity's component has been modified.
+ */
 typedef struct {
     component_t component_id;
-    const void* data;
+    const void *data;
 } dirty_component_t;
 
 
+/**
+ * @brief Initializes the ECS engine, setting up the default built-in components.
+ * @param ecs A pointer to the ECS instance to initialize.
+ */
+void ecs_init(ecs_t *ecs);
 
-//Initialises the ecs engine, setting up the default builtin components
-void ecs_init(void);
-//Creates a new entity and adds it to the entities pool
-entity_t ecs_create_entity(void);
-//Destroys a given entity and removes it from the entities pool
-void ecs_destroy_entity(entity_t entity);
-//Serialize an entire entity, including its components
-bool ecs_serialize_entity(entity_t entity, uint8_t* out_buffer, size_t* out_size, size_t max_out_size);
-//Deserializes an entity with its components from a given buffer
-entity_t ecs_deserialize_entity(const uint8_t* in_buffer);
-//Adds a given component to a given entity, being data the actual component data i.e. position={0,0,0}. data = &position
-bool ecs_add_component(entity_t entity, component_t component, void* data);
-//Retrieves a component (id) used by an entity, returns null if such entity isn't using it
-void* ecs_get_component(entity_t entity, component_t component);
-//Returns a components name based on its ID or NULL if it doesn't exist
-const char* ecs_get_component_name(component_t component);
-//Checks if an entity is using a given component
-bool ecs_has_component(entity_t entity, component_t component);
-//Removes a given component from a given entity component's pool
-bool ecs_remove_component(entity_t entity, component_t component);
-//Marks a component as dirty for the NET layer. This method shall be called for any modified component inside a systems update function [ecs_run_systems(dt)]
-void ecs_mark_component_dirty(entity_t entity, component_t component);
-//Returns the number of dirty components found
-int ecs_get_dirty_components(entity_t entity,dirty_component_t* out_dirty_components);
-//Resets the is dirty flag
-void ecs_clear_component_dirty(entity_t entity, component_t component);
-//Registers a new component into the ecs engine
-component_t ecs_register_component(component_descriptor_t component_descriptor);
-//Registers a new system into the ecs engine
-void ecs_register_system(system_func_t func);
+/**
+ * @brief Creates a new entity and adds it to the entities pool.
+ * @param ecs A pointer to the ECS instance.
+ * @return The ID of the newly created entity.
+ */
+entity_t ecs_create_entity(ecs_t *ecs);
 
-//Exposed update function, it calls ecs_run_systems(dt)
-void ecs_update(float dt);
+/**
+ * @brief Destroys a given entity and removes it from the entities pool.
+ * @param ecs A pointer to the ECS instance.
+ * @param entity The ID of the entity to destroy.
+ */
+void ecs_destroy_entity(ecs_t *ecs, entity_t entity);
+
+/**
+ * @brief Serializes an entire entity, including its components, into a buffer.
+ * @param ecs A pointer to the ECS instance.
+ * @param entity The ID of the entity to serialize.
+ * @param out_buffer The output buffer to write the serialized data to.
+ * @param out_size A pointer to a variable that will store the size of the serialized data.
+ * @param max_out_size The maximum size of the output buffer.
+ * @return True if serialization was successful, false otherwise.
+ */
+bool ecs_serialize_entity(ecs_t *ecs, entity_t entity, uint8_t *out_buffer, size_t *out_size, size_t max_out_size);
+
+/**
+ * @brief Deserializes an entity with its components from a given buffer.
+ * @param ecs A pointer to the ECS instance.
+ * @param in_buffer The input buffer containing the serialized entity data.
+ * @return The ID of the deserialized entity.
+ */
+entity_t ecs_deserialize_entity(ecs_t *ecs, const uint8_t *in_buffer);
+
+/**
+ * @brief Adds a given component to a given entity.
+ * @param ecs A pointer to the ECS instance.
+ * @param entity The ID of the entity.
+ * @param component The ID of the component to add.
+ * @param data A pointer to the actual component data.
+ * @return True if the component was added successfully, false otherwise.
+ */
+bool ecs_add_component(ecs_t *ecs, entity_t entity, component_t component, void *data);
+
+/**
+ * @brief Retrieves a component from an entity.
+ * @param ecs A pointer to the ECS instance.
+ * @param entity The ID of the entity.
+ * @param component The ID of the component to retrieve.
+ * @return A pointer to the component's data, or NULL if the entity does not have the component.
+ */
+void *ecs_get_component(ecs_t *ecs, entity_t entity, component_t component);
+
+/**
+ * @brief Returns a component's name based on its ID.
+ * @param ecs A pointer to the ECS instance.
+ * @param component The ID of the component.
+ * @return The name of the component, or NULL if it doesn't exist.
+ */
+const char *ecs_get_component_name(ecs_t *ecs, component_t component);
+
+/**
+ * @brief Checks if an entity has a given component.
+ * @param ecs A pointer to the ECS instance.
+ * @param entity The ID of the entity.
+ * @param component The ID of the component to check.
+ * @return True if the entity has the component, false otherwise.
+ */
+bool ecs_has_component(ecs_t *ecs, entity_t entity, component_t component);
+
+/**
+ * @brief Removes a given component from an entity.
+ * @param ecs A pointer to the ECS instance.
+ * @param entity The ID of the entity.
+ * @param component The ID of the component to remove.
+ * @return True if the component was removed successfully, false otherwise.
+ */
+bool ecs_remove_component(ecs_t *ecs, entity_t entity, component_t component);
+
+/**
+ * @brief Marks a component as dirty for the networking layer.
+ * This method should be called whenever a component is modified inside a system's update function.
+ * @param ecs A pointer to the ECS instance.
+ * @param entity The ID of the entity.
+ * @param component The ID of the component to mark as dirty.
+ */
+void ecs_mark_component_dirty(ecs_t *ecs, entity_t entity, component_t component);
+
+/**
+ * @brief Gets the number of dirty components for a given entity.
+ * @param ecs A pointer to the ECS instance.
+ * @param entity The ID of the entity.
+ * @param out_dirty_components An array to be filled with information about dirty components.
+ * @return The number of dirty components found.
+ */
+int ecs_get_dirty_components(ecs_t *ecs, entity_t entity, dirty_component_t *out_dirty_components);
+
+/**
+ * @brief Resets the dirty flag for a component.
+ * @param ecs A pointer to the ECS instance.
+ * @param entity The ID of the entity.
+ * @param component The ID of the component to clear the dirty flag for.
+ */
+void ecs_clear_component_dirty(ecs_t *ecs, entity_t entity, component_t component);
+
+/**
+ * @brief Registers a new component with the ECS engine.
+ * @param ecs A pointer to the ECS instance.
+ * @param component_descriptor A descriptor containing the component's name and size.
+ * @return The ID of the newly registered component.
+ */
+component_t ecs_register_component(ecs_t *ecs, component_descriptor_t component_descriptor);
+
+/**
+ * @brief Registers a new system with the ECS engine.
+ * @param ecs A pointer to the ECS instance.
+ * @param func The system function to register.
+ */
+void ecs_register_system(ecs_t *ecs, system_func_t func);
+
+/**
+ * @brief The main ECS update function. It calls all registered systems.
+ * @param ecs A pointer to the ECS instance.
+ * @param dt The delta time since the last update.
+ */
+void ecs_update(ecs_t *ecs, float dt);
 
 
-//Default components
+// Default components.
 extern component_t COMPONENT_POSITION;
 extern component_t COMPONENT_ROTATION;
 extern component_t COMPONENT_TRANSFORM;
 extern component_t COMPONENT_VELOCITY;
 
 
-//Registers the default systems into the ecs engine
-void ecs_register_builtin_systems(void);
-//Registers the default components into the ecs engine
-void ecs_register_builtin_components(void);
+/**
+ * @brief Registers the default systems with the ECS engine.
+ * @param ecs A pointer to the ECS instance.
+ */
+void ecs_register_builtin_systems(ecs_t *ecs);
+
+/**
+ * @brief Registers the default components with the ECS engine.
+ * @param ecs A pointer to the ECS instance.
+ */
+void ecs_register_builtin_components(ecs_t *ecs);
+
+
+#endif

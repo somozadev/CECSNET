@@ -77,7 +77,8 @@ bool test_ecs() {
     assert(
         new_pos->x == final_moving_pos->x && new_pos->y == final_moving_pos->y &&
         "Deserialized position is incorrect.");
-    printf("New entity %d deserialized correctly from entity %d. Position is (%.2f, %.2f) (PASSED).\n", new_entity, moving_entity, new_pos->x,
+    printf("New entity %d deserialized correctly from entity %d. Position is (%.2f, %.2f) (PASSED).\n", new_entity,
+           moving_entity, new_pos->x,
            new_pos->y);
 
     // --- Cleanup ---

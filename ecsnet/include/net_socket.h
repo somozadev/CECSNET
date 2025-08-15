@@ -10,33 +10,115 @@
 #include <arpa/inet.h>
 #endif
 
+/**
+ * @brief Enumeration of available socket types (TCP and UDP).
+ */
 typedef enum
 {
-    SOCKET_TYPE_TCP,
-    SOCKET_TYPE_UDP
+    SOCKET_TYPE_TCP,    /**< TCP socket type. */
+    SOCKET_TYPE_UDP,    /**< UDP socket type. */
+    PROTOCOL_COUNT      /**< The total number of supported protocols. */
 } socket_type_t;
 
+/**
+ * @brief Represents a network socket.
+ *
+ * This struct encapsulates the socket's file descriptor, type, and address
+ * information.
+ */
 typedef struct
 {
-    socket_type_t type;
-    int fd;
+    struct sockaddr_in addr;    /**< The address associated with the socket. */
+    socket_type_t type;         /**< The type of the socket (TCP or UDP). */
+    int fd;                     /**< The socket file descriptor. */
 } net_socket_t;
 
-//Creates a new net socket with TCP or UDP configuration
+/**
+ * @brief Creates a new network socket.
+ * @param type The type of socket to create (TCP or UDP).
+ * @return The newly created net_socket_t instance.
+ */
 net_socket_t net_socket_create(socket_type_t type);
-// Makes the socket non-blocking
+
+/**
+ * @brief Makes the socket non-blocking.
+ * @param socket A pointer to the net_socket_t instance.
+ * @return 0 on success, or a negative value on failure.
+ */
 int net_socket_set_non_blocking(net_socket_t* socket);
-//Connects the net socket to a given ip and port
+
+/**
+ * @brief Connects the socket to a given IP and port.
+ * @param socket A pointer to the net_socket_t instance.
+ * @param ip The IP address to connect to.
+ * @param port The port to connect to.
+ * @return 0 on success, or a negative value on failure.
+ */
 int net_socket_connect(net_socket_t* socket,  char* ip, uint16_t port);
-//Sends data over the socket connection with a given lenght
+
+/**
+ * @brief Sends data over the socket connection.
+ * @param socket A pointer to the net_socket_t instance.
+ * @param data A pointer to the data buffer to send.
+ * @param len The length of the data to send.
+ * @return The number of bytes sent, or a negative value on failure.
+ */
 int net_socket_send(net_socket_t* socket, const void* data, int len);
-// Sends data to a specific address (for connectionless sockets like UDP)
+
+/**
+ * @brief Sends data to a specific address (for connectionless sockets like UDP).
+ * @param socket A pointer to the net_socket_t instance.
+ * @param data A pointer to the data buffer to send.
+ * @param len The length of the data to send.
+ * @param addr A pointer to the destination address.
+ * @return The number of bytes sent, or a negative value on failure.
+ */
 int net_socket_sendto(net_socket_t* socket, const void* data, int len, const struct sockaddr_in* addr);
-//Receives a data buffer over the socket connection with a given maximum lenght
+
+/**
+ * @brief Receives a data buffer over the socket connection.
+ * @param socket A pointer to the net_socket_t instance.
+ * @param buffer A pointer to the buffer to store received data.
+ * @param max_len The maximum length of the buffer.
+ * @return The number of bytes received, or a negative value on failure.
+ */
 int net_socket_receive(net_socket_t* socket, void* buffer, int max_len);
-// Binds the socket to a given port and IP (for server-side sockets)
+
+/**
+ * @brief Receives a data buffer over a socket and returns the sender's address (for UDP).
+ * @param socket A pointer to the net_socket_t instance.
+ * @param buffer A pointer to the buffer to store received data.
+ * @param max_len The maximum length of the buffer.
+ * @param sender_addr A pointer to a sockaddr_in struct to store the sender's address.
+ * @return The number of bytes received, or a negative value on failure.
+ */
+int net_socket_receive_from(net_socket_t* socket, void* buffer, int max_len, struct sockaddr_in* sender_addr);
+
+/**
+ * @brief Binds the socket to a given IP and port (for server-side sockets).
+ * @param socket A pointer to the net_socket_t instance.
+ * @param ip The IP address to bind to.
+ * @param port The port to bind to.
+ * @return 0 on success, or a negative value on failure.
+ */
 int net_socket_bind(net_socket_t* socket, const char* ip, uint16_t port);
-//Closes the net socket connection from it's connected ip and port
+
+/**
+ * @brief Sets the socket in listening mode (only for TCP sockets).
+ * @param socket A pointer to the net_socket_t instance.
+ * @param backlog The maximum length of the pending connections queue.
+ * @return 0 on success, or a negative value on failure.
+ */
+int net_socket_listen(net_socket_t* socket, int backlog);
+
+/**
+ * @brief Closes the network socket connection.
+ * @param socket A pointer to the net_socket_t instance to close.
+ * @return 0 on success, or a negative value on failure.
+ */
 int net_socket_close(net_socket_t* socket);
-//Cleanup needed for windows platforms after closing a connection
+
+/**
+ * @brief Performs any necessary cleanup after closing a connection (e.g., for Windows).
+ */
 void net_socket_cleanup(void);

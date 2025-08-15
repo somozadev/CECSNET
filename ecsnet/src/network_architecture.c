@@ -1,218 +1,280 @@
-// #include "network_architecture.h"
-//
-// #include <stdio.h>
-// #include <stdlib.h>
-//
-// #include "protocol_handler.h"
-//
-// #include <string.h>
-//
-// #pragma region NET_ARCH_BASE
-// void ecs_network_architecture_init(void *self)
-// {
-//     network_architecture_t* network_architecture = (network_architecture_t *)self;
-//     if (network_architecture && network_architecture->initialize)
-//         network_architecture->initialize(network_architecture->implemented_architecture);
-// }
-// void ecs_network_architecture_send(void *self)
-// {
-//     network_architecture_t* network_architecture = (network_architecture_t *)self;
-//     if (network_architecture && network_architecture->send_data)
-//         network_architecture->send_data(network_architecture->implemented_architecture);
-// }
-// void ecs_network_architecture_receive(void *self)
-// {
-//     network_architecture_t* network_architecture = (network_architecture_t *)self;
-//     if (network_architecture && network_architecture->receive_data)
-//         network_architecture->receive_data(network_architecture->implemented_architecture);
-// }
-// void ecs_network_architecture_update(void *self)
-// {
-//     network_architecture_t* network_architecture = (network_architecture_t *)self;
-//     if (network_architecture && network_architecture->update)
-//         network_architecture->update(network_architecture->implemented_architecture);
-// }
-// void ecs_network_architecture_destroy(void *self)
-// {
-//     network_architecture_t* network_architecture = (network_architecture_t *)self;
-//     if (network_architecture && network_architecture->destroy)
-//         network_architecture->destroy(network_architecture->implemented_architecture);
-//     free(network_architecture);
-// }
-//
-// #pragma endregion
-//
-// #pragma region CLIENT_SERVER
-//
-// network_architecture_t *create_client_server_architecture()
-// {
-//     // static network_architecture_client_server_t client_server = {0}; Not using memory management
-//     // network_architecture_t network_interface = {
-//     //     .initialize = client_server_init,
-//     //     .update = client_server_update,
-//     //     .send_data = ecs_network_architecture_send,
-//     //     .receive_data = ecs_network_architecture_receive,
-//     //     .implemented_architecture = &client_server};
-//     // return network_interface;
-//
-//     network_architecture_client_server_t *client_server = malloc(sizeof(network_architecture_client_server_t));
-//     if (!client_server)
-//         return NULL;
-//     memset(client_server, 0, sizeof(*client_server));
-//
-//     client_server->connection_manager = malloc(sizeof(connection_manager_t));
-//     if (!client_server->connection_manager)
-//     {
-//         free(client_server);
-//         return NULL;
-//     }
-//     connection_manager_init(client_server->connection_manager);
-//     client_server->server_socket = net_socket_create(SOCKET_TYPE_UDP);
-//     net_socket_connect(&client_server->server_socket, "12345", 12);
-//     network_architecture_t *interface = malloc(sizeof(network_architecture_t));
-//     if (!interface)
-//     {
-//         free(client_server->connection_manager);
-//         free(client_server);
-//         return NULL;
-//     }
-//
-//     interface->initialize = client_server_init;
-//     interface->update = client_server_update;
-//     interface->send_data = ecs_network_architecture_send;
-//     interface->receive_data = ecs_network_architecture_receive;
-//     interface->destroy = destroy_client_server_architecture;
-//     interface->implemented_architecture = client_server;
-//
-//     return interface;
-// }
-// void destroy_client_server_architecture(void *self)
-// {
-//     network_architecture_client_server_t *client_server = (network_architecture_client_server_t *)self;
-//
-//     if (!client_server)
-//         return;
-//
-//     net_socket_close(&client_server->server_socket);
-//
-//     if (client_server->connection_manager)
-//     {
-//         free(client_server->connection_manager);
-//     }
-//
-//     free(client_server);
-// }
-//
-// void client_server_init(void *self)
-// {
-//     network_architecture_client_server_t *client_server = (network_architecture_client_server_t *)self;
-//     static connection_manager_t connection_manager;
-//
-//     connection_manager_init(&connection_manager);
-//     client_server->connection_manager = &connection_manager;
-//
-//     client_server->server_socket = net_socket_create(SOCKET_TYPE_UDP);
-//     // ip n port shall be provided ?
-//     net_socket_connect(&client_server->server_socket, "12345", 12);
-//     printf("[ClientServer] Initialized\n");
-// }
-//
-// void client_server_update(void *self)
-// {
-//     network_architecture_client_server_t *client_server = (network_architecture_client_server_t *)self;
-//     connection_manager_update(client_server->connection_manager);
-//     printf("[ClientServer] Update tick\n");
-// }
-//
-// #pragma endregion
-//
-// #pragma region P2P
-//
-// // network_architecture_t create_peer_to_peer_architecture() Not using memory management
-// // {
-// //     static network_architecture_peer_to_peer_t p2p = {0};
-// //     network_architecture_t network_interface = {
-// //         .initialize = peer_to_peer_init,
-// //         .update = peer_to_peer_update,
-// //         .send_data = ecs_network_architecture_send,
-// //         .receive_data = ecs_network_architecture_receive,
-// //         .implemented_architecture = &p2p};
-// //     return network_interface;
-// // }
-//
-// network_architecture_t *create_peer_to_peer_architecture()
-// {
-//     network_architecture_peer_to_peer_t *p2p = malloc(sizeof(network_architecture_peer_to_peer_t));
-//     if (!p2p)
-//         return NULL;
-//
-//     memset(p2p, 0, sizeof(*p2p));
-//
-//     p2p->connection_manager = malloc(sizeof(connection_manager_t));
-//     if (!p2p->connection_manager)
-//     {
-//         free(p2p);
-//         return NULL;
-//     }
-//
-//     connection_manager_init(p2p->connection_manager);
-//
-//     p2p->server_socket = net_socket_create(SOCKET_TYPE_UDP);
-//     net_socket_connect(&p2p->server_socket, "12345", 11);
-//
-//     network_architecture_t *interface = malloc(sizeof(network_architecture_t));
-//     if (!interface)
-//     {
-//         free(p2p->connection_manager);
-//         free(p2p);
-//         return NULL;
-//     }
-//
-//     interface->initialize = peer_to_peer_init;
-//     interface->update = peer_to_peer_update;
-//     interface->send_data = ecs_network_architecture_send;
-//     interface->receive_data = ecs_network_architecture_receive;
-//     interface->destroy = destroy_peer_to_peer_architecture;
-//     interface->implemented_architecture = p2p;
-//
-//     return interface;
-// }
-//
-// void destroy_peer_to_peer_architecture(void *self)
-// {
-//     network_architecture_peer_to_peer_t *p2p = (network_architecture_peer_to_peer_t *)self;
-//     if (!p2p)
-//         return;
-//
-//     net_socket_close(&p2p->server_socket);
-//
-//     if (p2p->connection_manager)
-//     {
-//         free(p2p->connection_manager);
-//     }
-//
-//     free(p2p);
-// }
-//
-// void peer_to_peer_init(void *self)
-// {
-//     network_architecture_peer_to_peer_t *p2p = (network_architecture_peer_to_peer_t *)self;
-//     static connection_manager_t connection_manager;
-//
-//     connection_manager_init(&connection_manager);
-//     p2p->connection_manager = &connection_manager;
-//
-//     p2p->server_socket = net_socket_create(SOCKET_TYPE_UDP);
-//     // ip n port shall be provided ?
-//     net_socket_connect(&p2p->server_socket, "12345", 11);
-//     printf("[PeerToPeer] Initialized\n");
-// }
-//
-// void peer_to_peer_update(void *self)
-// {
-//     network_architecture_peer_to_peer_t *p2p = (network_architecture_peer_to_peer_t *)self;
-//     connection_manager_update(p2p->connection_manager);
-//     printf("[PeerToPeer] Update tick\n");
-// }
-//
-// #pragma endregion
+#include "network_architecture.h"
+
+#include <stdio.h>
+#include <stdlib.h> // Required for malloc and free
+
+#include "network_cs.h" // Client-Server implementation
+// #include "network_p2p.h"
+// #include "network_ls.h"
+
+/**
+ * @brief Represents the opaque network architecture structure.
+ *
+ * This struct serves as a wrapper that holds a pointer to the specific
+ * implementation (e.g., Client-Server, P2P) and a reference to the ECS.
+ */
+struct network_architecture_t {
+    network_architecture_type_t type;
+    network_architecture_config_t config;
+    // A pointer to the specific network implementation (e.g., network_cs_t).
+    void *impl;
+    // A pointer to the ECS instance.
+    ecs_t *ecs;
+};
+
+void network_architecture_init(network_architecture_t **architecture, const network_architecture_config_t *config,
+                               ecs_t *ecs) {
+    if (!architecture || !config || !ecs) {
+        return;
+    }
+
+    // Allocate memory for the main network architecture struct.
+    *architecture = (network_architecture_t *) malloc(sizeof(network_architecture_t));
+    if (!*architecture) return;
+
+    // Store the configuration and ECS pointer.
+    (*architecture)->config = *config;
+    (*architecture)->type = config->type;
+    (*architecture)->ecs = ecs;
+    (*architecture)->impl = NULL;
+
+    // Initialize the specific network implementation based on the configured type.
+    switch (config->type) {
+        case ARCH_CLIENT_SERVER:
+            // Call the initialization function for the Client-Server module.
+            network_cs_t *cs_impl = network_cs_init(config, ecs);
+            if (cs_impl) {
+                // Configure callbacks if provided
+                if (config->on_peer_connected) {
+                    cs_impl->connection_manager.on_connect = config->on_peer_connected;
+                }
+                if (config->on_peer_disconnected) {
+                    cs_impl->connection_manager.on_disconnect = config->on_peer_disconnected;
+                }
+                if (config->on_packet_received) {
+                    cs_impl->connection_manager.on_receive = config->on_packet_received;
+                }
+                if (config->user_data) {
+                    cs_impl->connection_manager.user_data = config->user_data;
+                }
+            }
+            (*architecture)->impl = cs_impl;
+            break;
+        // case ARCH_P2P:
+        //     // Call the initialization function for the P2P module.
+        //     (*architecture)->impl = network_p2p_init(config, ecs);
+        //     break;
+        // case ARCH_LISTEN_SERVER:
+        //     (*architecture)->impl = network_ls_init(config, ecs);
+        //     break;
+        default:
+            // Handle unrecognized or unsupported architecture types.
+            fprintf(stderr, "Error: Architecture type not recognised.\n");
+            break;
+    }
+}
+
+void network_architecture_update(network_architecture_t *architecture) {
+    if (!architecture || !architecture->impl) {
+        return;
+    }
+    ecs_update(architecture->ecs, 1.0);
+    // Delegate the update call to the specific implementation.
+    // This is the core of the polymorphic design pattern.
+    switch (architecture->type) {
+        case ARCH_CLIENT_SERVER:
+            network_cs_update((network_cs_t *) architecture->impl);
+            break;
+            // case ARCH_P2P:
+            //     network_p2p_update((network_p2p_t*)architecture->impl);
+            //     break;
+            // case ARCH_LISTEN_SERVER:
+            //     network_ls_update((network_ls_t*)architecture->impl);
+            //     break;
+    }
+}
+
+void network_architecture_destroy(network_architecture_t *architecture) {
+    if (!architecture) {
+        return;
+    }
+    // Delegate the destruction call to the specific implementation
+    // before freeing the main architecture struct.
+    switch (architecture->type) {
+        case ARCH_CLIENT_SERVER:
+            network_cs_destroy((network_cs_t *) architecture->impl);
+            break;
+            // case ARCH_P2P:
+            //     network_p2p_destroy((network_p2p_t*)architecture->impl);
+            //     break;
+            // case ARCH_LISTEN_SERVER:
+            //     network_ls_destroy((network_ls_t*)architecture->impl);
+            //     break;
+    }
+    free(architecture);
+}
+
+bool network_architecture_connect_to_server(network_architecture_t* architecture, const char* ip_address, uint16_t port) {
+    connection_manager_t* cm = network_architecture_get_connection_manager(architecture);
+    if (cm) {
+        return connection_manager_connect_to_server(cm, ip_address, port) == 0;
+    }
+    return false;
+}
+
+bool network_architecture_send_to_peer(network_architecture_t *architecture, uint32_t peer_id, const void *data,
+                                       int len) {
+    if (!architecture || !architecture->impl || !data || len <= 0) {
+        return false;
+    }
+
+    switch (architecture->type) {
+        case ARCH_CLIENT_SERVER: {
+            network_cs_t *cs_impl = (network_cs_t *) architecture->impl;
+
+            // Find the peer by ID
+            peer_t *target_peer = NULL;
+            char peer_id_str[32];
+            snprintf(peer_id_str, sizeof(peer_id_str), "%u", peer_id);
+
+            for (int i = 0; i < cs_impl->connection_manager.peer_count; i++) {
+                if (strcmp(cs_impl->connection_manager.peers[i].id, peer_id_str) == 0) {
+                    target_peer = &cs_impl->connection_manager.peers[i];
+                    break;
+                }
+            }
+
+            if (!target_peer) {
+                return false; // Peer not found
+            }
+
+            return connection_manager_send_to_peer(&cs_impl->connection_manager, peer_id_str, data, len);
+            // Pack the raw data using protocol handler
+            // protocol_handler_pack_raw_data(&cs_impl->protocol_handler, data, len);
+
+            // Send the packet
+            // return protocol_handler_send_packet(&cs_impl->connection_manager, peer_id, &cs_impl->protocol_handler);
+        }
+        default:
+            return false;
+    }
+}
+
+bool network_architecture_send_entity_update(network_architecture_t *architecture, uint32_t peer_id, entity_t entity_id,
+                                             const void *component_data, int data_len) {
+    if (!architecture || !architecture->impl || !component_data || data_len <= 0) {
+        return false;
+    }
+
+    switch (architecture->type) {
+        case ARCH_CLIENT_SERVER: {
+            network_cs_t *cs_impl = (network_cs_t *) architecture->impl;
+
+            // Find the peer by ID
+            peer_t *target_peer = NULL;
+            char peer_id_str[32];
+            snprintf(peer_id_str, sizeof(peer_id_str), "%u", peer_id);
+            for (int i = 0; i < cs_impl->connection_manager.peer_count; i++) {
+                if (strcmp(cs_impl->connection_manager.peers[i].id, peer_id_str) == 0) {
+                    target_peer = &cs_impl->connection_manager.peers[i];
+                    break;
+                }
+            }
+
+            if (!target_peer) {
+                return false; // Peer not found
+            }
+
+            // Pack the entity update using protocol handler
+            protocol_handler_pack_entity_update(&cs_impl->protocol_handler, entity_id, component_data, data_len);
+
+            // Send the packet
+            protocol_handler_send_packet(&cs_impl->connection_manager, peer_id_str, &cs_impl->protocol_handler);
+            return true;
+        }
+        default:
+            return false;
+    }
+}
+
+bool network_architecture_broadcast(network_architecture_t *architecture, const void *data, int len) {
+    if (!architecture || !architecture->impl || !data || len <= 0) {
+        return false;
+    }
+
+    switch (architecture->type) {
+        case ARCH_CLIENT_SERVER: {
+            network_cs_t *cs_impl = (network_cs_t *) architecture->impl;
+            bool all_sent = true;
+
+            // Send to all connected peers
+            for (int i = 0; i < cs_impl->connection_manager.peer_count; i++) {
+                const char *peer_id = cs_impl->connection_manager.peers[i].id;
+                if (!connection_manager_send_to_peer(&cs_impl->connection_manager, peer_id, data, len)) {
+                    all_sent = false;
+                }
+            }
+
+            return all_sent;
+        }
+        default:
+            return false;
+    }
+}
+
+int network_architecture_get_peer_count(network_architecture_t* architecture) {
+    connection_manager_t* cm = network_architecture_get_connection_manager(architecture);
+    if (cm) {
+        return cm->peer_count;
+    }
+    return 0;
+}
+
+peer_t *network_architecture_get_peer(network_architecture_t *architecture, uint32_t peer_id) {
+    if (!architecture || !architecture->impl) {
+        return NULL;
+    }
+
+    switch (architecture->type) {
+        case ARCH_CLIENT_SERVER: {
+            network_cs_t *cs_impl = (network_cs_t *) architecture->impl;
+            char peer_id_str[32];
+            snprintf(peer_id_str, sizeof(peer_id_str), "%u", peer_id);
+
+            // Find the peer by ID
+            for (int i = 0; i < cs_impl->connection_manager.peer_count; i++) {
+                if (strcmp(cs_impl->connection_manager.peers[i].id, peer_id_str) == 0) {
+                    return &cs_impl->connection_manager.peers[i];
+                }
+            }
+            return NULL; // Peer not found
+        }
+        default:
+            return NULL;
+    }
+}
+
+connection_manager_t* network_architecture_get_connection_manager(network_architecture_t* architecture) {
+    if (!architecture || !architecture->impl) {
+        return NULL;
+    }
+
+    switch (architecture->type) {
+        case ARCH_CLIENT_SERVER:
+            return &((network_cs_t*)architecture->impl)->connection_manager;
+        default:
+            return NULL;
+    }
+}
+
+void network_architecture_set_callbacks(network_architecture_t* architecture,
+                                       void (*on_connect)(void*, peer_t*),
+                                       void (*on_disconnect)(void*, peer_t*),
+                                       void (*on_receive)(void*, peer_t*, const void*, int)) {
+    connection_manager_t* cm = network_architecture_get_connection_manager(architecture);
+    if (cm) {
+        cm->on_connect = on_connect;
+        cm->on_disconnect = on_disconnect;
+        cm->on_receive = on_receive;
+    }
+}

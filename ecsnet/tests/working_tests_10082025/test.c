@@ -7,16 +7,16 @@
 
 int main()
 {
-     // printf("------------------------------\n");
-     // printf("--- Running ECS Unit Tests ---\n");
-     // printf("------------------------------\n");
-     // bool result = test_ecs();
-     // assert(result == true);
-     // printf("------------------------------\n");
-     // printf("--- Running NET Unit Tests ---\n");
-     // printf("------------------------------\n");
-     // result = test_networking();
-     // assert(result == true);
+    // printf("------------------------------\n");
+    // printf("--- Running ECS Unit Tests ---\n");
+    // printf("------------------------------\n");
+    // bool result = test_ecs();
+    // assert(result == true);
+    // printf("------------------------------\n");
+    // printf("--- Running NET Unit Tests ---\n");
+    // printf("------------------------------\n");
+    // result = test_networking();
+    // assert(result == true);
     printf("-------------------------------\n");
     printf("- Running NET ARCH Unit Tests -\n");
     printf("-------------------------------\n");

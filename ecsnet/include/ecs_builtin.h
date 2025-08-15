@@ -1,50 +1,115 @@
-#pragma once
-#include <stdint.h>
+#ifndef ECS_BUILTIN_H
+#define ECS_BUILTIN_H
 
-//Definition  for positions component data
-typedef struct
-{
-    float x, y;
+#include <stdint.h>
+#include "ecs_types.h"
+
+/**
+ * @brief Component data structure for entity position.
+ */
+typedef struct {
+    float x; /**< X-axis position. */
+    float y; /**< Y-axis position. */
 } position_t;
 
-//Definition  for rotations component data
-typedef struct
-{
-    float x, y, z, w;
+/**
+ * @brief Component data structure for entity rotation (quaternion format).
+ */
+typedef struct {
+    float x; /**< X-axis rotation component. */
+    float y; /**< Y-axis rotation component. */
+    float z; /**< Z-axis rotation component. */
+    float w; /**< W-axis rotation component (scalar part). */
 } rotation_t;
 
-//Definition  for transforms component data
-typedef struct
-{
-    position_t position;
-    rotation_t rotation;
+/**
+ * @brief Component data structure for entity transformation.
+ *
+ * Combines position and rotation into a single component.
+ */
+typedef struct {
+    position_t position; /**< Position component. */
+    rotation_t rotation; /**< Rotation component. */
 } transform_t;
 
-//Definition  for velocitys component data
-typedef struct
-{
-    float x, y;
+/**
+ * @brief Component data structure for entity velocity.
+ */
+typedef struct {
+    float x; /**< X-axis velocity. */
+    float y; /**< Y-axis velocity. */
 } velocity_t;
 
-//Definition for movement system
-static void system_movement(float dt);
+/**
+ * @brief ECS system responsible for applying velocity to position over time.
+ *
+ * @param ecs Pointer to the ECS world.
+ * @param dt  Delta time in seconds since the last update.
+ */
+void system_movement(ecs_t *ecs, float dt);
 
-//Implementation of  component_descriptor_t serialize_func_t for position's serialization 
+/**
+ * @brief Serialize a position component to a byte buffer.
+ *
+ * @param data Pointer to the position_t structure.
+ * @param out  Pointer to the output byte buffer.
+ */
 static void serialize_position(const void *data, uint8_t *out);
-//Implementation of  component_descriptor_t deserialize_func_t for position's deserialization
+
+/**
+ * @brief Deserialize a position component from a byte buffer.
+ *
+ * @param in   Pointer to the input byte buffer.
+ * @param data Pointer to the position_t structure to populate.
+ */
 static void deserialize_position(const uint8_t *in, void *data);
 
-//Implementation of  component_descriptor_t serialize_func_t for rotation's serialization 
+/**
+ * @brief Serialize a rotation component to a byte buffer.
+ *
+ * @param data Pointer to the rotation_t structure.
+ * @param out  Pointer to the output byte buffer.
+ */
 static void serialize_rotation(const void *data, uint8_t *out);
-//Implementation of  component_descriptor_t deserialize_func_t for rotation's deserialization
+
+/**
+ * @brief Deserialize a rotation component from a byte buffer.
+ *
+ * @param in   Pointer to the input byte buffer.
+ * @param data Pointer to the rotation_t structure to populate.
+ */
 static void deserialize_rotation(const uint8_t *in, void *data);
 
-//Implementation of  component_descriptor_t serialize_func_t for transform's serialization 
+/**
+ * @brief Serialize a transform component to a byte buffer.
+ *
+ * @param data Pointer to the transform_t structure.
+ * @param out  Pointer to the output byte buffer.
+ */
 static void serialize_transform(const void *data, uint8_t *out);
-//Implementation of  component_descriptor_t deserialize_func_t for transform's deserialization
+
+/**
+ * @brief Deserialize a transform component from a byte buffer.
+ *
+ * @param in   Pointer to the input byte buffer.
+ * @param data Pointer to the transform_t structure to populate.
+ */
 static void deserialize_transform(const uint8_t *in, void *data);
 
-//Implementation of  component_descriptor_t serialize_func_t for velocity's serialization 
+/**
+ * @brief Serialize a velocity component to a byte buffer.
+ *
+ * @param data Pointer to the velocity_t structure.
+ * @param out  Pointer to the output byte buffer.
+ */
 static void serialize_velocity(const void *data, uint8_t *out);
-//Implementation of  component_descriptor_t deserialize_func_t for velocity's deserialization
+
+/**
+ * @brief Deserialize a velocity component from a byte buffer.
+ *
+ * @param in   Pointer to the input byte buffer.
+ * @param data Pointer to the velocity_t structure to populate.
+ */
 static void deserialize_velocity(const uint8_t *in, void *data);
+
+#endif

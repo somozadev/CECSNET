@@ -16,7 +16,10 @@ set(SOURCES
 
 # Ejecutable principal
 add_executable(ecsnet ${SOURCES}
-        include/ecs_internal.h)
+        include/ecs_internal.h
+        src/network_cs.c
+        include/network_cs.h
+)
 target_include_directories(ecsnet PRIVATE include)
 
 # Librerías para Windows
@@ -31,6 +34,8 @@ add_executable(test_ecs
         ${SOURCES}
         tests/test_net.h
         tests/test_net.c
+        tests/test_networking_architecture.c
+        tests/test_networking_architecture.h
 )
 target_include_directories(test_ecs PRIVATE include)
 set_property(TARGET test_ecs PROPERTY C_STANDARD 11)

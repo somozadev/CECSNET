@@ -1,20 +1,61 @@
 #pragma once
 
-//ecs configuration
+/**
+ * @file ecs_config.h
+ * @brief Configuration constants for the ECS framework and related subsystems.
+ *
+ * This header defines compile-time limits and settings for:
+ * - ECS entity, component, and system counts.
+ * - Networking parameters such as buffer sizes and socket types.
+ * - Platform-specific configuration macros.
+ */
+
+/* ========================= ECS CONFIGURATION ========================= */
+
+/**
+ * @brief Maximum number of entities allowed in the ECS world.
+ */
 #define MAX_ENTITIES 1024
+
+/**
+ * @brief Maximum number of different component types that can be registered.
+ */
 #define MAX_COMPONENTS 32
+
+/**
+ * @brief Maximum number of systems that can be registered and run.
+ */
 #define MAX_SYSTEMS 64
 
-//networking configuration
+/* ========================= NETWORKING CONFIGURATION ========================= */
+
+/**
+ * @brief Size (in bytes) of the buffer used for network communication.
+ */
 #define NETWORK_BUFFER_SIZE 4096
-#define DEFAULT_SOCKET_TYPE 1 //1=TCP 2=UDP
+
+/**
+ * @brief Default socket type for network connections.
+ * @details 1 = TCP, 2 = UDP
+ */
+#define DEFAULT_SOCKET_TYPE 1
+
+/**
+ * @brief Timeout for network operations in milliseconds.
+ */
 #define NETWORK_TIMEOUT_MS 3000
 
-//Compiling target platform configuration
+/* ========================= PLATFORM CONFIGURATION ========================= */
+
+/**
+ * @brief Name of the target platform as a string.
+ *
+ * This is determined at compile time.
+ * - "Windows" for _WIN32
+ * - "Unix" for all other platforms
+ */
 #ifdef _WIN32
 #define PLATFORM_NAME "Windows"
 #else
 #define PLATFORM_NAME "Unix"
 #endif
-
-
