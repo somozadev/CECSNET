@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <math.h>  // For fabs
+#include <math.h>  // Para fabs
 #include "test_networking_architecture.h"
 
 #ifdef _WIN32
@@ -16,7 +16,7 @@
 #include <unistd.h>
 #endif
 
-// Include library headers
+// Incluye las cabeceras de tus librerías
 #include "ecs.h"
 #include "net_socket.h"
 #include "connection_manager.h"
@@ -27,46 +27,46 @@
 #include "ecs_internal.h"
 #include "ecs_builtin.h"
 
-// --- Test Variables and Callbacks ---
+// --- Variables y Callbacks de Test ---
 
 static bool g_client_received_data_flag = false;
 
-// Test callback for data reception on the client.
+// Callback de prueba para la recepción de datos en el cliente.
 void on_client_receive_callback(void* user_data, peer_t* peer, const void* data, int len) {
-    printf("[Client] Received packet from server. Size: %d\n", len);
+    printf("[Cliente] Recibido paquete del servidor. Tamano: %d\n", len);
 
     const network_packet_t* packet = (const network_packet_t*)data;
 
     if (packet->header.type == PACKET_TYPE_ENTITY_UPDATE) {
-        printf("[Client] Received entity update\n");
+        printf("[Cliente] Recibida actualización de entidad\n");
 
         const uint8_t* current_data = packet->data;
 
-        // Extract entity_id from packet
+        // Extraer entity_id del paquete
         entity_t entity_id;
         memcpy(&entity_id, current_data, sizeof(entity_t));
         current_data += sizeof(entity_t);
 
-        // The next field appears to be the first component ID, not a bitmask
+        // El siguiente campo parece ser el primer component ID, no un bitmask
         uint32_t first_component_id;
         memcpy(&first_component_id, current_data, sizeof(uint32_t));
         current_data += sizeof(uint32_t);
 
-        // Calculate remaining data
+        // Calcular datos restantes
         int remaining_data = len - sizeof(packet_header_t) - sizeof(entity_t) - sizeof(uint32_t);
 
-        printf("[Debug] Entity ID: %d, First Component ID: %d, Remaining data: %d bytes\n",
+        printf("[Debug] Entity ID: %d, First Component ID: %d, Datos restantes: %d bytes\n",
                entity_id, first_component_id, remaining_data);
 
-        // Show raw data for debugging
-        printf("[Debug] Raw component data (%d bytes):\n", remaining_data);
+        // Mostrar los datos raw para debugging
+        printf("[Debug] Datos raw de componentes (%d bytes):\n", remaining_data);
         for (int i = 0; i < remaining_data && i < 32; i++) {
             printf("%02X ", current_data[i]);
             if ((i + 1) % 8 == 0) printf("\n");
         }
         printf("\n");
 
-        // Process the first component
+        // Procesar el primer componente
         if (first_component_id == COMPONENT_POSITION) {
             if (remaining_data >= sizeof(position_t)) {
                 position_t pos;
@@ -74,22 +74,22 @@ void on_client_receive_callback(void* user_data, peer_t* peer, const void* data,
                 current_data += sizeof(position_t);
                 remaining_data -= sizeof(position_t);
 
-                printf("[Client] Position received: x=%.2f, y=%.2f\n", pos.x, pos.y);
+                printf("[Cliente] Position recibida: x=%.2f, y=%.2f\n", pos.x, pos.y);
 
-                // Check if it's the expected position
+                // Verificar si es la posición esperada
                 if (fabs(pos.x - 220.0f) < 0.1f && fabs(pos.y - 20.0f) < 0.1f) {
-                    printf("[Client] ✅ Correct position received\n");
+                    printf("[Cliente] ✅ Position correcta recibida\n");
                     g_client_received_data_flag = true;
                 } else {
-                    printf("[Client] ⚠️ Position received but unexpected values\n");
+                    printf("[Cliente] ⚠️ Position recibida pero valores inesperados\n");
                 }
             } else {
-                printf("[Error] Not enough data for Position\n");
+                printf("[Error] No hay suficientes datos para Position\n");
                 return;
             }
         }
 
-        // Check if there's a second component
+        // Verificar si hay un segundo componente
         if (remaining_data >= sizeof(uint32_t)) {
             uint32_t second_component_id;
             memcpy(&second_component_id, current_data, sizeof(uint32_t));
@@ -105,46 +105,46 @@ void on_client_receive_callback(void* user_data, peer_t* peer, const void* data,
                     current_data += sizeof(velocity_t);
                     remaining_data -= sizeof(velocity_t);
 
-                    printf("[Client] Velocity received: x=%.2f, y=%.2f\n", vel.x, vel.y);
+                    printf("[Cliente] Velocity recibida: x=%.2f, y=%.2f\n", vel.x, vel.y);
 
-                    // Check if it's the expected velocity
+                    // Verificar si es la velocidad esperada
                     if (fabs(vel.x - 5.0f) < 0.1f && fabs(vel.y - 3.0f) < 0.1f) {
-                        printf("[Client] ✅ Correct velocity received\n");
+                        printf("[Cliente] ✅ Velocity correcta recibida\n");
                     } else {
-                        printf("[Client] ⚠️ Velocity received but unexpected values\n");
+                        printf("[Cliente] ⚠️ Velocity recibida pero valores inesperados\n");
                     }
                 } else {
-                    printf("[Error] Not enough data for Velocity\n");
+                    printf("[Error] No hay suficientes datos para Velocity\n");
                 }
             }
         }
 
         if (remaining_data > 0) {
-            printf("[Debug] Additional unprocessed data: %d bytes\n", remaining_data);
+            printf("[Debug] Datos adicionales no procesados: %d bytes\n", remaining_data);
         }
     } else {
-        printf("[Client] Unknown packet type: %d\n", packet->header.type);
+        printf("[Cliente] Tipo de paquete desconocido: %d\n", packet->header.type);
     }
 }
 
 void on_server_connect_callback(void* user_data, peer_t* peer) {
-    connection_manager_t* cm = (connection_manager_t*)user_data; // Cast the pointer if needed
-    printf("[Server] Peer %s connected. ✅\n", peer->id);
+    connection_manager_t* cm = (connection_manager_t*)user_data; // Se castea el puntero si es necesario
+    printf("[Servidor] Peer %s conectado. ✅\n", peer->id);
 }
 
 void on_server_disconnect_callback(void* user_data, peer_t* peer) {
-    connection_manager_t* cm = (connection_manager_t*)user_data; // Cast the pointer if needed
-    printf("[Server] Peer %s disconnected. ❌\n", peer->id);
+    connection_manager_t* cm = (connection_manager_t*)user_data; // Se castea el puntero si es necesario
+    printf("[Servidor] Peer %s desconectado. ❌\n", peer->id);
 }
 
-// --- Network Architecture Test Function ---
+// --- Función de Test de la Arquitectura de Red ---
 
 bool test_networking_architecture() {
-    printf("--- Network Architecture Test (Client-Server) ---\n");
+    printf("--- Test de Arquitectura de Red (Cliente-Servidor) ---\n");
     bool success = true;
     g_client_received_data_flag = false;
 
-    // --- SETUP: Initialize Winsock and ECS ---
+    // --- SETUP: Inicializar Winsock y ECS ---
     printf("\n--- Setup ---\n");
 #ifdef _WIN32
     WSADATA wsaData;
@@ -159,7 +159,7 @@ bool test_networking_architecture() {
     ecs_register_builtin_components(&client_ecs);
     ecs_register_builtin_systems(&client_ecs);
 
-    // Debug: Show component values
+    // Debug: Mostrar los valores de los componentes
     printf("[Debug] COMPONENT_POSITION = %d\n", COMPONENT_POSITION);
     printf("[Debug] COMPONENT_VELOCITY = %d\n", COMPONENT_VELOCITY);
     printf("[Debug] sizeof(position_t) = %zu\n", sizeof(position_t));
@@ -167,16 +167,16 @@ bool test_networking_architecture() {
     printf("[Debug] sizeof(entity_t) = %zu\n", sizeof(entity_t));
     printf("[Debug] sizeof(packet_header_t) = %zu\n", sizeof(packet_header_t));
 
-    // Create an entity with Position and Velocity on the server
+    // Creamos una entidad con Position y Velocity en el servidor
     position_t test_pos = {220.0f, 20.0f};
     velocity_t test_vel = {5.0f, 3.0f};
     entity_t entity_to_sync = ecs_create_entity(&server_ecs);
     ecs_add_component(&server_ecs, entity_to_sync, COMPONENT_POSITION, &test_pos);
     ecs_add_component(&server_ecs, entity_to_sync, COMPONENT_VELOCITY, &test_vel);
-    printf("Entity %d created with PositionComponent and VelocityComponent on the server.\n", entity_to_sync);
+    printf("Entidad %d creada con PositionComponent y VelocityComponent en el servidor.\n", entity_to_sync);
 
-    // --- Test 1: Client-Server Connection ---
-    printf("\n--- Test 1: Connection and Peer Detection ---\n");
+    // --- Test 1: Conexión Cliente-Servidor ---
+    printf("\n--- Test 1: Conexión y Detección de Peer ---\n");
     network_architecture_config_t server_config = {
         .type = ARCH_CLIENT_SERVER,
         .ip_address = "127.0.0.1",
@@ -195,18 +195,18 @@ bool test_networking_architecture() {
     network_cs_t* server_arch = network_cs_init(&server_config, &server_ecs);
     network_cs_t* client_arch = network_cs_init(&client_config, &client_ecs);
 
-    assert(server_arch != NULL && client_arch != NULL && "Failed to initialize network architecture.");
+    assert(server_arch != NULL && client_arch != NULL && "Fallo al inicializar la arquitectura de red.");
 
-    // Assign callbacks
+    // Asignar callbacks
     server_arch->connection_manager.on_connect = on_server_connect_callback;
     server_arch->connection_manager.on_disconnect = on_server_disconnect_callback;
     client_arch->connection_manager.on_receive = on_client_receive_callback;
 
-    printf("Client attempting to connect to server...\n");
+    printf("Cliente intentando conectarse al servidor...\n");
     connection_manager_connect_to_server(&client_arch->connection_manager, server_config.ip_address, server_config.tcp_port);
 
-    // --- Connection loop ---
-    printf("Waiting for connection...\n");
+    // --- Bucle de conexión ---
+    printf("Esperando conexión...\n");
     int i = 0;
     while (server_arch->connection_manager.peer_count == 0 && i < 100) {
         network_cs_update(server_arch);
@@ -220,10 +220,10 @@ bool test_networking_architecture() {
     }
 
     assert(server_arch->connection_manager.peer_count > 0 && "Server has no connected peers");
-    printf("Client successfully connected to server. ✅\n");
+    printf("Cliente conectado exitosamente al servidor. ✅\n");
 
-    // --- Test 2: Data Reception ---
-    printf("\n--- Test 2: Data Reception ---\n");
+    // --- Test 2: Recepción de datos ---
+    printf("\n--- Test 2: Recepción de Datos ---\n");
     i = 0;
     while (i < 50 && !g_client_received_data_flag) {
         network_cs_update(server_arch);
@@ -236,41 +236,41 @@ bool test_networking_architecture() {
         i++;
     }
 
-    // Check if client received valid data
+    // Verificar si el cliente recibió datos válidos
     if (g_client_received_data_flag) {
-        printf("Client received valid data from server. ✅\n");
+        printf("El cliente recibió datos válidos del servidor. ✅\n");
     } else {
-        printf("Client did not receive valid data from server. ❌\n");
+        printf("El cliente no recibió datos válidos del servidor. ❌\n");
         success = false;
     }
 
-    // --- Test 3: Simulation with ECS Update ---
-    printf("\n--- Test 3: Simulation with ECS Update ---\n");
+    // --- Test 3: Simulación con ECS Update ---
+    printf("\n--- Test 3: Simulación con ECS Update ---\n");
 
-    // Show initial position
+    // Mostrar posición inicial
     position_t* server_pos = (position_t*)ecs_get_component(&server_ecs, entity_to_sync, COMPONENT_POSITION);
     velocity_t* server_vel = (velocity_t*)ecs_get_component(&server_ecs, entity_to_sync, COMPONENT_VELOCITY);
 
     if (server_pos && server_vel) {
-        printf("[Server] Initial position: x=%.2f, y=%.2f\n", server_pos->x, server_pos->y);
-        printf("[Server] Velocity: x=%.2f, y=%.2f\n", server_vel->x, server_vel->y);
+        printf("[Servidor] Posición inicial: x=%.2f, y=%.2f\n", server_pos->x, server_pos->y);
+        printf("[Servidor] Velocidad: x=%.2f, y=%.2f\n", server_vel->x, server_vel->y);
 
-        // Execute some simulation frames
+        // Ejecutar algunos frames de simulación
         float dt = 0.016f; // ~60 FPS
         for (int frame = 0; frame < 5; frame++) {
             printf("\n[Frame %d]\n", frame + 1);
 
-            // Update server ECS (this will execute the movement system)
+            // Actualizar ECS del servidor (esto ejecutará el sistema de movimiento)
             ecs_update(&server_ecs, dt);
 
-            // Show new position
-            printf("[Server] New position: x=%.2f, y=%.2f\n", server_pos->x, server_pos->y);
+            // Mostrar nueva posición
+            printf("[Servidor] Nueva posición: x=%.2f, y=%.2f\n", server_pos->x, server_pos->y);
 
-            // Update network (this should synchronize changes)
+            // Actualizar red (esto debería sincronizar los cambios)
             network_cs_update(server_arch);
             network_cs_update(client_arch);
 
-            // Small pause
+            // Pequeña pausa
 #ifdef _WIN32
             Sleep(50);
 #else
@@ -278,16 +278,16 @@ bool test_networking_architecture() {
 #endif
         }
 
-        // Check that the position changed
+        // Verificar que la posición cambió
         if (fabs(server_pos->x - 220.0f) > 0.1f || fabs(server_pos->y - 20.0f) > 0.1f) {
-            printf("[Server] ✅ The entity moved correctly with the movement system\n");
-            printf("[Server] Final position: x=%.2f, y=%.2f\n", server_pos->x, server_pos->y);
+            printf("[Servidor] ✅ La entidad se movió correctamente con el sistema de movimiento\n");
+            printf("[Servidor] Posición final: x=%.2f, y=%.2f\n", server_pos->x, server_pos->y);
         } else {
-            printf("[Server] ⚠️ The entity did not move (possible issue with the movement system)\n");
+            printf("[Servidor] ⚠️ La entidad no se movió (posible problema con el sistema de movimiento)\n");
         }
     }
 
-    // Cleanup
+    // Limpieza
     network_cs_destroy(server_arch);
     network_cs_destroy(client_arch);
 
@@ -295,6 +295,6 @@ bool test_networking_architecture() {
     WSACleanup();
 #endif
 
-    printf("\nNetwork architecture test completed.\n");
+    printf("\nTest de arquitectura de red completado.\n");
     return success;
 }
