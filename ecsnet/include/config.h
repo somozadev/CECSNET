@@ -23,15 +23,17 @@
 //   #define ECSNET_API __attribute__((visibility("default")))
 // #endif
 //
-#if defined(_WIN32)
-  #if defined(ECSNET_EXPORTS)
-    #define ECSNET_API __declspec(dllexport)
-  #else
-    #define ECSNET_API __declspec(dllimport)
-  #endif
-#else
-  #define ECSNET_API
-#endif
+#define ECSNET_API
+//
+// #if defined(_WIN32)
+//   #if defined(ECSNET_EXPORTS)
+//     #define ECSNET_API __declspec(dllexport)
+//   #else
+//     #define ECSNET_API __declspec(dllimport)
+//   #endif
+// #else
+//   #define ECSNET_API
+// #endif
 /* ========================= ECS CONFIGURATION ========================= */
 
 /**

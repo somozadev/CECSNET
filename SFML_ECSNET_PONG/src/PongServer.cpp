@@ -17,8 +17,6 @@
 #endif
 
 // Component IDs asumidos por ECSNET
-#define COMPONENT_POSITION 0
-#define COMPONENT_VELOCITY 1
 
 
 void on_server_connect_callback(void* user_data, peer_t* peer) {
@@ -51,13 +49,13 @@ void on_server_disconnect_callback(void* user_data, peer_t* peer) {
     ecs_register_builtin_systems(&server_ecs);
 
     // Crear entidades: pelota y paddles
-    entity_t ball = ecs_create_entity(&server_ecs);
     position_t ball_pos = {400.f, 300.f};
-    velocity_t ball_vel = {0.0f, 0.1f};
+    velocity_t ball_vel = {0.0f, 10.f};
+    entity_t ball = ecs_create_entity(&server_ecs);
     ecs_add_component(&server_ecs, ball, COMPONENT_POSITION, &ball_pos);
     ecs_add_component(&server_ecs, ball, COMPONENT_VELOCITY, &ball_vel);
-    //
-    // entity_t paddle1 = ecs_create_entity(&server_ecs);
+
+     // entity_t paddle1 = ecs_create_entity(&server_ecs);
     // position_t paddle1_pos = {50.f, 250.f};
     // ecs_add_component(&server_ecs, paddle1, COMPONENT_POSITION, &paddle1_pos);
     //
@@ -68,10 +66,10 @@ void on_server_disconnect_callback(void* user_data, peer_t* peer) {
     // Inicializar arquitectura cliente-servidor
     network_architecture_config_t server_config = {
         .type = ARCH_CLIENT_SERVER,
-        .ip_address = "127.0.0.1",
+        .ip_address = "0.0.0.0",
         .is_server = true,
-        .tcp_port = 12345,
-        .udp_port = 12345
+        .tcp_port = 1666,
+        .udp_port = 1666
     };
     network_cs_t* server_arch = network_cs_init(&server_config, &server_ecs);
     server_arch->ecs = &server_ecs;
@@ -86,6 +84,11 @@ void on_server_disconnect_callback(void* user_data, peer_t* peer) {
         network_cs_update(server_arch);
         ecs_update(&server_ecs, dt);
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        // auto newPos = (position_t*)ecs_get_component(&server_ecs, ball, COMPONENT_POSITION);
+        // auto newVel = (position_t*)ecs_get_component(&server_ecs, ball, COMPONENT_VELOCITY);
+        // printf("[SERVER] Position: x=%.2f, y=%.2f\n", newPos->x, newPos->y);
+        // printf("[SERVER] Velocity: x=%.2f, y=%.2f\n", newVel->x, newVel->y);
+
     }
 
     network_cs_destroy(server_arch);
