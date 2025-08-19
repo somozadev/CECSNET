@@ -1,13 +1,15 @@
 #ifndef ECS_BUILTIN_H
 #define ECS_BUILTIN_H
 
+#include <stdbool.h>
 #include <stdint.h>
 #include "ecs_types.h"
+
 
 /**
  * @brief Component data structure for entity position.
  */
-typedef struct {
+ECSNET_API typedef struct {
     float x; /**< X-axis position. */
     float y; /**< Y-axis position. */
 } position_t;
@@ -15,7 +17,7 @@ typedef struct {
 /**
  * @brief Component data structure for entity rotation (quaternion format).
  */
-typedef struct {
+ECSNET_API typedef struct {
     float x; /**< X-axis rotation component. */
     float y; /**< Y-axis rotation component. */
     float z; /**< Z-axis rotation component. */
@@ -27,7 +29,7 @@ typedef struct {
  *
  * Combines position and rotation into a single component.
  */
-typedef struct {
+ECSNET_API typedef struct {
     position_t position; /**< Position component. */
     rotation_t rotation; /**< Rotation component. */
 } transform_t;
@@ -35,18 +37,32 @@ typedef struct {
 /**
  * @brief Component data structure for entity velocity.
  */
-typedef struct {
+ECSNET_API typedef struct {
     float x; /**< X-axis velocity. */
     float y; /**< Y-axis velocity. */
+    bool is_moving; /**< Indicates whether the entity is currently moving. */
 } velocity_t;
 
+// /**
+//  * @brief Registers all built-in ECS components into the given ECS world.
+//  *
+//  * @param ecs Pointer to the ECS world.
+//  */
+// ECSNET_API void ecs_register_builtin_components(ecs_t* ecs);
+//
+// /**
+//  * @brief Registers all built-in ECS systems into the given ECS world.
+//  *
+//  * @param ecs Pointer to the ECS world.
+//  */
+// ECSNET_API void ecs_register_builtin_systems(ecs_t* ecs);
 /**
  * @brief ECS system responsible for applying velocity to position over time.
  *
  * @param ecs Pointer to the ECS world.
  * @param dt  Delta time in seconds since the last update.
  */
-void system_movement(ecs_t *ecs, float dt);
+ECSNET_API void system_movement(ecs_t *ecs, float dt);
 
 /**
  * @brief Serialize a position component to a byte buffer.
@@ -54,7 +70,7 @@ void system_movement(ecs_t *ecs, float dt);
  * @param data Pointer to the position_t structure.
  * @param out  Pointer to the output byte buffer.
  */
-static void serialize_position(const void *data, uint8_t *out);
+ECSNET_API  void serialize_position(const void *data, uint8_t *out);
 
 /**
  * @brief Deserialize a position component from a byte buffer.
@@ -62,7 +78,7 @@ static void serialize_position(const void *data, uint8_t *out);
  * @param in   Pointer to the input byte buffer.
  * @param data Pointer to the position_t structure to populate.
  */
-static void deserialize_position(const uint8_t *in, void *data);
+ECSNET_API  void deserialize_position(const uint8_t *in, void *data);
 
 /**
  * @brief Serialize a rotation component to a byte buffer.
@@ -70,7 +86,7 @@ static void deserialize_position(const uint8_t *in, void *data);
  * @param data Pointer to the rotation_t structure.
  * @param out  Pointer to the output byte buffer.
  */
-static void serialize_rotation(const void *data, uint8_t *out);
+ECSNET_API  void serialize_rotation(const void *data, uint8_t *out);
 
 /**
  * @brief Deserialize a rotation component from a byte buffer.
@@ -78,7 +94,7 @@ static void serialize_rotation(const void *data, uint8_t *out);
  * @param in   Pointer to the input byte buffer.
  * @param data Pointer to the rotation_t structure to populate.
  */
-static void deserialize_rotation(const uint8_t *in, void *data);
+ECSNET_API  void deserialize_rotation(const uint8_t *in, void *data);
 
 /**
  * @brief Serialize a transform component to a byte buffer.
@@ -86,7 +102,7 @@ static void deserialize_rotation(const uint8_t *in, void *data);
  * @param data Pointer to the transform_t structure.
  * @param out  Pointer to the output byte buffer.
  */
-static void serialize_transform(const void *data, uint8_t *out);
+ECSNET_API  void serialize_transform(const void *data, uint8_t *out);
 
 /**
  * @brief Deserialize a transform component from a byte buffer.
@@ -94,7 +110,7 @@ static void serialize_transform(const void *data, uint8_t *out);
  * @param in   Pointer to the input byte buffer.
  * @param data Pointer to the transform_t structure to populate.
  */
-static void deserialize_transform(const uint8_t *in, void *data);
+ECSNET_API  void deserialize_transform(const uint8_t *in, void *data);
 
 /**
  * @brief Serialize a velocity component to a byte buffer.
@@ -102,7 +118,7 @@ static void deserialize_transform(const uint8_t *in, void *data);
  * @param data Pointer to the velocity_t structure.
  * @param out  Pointer to the output byte buffer.
  */
-static void serialize_velocity(const void *data, uint8_t *out);
+ECSNET_API  void serialize_velocity(const void *data, uint8_t *out);
 
 /**
  * @brief Deserialize a velocity component from a byte buffer.
@@ -110,6 +126,6 @@ static void serialize_velocity(const void *data, uint8_t *out);
  * @param in   Pointer to the input byte buffer.
  * @param data Pointer to the velocity_t structure to populate.
  */
-static void deserialize_velocity(const uint8_t *in, void *data);
+ECSNET_API  void deserialize_velocity(const uint8_t *in, void *data);
 
 #endif

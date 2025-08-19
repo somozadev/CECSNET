@@ -256,7 +256,7 @@ bool test_networking_architecture() {
         printf("[Server] Velocity: x=%.2f, y=%.2f\n", server_vel->x, server_vel->y);
 
         // Execute some simulation frames
-        float dt = 0.016f; // ~60 FPS
+            float dt = 0.016f; // ~60 FPS
         for (int frame = 0; frame < 5; frame++) {
             printf("\n[Frame %d]\n", frame + 1);
 

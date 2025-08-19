@@ -33,7 +33,7 @@ typedef enum {
  * Note on padding: The size is 2 bytes and the enum type is 4 bytes,
  * which results in 2 bytes of padding to align the struct to an 8-byte boundary.
  */
-typedef struct {
+ECSNET_API typedef struct {
     uint16_t size;          /**< The total size of the packet in bytes. */
     packet_type_t type;     /**< The type of the packet. */
 } packet_header_t;
@@ -44,7 +44,7 @@ typedef struct {
  * This struct combines the header and the data payload, providing a complete
  * packet representation for sending and receiving.
  */
-typedef struct {
+ECSNET_API typedef struct {
     packet_header_t header; /**< The packet header. */
     uint8_t data[MAX_PACKET_SIZE - sizeof(packet_header_t)]; /**< The packet payload. */
 } network_packet_t;
@@ -55,7 +55,7 @@ typedef struct {
  * Manages the state for incoming and outgoing network packets, providing
  * functionality for packing, unpacking, and processing network data.
  */
-typedef struct protocol_handler_t {
+ECSNET_API typedef struct protocol_handler_t {
     network_packet_t out_packet; /**< The buffer for the outgoing packet. */
     network_packet_t in_packet;  /**< The buffer for the incoming packet. */
 } protocol_handler_t;

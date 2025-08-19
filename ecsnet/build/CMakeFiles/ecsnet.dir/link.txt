@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\ecsnet.dir/objects.a
+C:\msys64\mingw64\bin\ar.exe qc CMakeFiles\ecsnet.dir/objects.a @CMakeFiles\ecsnet.dir\objects1.rsp
+C:\msys64\mingw64\bin\cc.exe -shared -o libecsnet.dll -Wl,--out-implib,libecsnet.dll.a -Wl,--major-image-version,0,--minor-image-version,0 -Wl,--whole-archive CMakeFiles\ecsnet.dir/objects.a -Wl,--no-whole-archive @CMakeFiles\ecsnet.dir\linkLibs.rsp

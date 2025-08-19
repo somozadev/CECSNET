@@ -2,13 +2,14 @@
 #define ECS_TYPES_H
 
 #include <stdint.h>
+#include "config.h"
 
 /**
  * @brief Forward declaration of the ECS world structure.
  *
  * The full definition is provided in ecs.h.
  */
-typedef struct ecs_t ecs_t;
+ECSNET_API typedef struct ecs_t ecs_t;
 
 /**
  * @brief Unique identifier for an entity.
@@ -60,7 +61,8 @@ typedef void (*deserialize_func_t)(const uint8_t *buffer_in, void *data_out);
  * Contains metadata and function pointers required for managing
  * a specific component type within the ECS.
  */
-typedef struct {
+ECSNET_API typedef struct component_descriptor_t component_descriptor_t;
+typedef struct component_descriptor_t {
     size_t size;                       /**< Size of the component in bytes. */
     const char *name;                   /**< Human-readable component name. */
     serialize_func_t serialize;         /**< Pointer to the serialization function. */
@@ -72,6 +74,6 @@ typedef struct {
  *
  * The full definition is provided in ecs_internal.h.
  */
-typedef struct component_storage_t component_storage_t;
+ECSNET_API typedef struct component_storage_t component_storage_t;
 
 #endif

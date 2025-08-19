@@ -12,7 +12,7 @@
  * including the connection manager, protocol handler, and a pointer
  * to the ECS instance.
  */
-typedef struct network_cs_t {
+ECSNET_API typedef struct network_cs_t {
     ecs_t* ecs;                                 /**< A pointer to the ECS instance. */
     network_architecture_config_t config;      /**< Configuration for this network instance. */
     connection_manager_t connection_manager;    /**< The connection manager instance. */
@@ -28,21 +28,21 @@ typedef struct network_cs_t {
  * @param data A pointer to the received data buffer.
  * @param len The length of the received data.
  */
-void on_packet_received_cs(void* user_data, peer_t* peer, const void* data, int len);
+ECSNET_API void on_packet_received_cs(void* user_data, peer_t* peer, const void* data, int len);
 
 /**
  * @brief Callback function triggered when a new peer connects.
  * @param user_data A generic pointer to the network_cs_t instance.
  * @param peer A pointer to the newly connected peer.
  */
-void on_peer_connected_cs(void* user_data, peer_t* peer);
+ECSNET_API void on_peer_connected_cs(void* user_data, peer_t* peer);
 
 /**
  * @brief Callback function triggered when a peer disconnects.
  * @param user_data A generic pointer to the network_cs_t instance.
  * @param peer A pointer to the disconnected peer.
  */
-void on_peer_disconnected_cs(void* user_data, peer_t* peer);
+ECSNET_API void on_peer_disconnected_cs(void* user_data, peer_t* peer);
 
 /**
  * @brief Initializes the client-server network architecture.

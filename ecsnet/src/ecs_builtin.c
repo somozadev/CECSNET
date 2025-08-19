@@ -8,6 +8,7 @@
  * This performs a binary copy of a float into a memory location at the specified offset.
  */
 #define WRITE_FLOAT(out, offset, value) memcpy((out) + (offset), &(value), sizeof(float))
+#define WRITE_BOOLEAN(out, offset, value) memcpy((out) + (offset), &(value), sizeof(bool))
 
 /**
  * @brief Macro to read a float value from a byte buffer.
@@ -46,8 +47,10 @@ void system_movement(ecs_t* ecs, float dt)
         if (ecs_has_component(ecs, e, COMPONENT_POSITION) &&
             ecs_has_component(ecs, e, COMPONENT_VELOCITY))
         {
-            position_t* pos = ecs_get_component(ecs, e, COMPONENT_POSITION);
+
             velocity_t* vel = ecs_get_component(ecs, e, COMPONENT_VELOCITY);
+            if (!vel->is_moving) return;
+            position_t* pos = ecs_get_component(ecs, e, COMPONENT_POSITION);
 
             pos->x += vel->x * dt;
             pos->y += vel->y * dt;
@@ -171,6 +174,7 @@ void serialize_velocity(const void *data, uint8_t *out)
     const velocity_t *vel = (const velocity_t *)data;
     WRITE_FLOAT(out, 0, vel->x);
     WRITE_FLOAT(out, 4, vel->y);
+    WRITE_BOOLEAN(out, 8, vel->is_moving);
 }
 
 /**
@@ -181,4 +185,5 @@ void deserialize_velocity(const uint8_t *in, void *data)
     velocity_t *vel = (velocity_t *)data;
     READ_FLOAT(vel->x, in, 0);
     READ_FLOAT(vel->y, in, 4);
+    READ_FLOAT(vel->is_moving, in, 8);
 }

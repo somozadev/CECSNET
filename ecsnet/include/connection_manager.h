@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <winsock2.h>
+#include "config.h" 
 
 /**
  * @brief Defines the number of network protocols being used (TCP and UDP).
@@ -24,7 +25,7 @@ typedef struct connection_manager_t connection_manager_t;
  * This struct contains all the necessary information to identify and communicate
  * with a single remote peer, including its addresses and sockets.
  */
-typedef struct peer_t {
+ECSNET_API typedef struct peer_t {
     char id[64];                            /**< The unique identifier for the peer (e.g., "IP:PORT"). */
     struct sockaddr_in addr_tcp;            /**< The TCP address of the peer. */
     struct sockaddr_in addr_udp;            /**< The UDP address of the peer. */
@@ -43,7 +44,7 @@ typedef struct peer_t {
  * This structure holds an array of all connected peers, manages the listen sockets,
  * and stores pointers to callback functions for network events.
  */
-typedef struct connection_manager_t {
+ECSNET_API typedef struct connection_manager_t {
     peer_t peers[MAX_PEERS];                /**< An array of all managed peers. */
     int peer_count;                         /**< The current number of active peers. */
     net_socket_t listen_sockets[PROTOCOL_COUNT]; /**< Sockets for listening on both TCP and UDP. */

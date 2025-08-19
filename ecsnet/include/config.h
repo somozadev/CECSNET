@@ -10,6 +10,28 @@
  * - Platform-specific configuration macros.
  */
 
+/**
+ * @brief Definition for the ECSNET_API macro, which determines the visibility of the ECSNET library.
+ */
+// #if defined(_WIN32) || defined(_WIN64)
+//   #ifdef BUILD_DLL
+//     #define ECSNET_API __declspec(dllexport)
+//   #else
+//     #define ECSNET_API __declspec(dllimport)
+//   #endif
+// #else
+//   #define ECSNET_API __attribute__((visibility("default")))
+// #endif
+//
+#if defined(_WIN32)
+  #if defined(ECSNET_EXPORTS)
+    #define ECSNET_API __declspec(dllexport)
+  #else
+    #define ECSNET_API __declspec(dllimport)
+  #endif
+#else
+  #define ECSNET_API
+#endif
 /* ========================= ECS CONFIGURATION ========================= */
 
 /**

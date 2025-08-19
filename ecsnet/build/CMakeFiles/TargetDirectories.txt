@@ -1,0 +1,3 @@
+C:/Users/mesom/Documents/GitHub/CECSNET/ecsnet/build/CMakeFiles/ecsnet.dir
+C:/Users/mesom/Documents/GitHub/CECSNET/ecsnet/build/CMakeFiles/edit_cache.dir
+C:/Users/mesom/Documents/GitHub/CECSNET/ecsnet/build/CMakeFiles/rebuild_cache.dir

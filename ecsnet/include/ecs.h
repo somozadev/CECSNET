@@ -22,21 +22,21 @@ typedef struct {
  * @brief Initializes the ECS engine, setting up the default built-in components.
  * @param ecs A pointer to the ECS instance to initialize.
  */
-void ecs_init(ecs_t *ecs);
+ECSNET_API void ecs_init(ecs_t *ecs);
 
 /**
  * @brief Creates a new entity and adds it to the entities pool.
  * @param ecs A pointer to the ECS instance.
  * @return The ID of the newly created entity.
  */
-entity_t ecs_create_entity(ecs_t *ecs);
+ECSNET_API entity_t ecs_create_entity(ecs_t *ecs);
 
 /**
  * @brief Destroys a given entity and removes it from the entities pool.
  * @param ecs A pointer to the ECS instance.
  * @param entity The ID of the entity to destroy.
  */
-void ecs_destroy_entity(ecs_t *ecs, entity_t entity);
+ECSNET_API void ecs_destroy_entity(ecs_t *ecs, entity_t entity);
 
 /**
  * @brief Serializes an entire entity, including its components, into a buffer.
@@ -65,7 +65,7 @@ entity_t ecs_deserialize_entity(ecs_t *ecs, const uint8_t *in_buffer);
  * @param data A pointer to the actual component data.
  * @return True if the component was added successfully, false otherwise.
  */
-bool ecs_add_component(ecs_t *ecs, entity_t entity, component_t component, void *data);
+ECSNET_API bool ecs_add_component(ecs_t *ecs, entity_t entity, component_t component, void *data);
 
 /**
  * @brief Retrieves a component from an entity.
@@ -74,7 +74,7 @@ bool ecs_add_component(ecs_t *ecs, entity_t entity, component_t component, void 
  * @param component The ID of the component to retrieve.
  * @return A pointer to the component's data, or NULL if the entity does not have the component.
  */
-void *ecs_get_component(ecs_t *ecs, entity_t entity, component_t component);
+ECSNET_API void *ecs_get_component(ecs_t *ecs, entity_t entity, component_t component);
 
 /**
  * @brief Returns a component's name based on its ID.
@@ -91,7 +91,7 @@ const char *ecs_get_component_name(ecs_t *ecs, component_t component);
  * @param component The ID of the component to check.
  * @return True if the entity has the component, false otherwise.
  */
-bool ecs_has_component(ecs_t *ecs, entity_t entity, component_t component);
+ECSNET_API bool ecs_has_component(ecs_t *ecs, entity_t entity, component_t component);
 
 /**
  * @brief Removes a given component from an entity.
@@ -100,7 +100,7 @@ bool ecs_has_component(ecs_t *ecs, entity_t entity, component_t component);
  * @param component The ID of the component to remove.
  * @return True if the component was removed successfully, false otherwise.
  */
-bool ecs_remove_component(ecs_t *ecs, entity_t entity, component_t component);
+ECSNET_API bool ecs_remove_component(ecs_t *ecs, entity_t entity, component_t component);
 
 /**
  * @brief Marks a component as dirty for the networking layer.
@@ -134,41 +134,41 @@ void ecs_clear_component_dirty(ecs_t *ecs, entity_t entity, component_t componen
  * @param component_descriptor A descriptor containing the component's name and size.
  * @return The ID of the newly registered component.
  */
-component_t ecs_register_component(ecs_t *ecs, component_descriptor_t component_descriptor);
+ECSNET_API component_t ecs_register_component(ecs_t *ecs, component_descriptor_t component_descriptor);
 
 /**
  * @brief Registers a new system with the ECS engine.
  * @param ecs A pointer to the ECS instance.
  * @param func The system function to register.
  */
-void ecs_register_system(ecs_t *ecs, system_func_t func);
+ECSNET_API void ecs_register_system(ecs_t *ecs, system_func_t func);
 
 /**
  * @brief The main ECS update function. It calls all registered systems.
  * @param ecs A pointer to the ECS instance.
  * @param dt The delta time since the last update.
  */
-void ecs_update(ecs_t *ecs, float dt);
+ECSNET_API void ecs_update(ecs_t *ecs, float dt);
 
 
 // Default components.
-extern component_t COMPONENT_POSITION;
-extern component_t COMPONENT_ROTATION;
-extern component_t COMPONENT_TRANSFORM;
-extern component_t COMPONENT_VELOCITY;
+ECSNET_API extern component_t COMPONENT_POSITION;
+ECSNET_API extern component_t COMPONENT_ROTATION;
+ECSNET_API extern component_t COMPONENT_TRANSFORM;
+ECSNET_API extern component_t COMPONENT_VELOCITY;
 
 
 /**
  * @brief Registers the default systems with the ECS engine.
  * @param ecs A pointer to the ECS instance.
  */
-void ecs_register_builtin_systems(ecs_t *ecs);
+ECSNET_API void ecs_register_builtin_systems(ecs_t *ecs);
 
 /**
  * @brief Registers the default components with the ECS engine.
  * @param ecs A pointer to the ECS instance.
  */
-void ecs_register_builtin_components(ecs_t *ecs);
+ECSNET_API void ecs_register_builtin_components(ecs_t *ecs);
 
 
 #endif
