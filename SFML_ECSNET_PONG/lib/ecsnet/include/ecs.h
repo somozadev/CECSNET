@@ -26,12 +26,19 @@ typedef struct {
  */
 ECSNET_API void ecs_init(ecs_t *ecs);
 
-/**
- * @brief Creates a new entity and adds it to the entities pool.
- * @param ecs A pointer to the ECS instance.
- * @return The ID of the newly created entity.
- */
-ECSNET_API entity_t ecs_create_entity(ecs_t *ecs);
+    /**
+     * @brief Creates a new entity and adds it to the entities pool.
+     * @param ecs A pointer to the ECS instance.
+     * @return The ID of the newly created entity.
+     */
+    ECSNET_API entity_t ecs_create_entity(ecs_t *ecs);
+    /**
+     * @brief Tries to create a new entity by id and adds it to the entities pool.
+     * @param ecs A pointer to the ECS instance.
+     * @param id A given id.
+     * @return The ID of the newly created entity.
+     */
+    ECSNET_API entity_t ecs_try_create_entity_by_id(ecs_t* ecs, entity_t id);
 
 /**
  * @brief Destroys a given entity and removes it from the entities pool.

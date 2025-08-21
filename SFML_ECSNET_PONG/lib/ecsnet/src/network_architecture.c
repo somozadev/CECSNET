@@ -7,27 +7,20 @@
 // #include "network_p2p.h"
 // #include "network_ls.h"
 
-/**
- * @brief Represents the opaque network architecture structure.
- *
- * This struct serves as a wrapper that holds a pointer to the specific
- * implementation (e.g., Client-Server, P2P) and a reference to the ECS.
- */
-struct network_architecture_t {
-    network_architecture_type_t type;
-    network_architecture_config_t config;
-    // A pointer to the specific network implementation (e.g., network_cs_t).
-    void *impl;
-    // A pointer to the ECS instance.
-    ecs_t *ecs;
-};
+
+typedef struct {
+    network_architecture_config_t config; // public struct
+    void (*on_peer_connected_internal)(void* user_data, peer_t* peer);
+    void (*on_peer_disconnected_internal)(void* user_data, peer_t* peer);
+    void (*on_packet_received_internal)(void* user_data, peer_t* peer, const void* data, int len);
+    void* user_data;  /**< User data passed to callbacks */
+} network_architecture_internal_t;
 
 void network_architecture_init(network_architecture_t **architecture, const network_architecture_config_t *config,
                                ecs_t *ecs) {
-    if (!architecture || !config || !ecs) {
+    if ( !config ) {
         return;
     }
-
     // Allocate memory for the main network architecture struct.
     *architecture = (network_architecture_t *) malloc(sizeof(network_architecture_t));
     if (!*architecture) return;
@@ -59,6 +52,8 @@ void network_architecture_init(network_architecture_t **architecture, const netw
                 }
             }
             (*architecture)->impl = cs_impl;
+            if (!config->is_server)
+            connection_manager_connect_to_server(&cs_impl->connection_manager, config->ip_address, config->tcp_port);
             break;
         // case ARCH_P2P:
         //     // Call the initialization function for the P2P module.
@@ -74,17 +69,19 @@ void network_architecture_init(network_architecture_t **architecture, const netw
     }
 }
 
-void network_architecture_update(network_architecture_t *architecture) {
+void network_architecture_update(network_architecture_t *architecture, float dt) {
     if (!architecture || !architecture->impl) {
         return;
     }
-    ecs_update(architecture->ecs, 1.0);
+    if (architecture->config.is_server)
+    ecs_update(architecture->ecs, dt);
     // Delegate the update call to the specific implementation.
     // This is the core of the polymorphic design pattern.
     switch (architecture->type) {
         case ARCH_CLIENT_SERVER:
             network_cs_update((network_cs_t *) architecture->impl);
             break;
+        default: ;
             // case ARCH_P2P:
             //     network_p2p_update((network_p2p_t*)architecture->impl);
             //     break;

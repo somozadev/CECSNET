@@ -42,9 +42,22 @@ entity_t ecs_create_entity(ecs_t* ecs)
         if (!ecs->entities[i].in_use)
         {
             ecs->entities[i].in_use = true;
+            ecs->registered_entities_count++;
             return i;
         }
     }
+    // No free entity slots available.
+    return (entity_t)-1;
+}
+entity_t ecs_try_create_entity_by_id(ecs_t* ecs, entity_t id)
+{
+    // Search for the first unused entity slot.
+        if (!ecs->entities[id].in_use)
+        {
+            ecs->entities[id].in_use = true;
+            ecs->registered_entities_count++;
+            return id;
+        }
     // No free entity slots available.
     return (entity_t)-1;
 }
@@ -61,6 +74,7 @@ void ecs_destroy_entity(ecs_t* ecs, entity_t entity)
     {
         if (ecs->components[i].used[entity])
             ecs->components[i].used[entity] = false;
+            ecs->registered_entities_count--;
     }
 }
 

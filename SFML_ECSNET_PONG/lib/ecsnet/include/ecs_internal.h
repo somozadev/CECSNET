@@ -46,6 +46,7 @@ struct component_storage_t {
 struct ecs_t {
     entity_meta_t entities[MAX_ENTITIES];      /**< Metadata for all possible entities. */
     component_storage_t components[MAX_COMPONENTS]; /**< Storage for all registered component types. */
+    uint32_t registered_entities_count;       /**< Total number of registered entities. */
     uint32_t registered_component_count;       /**< Total number of registered component types. */
     system_func_t systems[MAX_SYSTEMS];        /**< Array of registered system function pointers. */
     int system_count;                          /**< Current number of registered systems. */

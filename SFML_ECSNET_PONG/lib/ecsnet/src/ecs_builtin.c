@@ -1,6 +1,11 @@
 #include "ecs_builtin.h"
+
+#include <stdio.h>
+
 #include "ecs.h"
 #include <string.h>
+
+#include "ecs_internal.h"
 
 /**
  * @brief Macro to write a float value into a byte buffer.
@@ -41,7 +46,7 @@ void ecs_register_builtin_systems(ecs_t* ecs)
  */
 void system_movement(ecs_t* ecs, float dt)
 {
-    for (entity_t e = 0; e < MAX_ENTITIES; ++e)
+    for (entity_t e = 0; e < ecs->registered_entities_count; ++e)
     {
         if (ecs_has_component(ecs, e, COMPONENT_POSITION) &&
             ecs_has_component(ecs, e, COMPONENT_VELOCITY))
@@ -51,7 +56,7 @@ void system_movement(ecs_t* ecs, float dt)
 
             pos->x += vel->x * dt;
             pos->y += vel->y * dt;
-
+            printf("Moved entity %u to (%f, %f)\n", e, pos->x, pos->y);
             ecs_mark_component_dirty(ecs, e, COMPONENT_POSITION);
         }
     }

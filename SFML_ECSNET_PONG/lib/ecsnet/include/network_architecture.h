@@ -38,11 +38,25 @@ ECSNET_API typedef struct {
     void* user_data;                    /**< User data passed to callbacks */
 } network_architecture_config_t;
 
+    /**
+     * @brief Represents the opaque network architecture structure.
+     *
+     * This struct serves as a wrapper that holds a pointer to the specific
+     * implementation (e.g., Client-Server, P2P) and a reference to the ECS.
+     */
+    ECSNET_API typedef struct {
+        network_architecture_type_t type;
+        network_architecture_config_t config;
+        // A pointer to the specific network implementation (e.g., network_cs_t).
+        void *impl;
+        // A pointer to the ECS instance.
+        ecs_t *ecs;
+    } network_architecture_t;
 /**
  * @brief Opaque type for the network architecture.
  * This hides the internal implementation details from the user.
  */
-ECSNET_API typedef struct network_architecture_t network_architecture_t;
+// ECSNET_API typedef struct network_architecture_t network_architecture_t;
 
 /**
  * @brief Initializes the network architecture based on the configuration.
@@ -57,7 +71,7 @@ ECSNET_API void network_architecture_init(network_architecture_t** architecture,
  * This handles all network-related tasks like receiving data and managing connections.
  * @param architecture A pointer to the network_architecture_t instance.
  */
-ECSNET_API void network_architecture_update(network_architecture_t* architecture);
+ECSNET_API void network_architecture_update(network_architecture_t* architecture, float dt);
 
 /**
  * @brief Shuts down and frees all network resources.

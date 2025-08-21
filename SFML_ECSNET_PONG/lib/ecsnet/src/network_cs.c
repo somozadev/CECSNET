@@ -46,6 +46,46 @@ void on_peer_connected_cs(void *user_data, peer_t *peer) {
         printf("[network_cs] Peer %s connected.\n", peer->id);
         // If it is a server, this is the opportunity to send an ACK or registration.
         // In this case, the client already sent the registration, so the server just replies.
+        if (!network_cs->config.is_server) return;
+        for (entity_t e = 0; e < MAX_ENTITIES; ++e) {
+            bool entity_has_data = false;
+            uint8_t sync_data[MAX_PACKET_SIZE];
+            size_t sync_data_size = 0;
+
+            for (component_t c = 0; c < network_cs->ecs->registered_component_count; ++c) {
+                if (ecs_has_component(network_cs->ecs, e, c)) {
+                    const void* component_data = ecs_get_component(network_cs->ecs, e, c);
+                    size_t component_size = network_cs->ecs->components[c].descriptor.size;
+
+                    if (sync_data_size + sizeof(component_t) + component_size > MAX_PACKET_SIZE) {
+                        break;
+                    }
+
+                    memcpy(sync_data + sync_data_size, &c, sizeof(component_t));
+                    sync_data_size += sizeof(component_t);
+
+                    memcpy(sync_data + sync_data_size, component_data, component_size);
+                    sync_data_size += component_size;
+
+                    entity_has_data = true;
+                }
+            }
+
+            if (entity_has_data) {
+                protocol_handler_pack_entity_update(
+                    &network_cs->protocol_handler,
+                    e,
+                    sync_data,
+                    sync_data_size
+                );
+
+                protocol_handler_send_packet(
+                    &network_cs->connection_manager,
+                    peer->id,
+                    &network_cs->protocol_handler
+                );
+            }
+        }
     }
 }
 
