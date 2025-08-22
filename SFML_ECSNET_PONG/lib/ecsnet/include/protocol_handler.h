@@ -14,6 +14,9 @@ extern "C" {
  * including the header and payload.
  */
 #define MAX_PACKET_SIZE 1024
+#define INPUT_UP     0x01
+#define INPUT_DOWN   0x02
+#define INPUT_SPAWN  0x80
 
 /**
  * @brief Enumeration of all available packet types.
@@ -93,7 +96,17 @@ void protocol_handler_pack_client_register(protocol_handler_t *handler, uint16_t
  * @param handler A pointer to the protocol_handler_t instance.
  */
 void protocol_handler_pack_server_ack(protocol_handler_t *handler);
-
+/**
+ * @brief Pack a client input packet (PACKET_TYPE_CLIENT_INPUT).
+ *        Layout: [entity_t][uint8_t cmd][extra...].
+ *
+ * @param handler   Initialized protocol handler to write into.
+ * @param entity_id Target entity id (use 0 if not applicable).
+ * @param input_cmd Command code (e.g., INPUT_UP/DOWN/SPAWN).
+ * @param extra     Optional command-specific bytes (may be NULL).
+ * @param extra_len Size of @p extra in bytes (0 ok; oversize is truncated).
+ */
+void protocol_handler_pack_client_input(protocol_handler_t* handler, entity_t entity_id, uint8_t input_cmd, const void* extra, uint16_t extra_len);
 /**
  * @brief Processes received network data.
  * @param handler A pointer to the protocol_handler_t instance.

@@ -56,7 +56,7 @@ void system_movement(ecs_t* ecs, float dt)
 
             pos->x += vel->x * dt;
             pos->y += vel->y * dt;
-            printf("Moved entity %u to (%f, %f)\n", e, pos->x, pos->y);
+            // printf("Moved entity %u to (%f, %f)\n", e, pos->x, pos->y);
             ecs_mark_component_dirty(ecs, e, COMPONENT_POSITION);
         }
     }
