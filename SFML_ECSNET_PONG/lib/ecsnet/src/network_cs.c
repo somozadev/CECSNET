@@ -11,7 +11,7 @@ void on_packet_received_cs(void *user_data, peer_t *peer, const void *data, int 
     if (!network_cs || !network_cs->ecs) return;
 
     // Process the packet with the Protocol Handler.
-    protocol_handler_process_received_data(&network_cs->protocol_handler, peer, data, len);
+    protocol_handler_process_received_data(&network_cs->protocol_handler, network_cs->ecs, peer, data, len);
 
     // Get the packet type after processing.
     const network_packet_t *packet = (const network_packet_t *) data;
@@ -54,7 +54,7 @@ void on_peer_connected_cs(void *user_data, peer_t *peer) {
 
             for (component_t c = 0; c < network_cs->ecs->registered_component_count; ++c) {
                 if (ecs_has_component(network_cs->ecs, e, c)) {
-                    const void* component_data = ecs_get_component(network_cs->ecs, e, c);
+                    const void *component_data = ecs_get_component(network_cs->ecs, e, c);
                     size_t component_size = network_cs->ecs->components[c].descriptor.size;
 
                     if (sync_data_size + sizeof(component_t) + component_size > MAX_PACKET_SIZE) {
@@ -139,65 +139,65 @@ network_cs_t *network_cs_init(const network_architecture_config_t *config, ecs_t
 
 void network_cs_update(network_cs_t *network_cs) {
     if (!network_cs) return;
-    // Delegate the update call to the connection manager.
+
+    // Actualizar el gestor de conexiones (procesa paquetes entrantes y vacía 1 paquete saliente)
     connection_manager_update(&network_cs->connection_manager);
+
     if (network_cs->config.is_server) {
-        for (entity_t entity = 0; entity < MAX_ENTITIES; entity++) {
+        static entity_t next_start = 0;
+        entity_t start = next_start;
+        for (int processed = 0; processed < network_cs->ecs->registered_entities_count; processed++) {
+            entity_t entity = (start + processed) % network_cs->ecs->registered_entities_count;
             bool entity_dirty = false;
             uint8_t sync_data[MAX_PACKET_SIZE];
-            size_t sync_data_size = 0;
+            size_t sync_size = 0;
 
+            // Construir sync_data con los componentes dirty de esta entidad
             for (component_t component = 0; component < network_cs->ecs->registered_component_count; component++) {
                 if (network_cs->ecs->components[component].is_dirty[entity]) {
                     const void *component_data = ecs_get_component(network_cs->ecs, entity, component);
                     if (component_data) {
-                        size_t component_size = network_cs->ecs->components[component].descriptor.size;
-
-                        // Asegúrate de que hay espacio suficiente en sync_data
-                        if (sync_data_size + sizeof(component_t) + component_size > MAX_PACKET_SIZE) {
+                        size_t comp_size = network_cs->ecs->components[component].descriptor.size;
+                        if (sync_size + sizeof(component_t) + comp_size > MAX_PACKET_SIZE)
                             break;
-                        }
-
-                        // Añadir ID del componente
-                        memcpy(sync_data + sync_data_size, &component, sizeof(component_t));
-                        sync_data_size += sizeof(component_t);
-
-                        // Añadir datos del componente
-                        memcpy(sync_data + sync_data_size, component_data, component_size);
-                        sync_data_size += component_size;
-
+                        memcpy(sync_data + sync_size, &component, sizeof(component_t));
+                        sync_size += sizeof(component_t);
+                        memcpy(sync_data + sync_size, component_data, comp_size);
+                        sync_size += comp_size;
                         entity_dirty = true;
                     }
                 }
             }
 
             if (entity_dirty) {
-                // Empaquetar la actualización de la entidad
-                protocol_handler_pack_entity_update(
-                    &network_cs->protocol_handler,
-                    entity,
-                    sync_data,
-                    sync_data_size
-                );
+                // Reiniciar el handler y empaquetar esta única entidad
+                protocol_handler_init(&network_cs->protocol_handler);
+                protocol_handler_pack_entity_update(&network_cs->protocol_handler,
+                                                    entity,
+                                                    sync_data,
+                                                    sync_size);
 
-                // Enviar a todos los clientes conectados
+                // Enviar a todos los peers
                 for (int i = 0; i < network_cs->connection_manager.peer_count; i++) {
                     peer_t *peer = &network_cs->connection_manager.peers[i];
-                    protocol_handler_send_packet(
-                        &network_cs->connection_manager,
-                        peer->id,
-                        &network_cs->protocol_handler
-                    );
+                    protocol_handler_send_packet(&network_cs->connection_manager,
+                                                 peer->id,
+                                                 &network_cs->protocol_handler);
                 }
 
-                // Limpiar flags de dirty
+                // **Llamar otra vez a connection_manager_update para que se envíe este paquete**
+                connection_manager_update(&network_cs->connection_manager);
+
+                // Limpiar flags dirty
                 for (component_t component = 0; component < network_cs->ecs->registered_component_count; component++) {
                     ecs_clear_component_dirty(network_cs->ecs, entity, component);
                 }
+                next_start = (entity + 1) % network_cs->ecs->registered_entities_count;
             }
         }
     }
 }
+
 
 void network_cs_destroy(network_cs_t *network_cs) {
     if (!network_cs) return;

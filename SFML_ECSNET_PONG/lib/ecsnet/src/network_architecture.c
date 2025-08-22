@@ -73,9 +73,6 @@ void network_architecture_update(network_architecture_t *architecture, float dt)
     if (!architecture || !architecture->impl) {
         return;
     }
-    if (architecture->config.is_server)
-    ecs_update(architecture->ecs, dt);
-    // Delegate the update call to the specific implementation.
     // This is the core of the polymorphic design pattern.
     switch (architecture->type) {
         case ARCH_CLIENT_SERVER:

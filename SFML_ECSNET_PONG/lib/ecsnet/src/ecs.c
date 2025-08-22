@@ -14,6 +14,7 @@ void ecs_init(ecs_t* ecs)
     memset(ecs->components, 0, sizeof(ecs->components));
 
     ecs->registered_component_count = 0;
+    ecs->registered_entities_count = 0;
     ecs->system_count = 0;
 
     // Register built-in ECS components and systems.

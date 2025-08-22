@@ -167,20 +167,19 @@ int main() {
 
     sf::RectangleShape ballShape(sf::Vector2f(20.f, 20.f));
     ballShape.setFillColor(sf::Color::White);
-    sf::RectangleShape paddle1Shape(sf::Vector2f(10.f, 60.f));
-    ballShape.setFillColor(sf::Color::White);
-    sf::RectangleShape paddle2Shape(sf::Vector2f(10.f, 60.f));
-    ballShape.setFillColor(sf::Color::White);
-    position_t *ball_pos = nullptr;
-    velocity_t *ball_vel = nullptr;
-    entity_t ball_entity = 0;
+    sf::RectangleShape ballShape2(sf::Vector2f(20.f, 20.f));
+    ballShape2.setFillColor(sf::Color::White);
 
-    entity_t paddle1_entity = 1;
-    entity_t paddle2_entity = 2;
-    position_t *paddle1_pos = nullptr;
-    position_t *paddle2_pos = nullptr;
+    position_t *ball_pos = nullptr;
+    position_t *ball2_pos = nullptr;
+    entity_t ball_entity = 0;
+    entity_t ball2_entity = 1;
+
 
     sf::Clock clock;
+    //enviar inputs
+    //net update
+    //render
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();
         sf::Event event;
@@ -197,28 +196,20 @@ int main() {
         network_architecture_update(client_arch, dt);
 
         ball_pos = (position_t *) ecs_get_component(&client_ecs, ball_entity, COMPONENT_POSITION);
-
-        paddle1_pos = (position_t *) ecs_get_component(&client_ecs, paddle1_entity, COMPONENT_POSITION);
-        paddle2_pos = (position_t *) ecs_get_component(&client_ecs, paddle2_entity, COMPONENT_POSITION);
-        for (entity_t e = 0; e < MAX_ENTITIES; ++e) {
-            if (ecs_has_component(&client_ecs, e, COMPONENT_POSITION)) {
-                auto pos = (position_t*)ecs_get_component(&client_ecs, e, COMPONENT_POSITION);
-                 printf("[Client] Entity %d Pos: %.2f, %.2f\n", e, pos->x, pos->y);
-            }
-        }
+        ball2_pos = (position_t *) ecs_get_component(&client_ecs, ball2_entity, COMPONENT_POSITION);
+     //   for (entity_t e = 0; e < MAX_ENTITIES; ++e) {
+     //       if (ecs_has_component(&client_ecs, e, COMPONENT_POSITION)) {
+     //           auto pos = (position_t*)ecs_get_component(&client_ecs, e, COMPONENT_POSITION);
+     //            printf("[Client] Entity %d Pos: %.2f, %.2f\n", e, pos->x, pos->y);
+     //       }
+     //   }
         window.clear(sf::Color::Black);
         if (ball_pos) {
             ballShape.setPosition(ball_pos->x, ball_pos->y);
             window.draw(ballShape);
-        }
-
-        if (paddle1_pos) {
-            paddle1Shape.setPosition(paddle1_pos->x, paddle1_pos->y);
-            window.draw(paddle1Shape);
-        }
-        if (paddle2_pos) {
-            paddle2Shape.setPosition(paddle2_pos->x, paddle2_pos->y);
-            window.draw(paddle2Shape);
+        } if (ball2_pos) {
+            ballShape2.setPosition(ball2_pos->x, ball2_pos->y);
+            window.draw(ballShape2);
         }
         window.display();
 

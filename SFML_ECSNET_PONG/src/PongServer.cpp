@@ -19,54 +19,47 @@
 #define INPUT_UP 0x01
 #define INPUT_DOWN 0x02
 
-void send_full_state_to_peer(ecs_t* ecs, network_cs_t* arch, peer_t* peer) {
-    // We need a protocol handler to pack the data.
-    protocol_handler_t handler;
-    protocol_handler_init(&handler);
-
-    // Iterate through all entities in the ECS
-    for (entity_t e = 0; e < MAX_ENTITIES; ++e) {
-        bool entity_has_data = false;
+struct server_context_t {
+    ecs_t* ecs;
+    network_architecture_t* arch;
+};
+void send_full_state_to_peer(ecs_t* ecs, network_architecture_t* arch, peer_t* peer) {
+    for (entity_t e = 0; e < ecs->registered_entities_count; ++e) {
+        bool has_data = false;
         uint8_t sync_data[MAX_PACKET_SIZE];
-        size_t sync_data_size = 0;
+        size_t sync_size = 0;
 
-        // Iterate through all components of the current entity
         for (component_t c = 0; c < ecs->registered_component_count; ++c) {
-            if (ecs_has_component(ecs, e, c)) {
-                const void* component_data = ecs_get_component(ecs, e, c);
-                size_t component_size = ecs->components[c].descriptor.size;
+            if (!ecs_has_component(ecs, e, c))
+                continue;
 
-                // Check if the component data fits in the packet
-                if (sync_data_size + sizeof(component_t) + component_size > MAX_PACKET_SIZE) {
-                    break;
-                }
+            const void* component_data = ecs_get_component(ecs, e, c);
+            size_t component_size = ecs->components[c].descriptor.size;
 
-                // Add component ID
-                memcpy(sync_data + sync_data_size, &c, sizeof(component_t));
-                sync_data_size += sizeof(component_t);
+            if (sync_size + sizeof(component_t) + component_size > MAX_PACKET_SIZE)
+                break;
 
-                // Add component data
-                memcpy(sync_data + sync_data_size, component_data, component_size);
-                sync_data_size += component_size;
+            memcpy(sync_data + sync_size, &c, sizeof(component_t));
+            sync_size += sizeof(component_t);
 
-                entity_has_data = true;
-            }
+            memcpy(sync_data + sync_size, component_data, component_size);
+            sync_size += component_size;
+
+            has_data = true;
         }
 
-        if (entity_has_data) {
-            protocol_handler_pack_entity_update(
-                &handler,
-                e,
-                sync_data,
-                sync_data_size
-            );
-            protocol_handler_send_packet(&arch->connection_manager, peer->id, &handler);
+        if (has_data) {
+            protocol_handler_t handler;
+            protocol_handler_init(&handler);
+            protocol_handler_pack_entity_update(&handler, e, sync_data, sync_size);
+            protocol_handler_send_packet(&reinterpret_cast<network_cs_t *>(arch)->connection_manager, peer->id, &handler);
         }
     }
 }
 void on_peer_connected_callback(void* user_data, peer_t* peer) {
-    network_cs_t* arch = (network_cs_t*)user_data;
-    send_full_state_to_peer(arch->ecs, arch, peer);
+    auto* ctx = static_cast<server_context_t *>(user_data);
+    if (!ctx || !ctx->arch || !ctx->ecs || !peer) return;
+    send_full_state_to_peer(ctx->ecs, ctx->arch, peer);
 }
 void on_packet_received_callback(void* user_data, peer_t* peer, const void* data, int len) {
     ecs_t* ecs = (ecs_t*)user_data;
@@ -120,7 +113,11 @@ void on_peer_disconnect_callback(void* user_data, peer_t* peer) {
     ecs_t server_ecs;
     ecs_init(&server_ecs);
 
-    // Crear entidades: pelota y paddles
+    server_context_t ctx;
+    ctx.ecs = &server_ecs;
+    ctx.arch = nullptr;
+
+
     position_t ball_pos = {500.f, 100.f};
     velocity_t ball_vel = {0.0f, 10.f};
     entity_t ball = ecs_create_entity(&server_ecs);
@@ -143,7 +140,6 @@ void on_peer_disconnect_callback(void* user_data, peer_t* peer) {
     // ecs_add_component(&server_ecs, paddle2, COMPONENT_VELOCITY, &paddle_vel);
 
     // Inicializar arquitectura cliente-servidor
-    network_architecture_t *server_arch= nullptr;
     network_architecture_config_t server_config = {
         .type = ARCH_CLIENT_SERVER,
         .ip_address = "127.0.0.1",
@@ -153,18 +149,22 @@ void on_peer_disconnect_callback(void* user_data, peer_t* peer) {
         .on_peer_connected = on_peer_connected_callback,
         .on_peer_disconnected = on_peer_disconnect_callback,
         .on_packet_received = on_packet_received_callback,
-        .user_data = &server_arch,
+        .user_data = &ctx,
     };
+    network_architecture_t *server_arch= nullptr;
     network_architecture_init(&server_arch, &server_config, &server_ecs);
+    ctx.arch = server_arch;
 
     sf::Clock clock;
     while (true) {
         float dt = clock.restart().asSeconds();
-        // network_cs_update(server_arch);
+        ecs_update(&server_ecs, dt);
+        ecs_mark_component_dirty(&server_ecs, ball,  COMPONENT_POSITION);
+        ecs_mark_component_dirty(&server_ecs, ball2, COMPONENT_POSITION);
         network_architecture_update(server_arch, dt);
+
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
 
-printf("test")
 ;    }
 
     network_architecture_destroy(server_arch);

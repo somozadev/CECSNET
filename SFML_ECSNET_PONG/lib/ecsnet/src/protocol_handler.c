@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "ecs_internal.h"
+
 void protocol_handler_init(protocol_handler_t* handler) {
     if (!handler) return;
     // Clear the entire handler structure to a known zero state.
@@ -41,7 +43,7 @@ void protocol_handler_pack_server_ack(protocol_handler_t* handler) {
     handler->out_packet.header.size = sizeof(packet_header_t);
 }
 
-void protocol_handler_process_received_data(protocol_handler_t* handler, peer_t* peer, const void* data, int len) {
+void protocol_handler_process_received_data(protocol_handler_t* handler,ecs_t* ecs, peer_t* peer, const void* data, int len) {
     if (!handler || !data || len <= sizeof(packet_header_t)) return;
 
     const network_packet_t* packet = (const network_packet_t*)data;
@@ -52,6 +54,29 @@ void protocol_handler_process_received_data(protocol_handler_t* handler, peer_t*
         case PACKET_TYPE_ENTITY_UPDATE: {
             printf("[ProtocolHandler] Received entity update. Not yet implemented.\n");
             // The logic to deserialize the entity update would go here.
+            const uint8_t* p = packet->data;
+            const uint8_t* end = ((const uint8_t*)packet) + packet->header.size;
+
+            entity_t wire_eid;
+            memcpy(&wire_eid, p, sizeof(entity_t));
+            p += sizeof(entity_t);
+
+             entity_t e = wire_eid; // V1.0 assuming entity id is the same in client and server
+            while (p < end) {
+                component_t cid;
+                memcpy(&cid, p, sizeof(component_t));
+                p += sizeof(component_t);
+
+
+                size_t comp_size = ecs->components[cid].descriptor.size;
+                void* dst = ecs_get_component(ecs, e, cid);
+                if (dst) {
+                    memcpy(dst, p, comp_size);
+                    ecs_mark_component_dirty(ecs, e, cid);
+                }
+                p += comp_size;
+            }
+
             break;
         }
         case PACKET_TYPE_CLIENT_REGISTER: {

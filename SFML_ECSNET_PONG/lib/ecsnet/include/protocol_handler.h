@@ -100,7 +100,7 @@ void protocol_handler_pack_server_ack(protocol_handler_t *handler);
  * @param data A pointer to the raw received data.
  * @param len The length of the received data.
  */
-void protocol_handler_process_received_data(protocol_handler_t *handler, peer_t *peer, const void *data, int len);
+void protocol_handler_process_received_data(protocol_handler_t *handler, ecs_t* ecs, peer_t *peer, const void *data, int len);
 
 /**
  * @brief Sends the current outgoing packet to a specific peer.
