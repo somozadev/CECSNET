@@ -24,9 +24,9 @@ extern "C" {
 typedef enum {
     PACKET_TYPE_INVALID, /**< Invalid or unknown packet type. */
     PACKET_TYPE_ENTITY_UPDATE, /**< Contains updates for one or more ECS entities. */
+    PACKET_TYPE_MULTI_ENTITY_UPDATE, /**< Sent by the server to sync every entity and component into a new client. */
     PACKET_TYPE_CLIENT_REGISTER, /**< Sent by a client to register with the server. */
     PACKET_TYPE_SERVER_ACK, /**< Sent by the server to acknowledge a client's registration. */
-    PACKET_TYPE_ENTITIES_SNAPSHOT, /**< Sent by the server to sync every entity and component into a new client. */
     PACKET_TYPE_CLIENT_INPUT, /**< Ment to be used with clients input sending back to the server. */
 } packet_type_t;
 
@@ -52,6 +52,7 @@ ECSNET_API typedef struct {
     packet_header_t header; /**< The packet header. */
     uint8_t data[MAX_PACKET_SIZE - sizeof(packet_header_t)]; /**< The packet payload. */
 } network_packet_t;
+
 
 /**
  * @brief The protocol handler structure.

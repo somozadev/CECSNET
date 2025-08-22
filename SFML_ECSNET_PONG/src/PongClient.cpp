@@ -31,111 +31,55 @@ void print_entity_table(ecs_t *ecs) {
     }
 }
 void on_client_receive_callback(void *user_data, peer_t *peer, const void *data, int len) {
-    auto *ecs = static_cast<ecs_t *>(user_data);
-    const auto *packet = static_cast<const network_packet_t *>(data);
+    ecs_t* ecs = (ecs_t*)user_data;
+    const network_packet_t* packet = (const network_packet_t*)data;
 
-    if (packet->header.type != PACKET_TYPE_ENTITY_UPDATE) {
-        printf("[Client] Unknown packet type: %d\n", packet->header.type);
+    if (packet->header.type != PACKET_TYPE_MULTI_ENTITY_UPDATE) {
+        // maneja otros tipos
         return;
     }
 
-    const uint8_t *current_data = packet->data;
-    int remaining_data = len - sizeof(packet_header_t);
+    const uint8_t* current = packet->data;
+    const uint8_t* end = ((const uint8_t*)packet) + packet->header.size;
 
-    // 1) entity_id
-    if (remaining_data < sizeof(entity_t)) {
-        printf("[Client] Malformed packet: no entity id\n");
-        return;
-    }
-    entity_t entity_id;
-    memcpy(&entity_id, current_data, sizeof(entity_id));
-    current_data += sizeof(entity_id);
-    remaining_data -= sizeof(entity_id);
-    ecs_try_create_entity_by_id(ecs,entity_id);
+    // Leer el número de entidades
+    uint16_t entity_count;
+    if (end - current < sizeof(uint16_t)) return;
+    memcpy(&entity_count, current, sizeof(uint16_t));
+    current += sizeof(uint16_t);
 
+    for (uint16_t eidx = 0; eidx < entity_count; ++eidx) {
+        // Leer entity_id
+        if (end - current < sizeof(entity_t)) break;
+        entity_t entity_id;
+        memcpy(&entity_id, current, sizeof(entity_id));
+        current += sizeof(entity_id);
 
-    // 2) leer todos los componentes que vengan
-    while (remaining_data > sizeof(uint32_t)) {
-        uint32_t comp_id;
-        memcpy(&comp_id, current_data, sizeof(uint32_t));
-        current_data += sizeof(uint32_t);
-        remaining_data -= sizeof(uint32_t);
+        // Asegurar la existencia de la entidad en el ECS local
+        ecs_try_create_entity_by_id(ecs, entity_id);
 
-        size_t comp_size = ecs->components[comp_id].descriptor.size;
-        if (remaining_data < comp_size) {
-            printf("[Client] Malformed packet: not enough bytes for comp %u\n", comp_id);
-            break;
+        // Leer número de componentes
+        if (end - current < sizeof(uint8_t)) break;
+        uint8_t comp_count;
+        memcpy(&comp_count, current, sizeof(uint8_t));
+        current += sizeof(uint8_t);
+
+        // Leer los componentes
+        for (uint8_t c = 0; c < comp_count; ++c) {
+            if (end - current < sizeof(component_t)) break;
+            component_t comp_id;
+            memcpy(&comp_id, current, sizeof(component_t));
+            current += sizeof(component_t);
+
+            size_t comp_size = ecs->components[comp_id].descriptor.size;
+            if (end - current < comp_size) break;
+
+            // Copiar datos al componente local
+            ecs_add_component(ecs, entity_id, comp_id, (void*)current);
+
+            current += comp_size;
         }
-
-        ecs_add_component(ecs, entity_id, comp_id, (void*)current_data);
-
-        current_data += comp_size;
-        remaining_data -= comp_size;
-
-        print_entity_table(ecs);
     }
-    // const auto ecs = static_cast<ecs_t *>(user_data);
-    // const auto *packet = static_cast<const network_packet_t *>(data);
-    //
-    // if (packet->header.type != PACKET_TYPE_ENTITY_UPDATE) {
-    //     printf("[Client] Unknown packet type: %d\n", packet->header.type);
-    //     return;
-    // }
-    //
-    // const uint8_t *current_data = packet->data;
-    //
-    // // entity_id from packet
-    // entity_t entity_id;
-    // memcpy(&entity_id, current_data, sizeof(entity_t));
-    // current_data += sizeof(entity_t);
-    // //first component ID
-    // uint32_t first_component_id;
-    // memcpy(&first_component_id, current_data, sizeof(uint32_t));
-    // current_data += sizeof(uint32_t);
-    // //Calculate remaining data
-    // int remaining_data = len - sizeof(packet_header_t) - sizeof(entity_t) - sizeof(uint32_t);
-    //
-    // // printf("[Debug] Entity ID: %d, First Component ID: %d, Remaining data: %d bytes\n",
-    // //        entity_id, first_component_id, remaining_data);
-    //
-    // if (first_component_id == COMPONENT_POSITION) {
-    //     if (remaining_data >= sizeof(position_t)) {
-    //         position_t pos;
-    //         memcpy(&pos, current_data, sizeof(position_t));
-    //         current_data += sizeof(position_t);
-    //         remaining_data -= sizeof(position_t);
-    //
-    //         printf("[Client] Position received: x=%.2f, y=%.2f\n", pos.x, pos.y);
-    //         ecs_add_component(ecs, entity_id, COMPONENT_POSITION, &pos);
-    //
-    //         // Check if it's the expected position
-    //     } else {
-    //         printf("[Error] Not enough data for Position\n");
-    //         return;
-    //     }
-    // }
-    // if (remaining_data >= sizeof(uint32_t)) {
-    //     uint32_t second_component_id;
-    //     memcpy(&second_component_id, current_data, sizeof(uint32_t));
-    //     current_data += sizeof(uint32_t);
-    //     remaining_data -= sizeof(uint32_t);
-    //
-    //     printf("[Debug] Second Component ID: %d\n", second_component_id);
-    //
-    //     if (second_component_id == COMPONENT_VELOCITY) {
-    //         if (remaining_data >= sizeof(velocity_t)) {
-    //             velocity_t vel;
-    //             memcpy(&vel, current_data, sizeof(velocity_t));
-    //             current_data += sizeof(velocity_t);
-    //             remaining_data -= sizeof(velocity_t);
-    //
-    //             printf("[Client] Velocity received: x=%.2f, y=%.2f\n", vel.x, vel.y);
-    //             ecs_add_component(ecs, entity_id, COMPONENT_VELOCITY, &vel);
-    //         } else {
-    //             printf("[Error] Not enough data for Velocity\n");
-    //         }
-    //     }
-    // }
 }
 
 int main() {

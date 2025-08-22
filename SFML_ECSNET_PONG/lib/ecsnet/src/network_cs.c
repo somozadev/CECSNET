@@ -136,6 +136,75 @@ network_cs_t *network_cs_init(const network_architecture_config_t *config, ecs_t
 
     return cs_arch;
 }
+void send_dirty_entities_batch(network_cs_t* network_cs) {
+    network_packet_t pkt;
+    pkt.header.type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+
+    uint8_t* write_ptr = pkt.data;
+
+    // Reservamos espacio para entity_count (2 bytes). Lo escribiremos al final.
+    write_ptr += sizeof(uint16_t);
+    uint16_t entity_count = 0;
+
+    // Recorrer todas las entidades y componentes sucios
+    for (entity_t entity = 0; entity < network_cs->ecs->registered_entities_count; entity++) {
+        // Preparar un buffer temporal con las parejas (component_id + datos) de la entidad
+        uint8_t comp_buffer[512];
+        uint8_t* comp_ptr = comp_buffer;
+        uint8_t comp_count = 0;
+
+        for (component_t cid = 0; cid < network_cs->ecs->registered_component_count; cid++) {
+            if (network_cs->ecs->components[cid].is_dirty[entity]) {
+                size_t comp_size = network_cs->ecs->components[cid].descriptor.size;
+                // Añadir el ID del componente
+                memcpy(comp_ptr, &cid, sizeof(component_t));
+                comp_ptr += sizeof(component_t);
+                // Añadir los datos del componente
+                const void* comp_data = ecs_get_component(network_cs->ecs, entity, cid);
+                memcpy(comp_ptr, comp_data, comp_size);
+                comp_ptr += comp_size;
+                comp_count++;
+            }
+        }
+
+        if (comp_count > 0) {
+            // Comprobar que cabe la entidad en el paquete
+            size_t entity_bytes = sizeof(entity_t) + sizeof(uint8_t) + (comp_ptr - comp_buffer);
+            if ((write_ptr - pkt.data) + entity_bytes > sizeof(pkt.data)) {
+                // Si no cabe, deja de añadir entidades (o envía un paquete parcial y continúa)
+                break;
+            }
+
+            // Escribir entity_id
+            memcpy(write_ptr, &entity, sizeof(entity_t));
+            write_ptr += sizeof(entity_t);
+            // Escribir número de componentes
+            memcpy(write_ptr, &comp_count, sizeof(uint8_t));
+            write_ptr += sizeof(uint8_t);
+            // Copiar los pares (component_id + datos)
+            memcpy(write_ptr, comp_buffer, comp_ptr - comp_buffer);
+            write_ptr += (comp_ptr - comp_buffer);
+
+            // Marcar que esta entidad se incluirá y limpia sus dirty flags
+            entity_count++;
+            for (component_t cid = 0; cid < network_cs->ecs->registered_component_count; cid++) {
+                network_cs->ecs->components[cid].is_dirty[entity] = false;
+            }
+        }
+    }
+
+    // Escribir entity_count al principio del payload
+    memcpy(pkt.data, &entity_count, sizeof(uint16_t));
+    // Calcular el tamaño total del paquete (cabecera + payload)
+    pkt.header.size = sizeof(packet_header_t) + (write_ptr - pkt.data);
+
+    // Enviar este único paquete a todos los peers
+    for (int i = 0; i < network_cs->connection_manager.peer_count; i++) {
+        const char* peer_id = network_cs->connection_manager.peers[i].id;
+        connection_manager_send_to_peer(&network_cs->connection_manager, peer_id, &pkt, pkt.header.size);
+    }
+}
+
 
 void network_cs_update(network_cs_t *network_cs) {
     if (!network_cs) return;
@@ -144,57 +213,8 @@ void network_cs_update(network_cs_t *network_cs) {
     connection_manager_update(&network_cs->connection_manager);
 
     if (network_cs->config.is_server) {
-        static entity_t next_start = 0;
-        entity_t start = next_start;
-        for (int processed = 0; processed < network_cs->ecs->registered_entities_count; processed++) {
-            entity_t entity = (start + processed) % network_cs->ecs->registered_entities_count;
-            bool entity_dirty = false;
-            uint8_t sync_data[MAX_PACKET_SIZE];
-            size_t sync_size = 0;
 
-            // Construir sync_data con los componentes dirty de esta entidad
-            for (component_t component = 0; component < network_cs->ecs->registered_component_count; component++) {
-                if (network_cs->ecs->components[component].is_dirty[entity]) {
-                    const void *component_data = ecs_get_component(network_cs->ecs, entity, component);
-                    if (component_data) {
-                        size_t comp_size = network_cs->ecs->components[component].descriptor.size;
-                        if (sync_size + sizeof(component_t) + comp_size > MAX_PACKET_SIZE)
-                            break;
-                        memcpy(sync_data + sync_size, &component, sizeof(component_t));
-                        sync_size += sizeof(component_t);
-                        memcpy(sync_data + sync_size, component_data, comp_size);
-                        sync_size += comp_size;
-                        entity_dirty = true;
-                    }
-                }
-            }
-
-            if (entity_dirty) {
-                // Reiniciar el handler y empaquetar esta única entidad
-                protocol_handler_init(&network_cs->protocol_handler);
-                protocol_handler_pack_entity_update(&network_cs->protocol_handler,
-                                                    entity,
-                                                    sync_data,
-                                                    sync_size);
-
-                // Enviar a todos los peers
-                for (int i = 0; i < network_cs->connection_manager.peer_count; i++) {
-                    peer_t *peer = &network_cs->connection_manager.peers[i];
-                    protocol_handler_send_packet(&network_cs->connection_manager,
-                                                 peer->id,
-                                                 &network_cs->protocol_handler);
-                }
-
-                // **Llamar otra vez a connection_manager_update para que se envíe este paquete**
-                connection_manager_update(&network_cs->connection_manager);
-
-                // Limpiar flags dirty
-                for (component_t component = 0; component < network_cs->ecs->registered_component_count; component++) {
-                    ecs_clear_component_dirty(network_cs->ecs, entity, component);
-                }
-                next_start = (entity + 1) % network_cs->ecs->registered_entities_count;
-            }
-        }
+        send_dirty_entities_batch(network_cs);
     }
 }
 
