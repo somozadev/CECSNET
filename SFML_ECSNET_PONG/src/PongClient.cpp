@@ -163,6 +163,18 @@ private:
         if (!serverPeerId_ && peer && peer->id) {
             serverPeerId_ = peer->id; // pointer as delivered by networking layer
             std::printf("[Client] Server peer id cached: %s\n", serverPeerId_);
+            auto* cs = static_cast<network_cs_t*>(netArch_->impl);
+
+
+            if (cs) {
+                connection_manager_set_peer_udp_remote_port_by_id(&cs->connection_manager, serverPeerId_, cs->config.udp_port);
+                uint16_t udp_port = connection_manager_get_udp_local_port(&cs->connection_manager);
+                protocol_handler_t h;
+                protocol_handler_init(&h);
+                protocol_handler_pack_client_register(&h, udp_port);
+                protocol_handler_send_packet(&cs->connection_manager, serverPeerId_, &h);
+                printf("[Client] Sent CLIENT_REGISTER with UDP port %hu\n", udp_port);
+            }
         }
 
         // 2) Basic validation

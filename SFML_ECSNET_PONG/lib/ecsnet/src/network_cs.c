@@ -131,16 +131,23 @@ network_cs_t *network_cs_init(const network_architecture_config_t *config, ecs_t
 
     // Create, bind, and add the UDP listen socket.
     net_socket_t udp_listen_socket = net_socket_create(SOCKET_TYPE_UDP);
-    net_socket_bind(&udp_listen_socket, config->ip_address, config->udp_port);
+    if (config->is_server) {
+        // Server: Fixed port
+        net_socket_bind(&udp_listen_socket, config->ip_address, config->udp_port);
+    } else {
+        // Client: Ephemeral port (0)
+        net_socket_bind(&udp_listen_socket, config->ip_address, 0);
+    }
     connection_manager_add_listen_socket(&cs_arch->connection_manager, udp_listen_socket, SOCKET_TYPE_UDP);
 
     return cs_arch;
 }
-void send_dirty_entities_batch(network_cs_t* network_cs) {
+
+void send_dirty_entities_batch(network_cs_t *network_cs) {
     network_packet_t pkt;
     pkt.header.type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
 
-    uint8_t* write_ptr = pkt.data;
+    uint8_t *write_ptr = pkt.data;
 
     // Reservamos espacio para entity_count (2 bytes). Lo escribiremos al final.
     write_ptr += sizeof(uint16_t);
@@ -150,7 +157,7 @@ void send_dirty_entities_batch(network_cs_t* network_cs) {
     for (entity_t entity = 0; entity < network_cs->ecs->registered_entities_count; entity++) {
         // Preparar un buffer temporal con las parejas (component_id + datos) de la entidad
         uint8_t comp_buffer[512];
-        uint8_t* comp_ptr = comp_buffer;
+        uint8_t *comp_ptr = comp_buffer;
         uint8_t comp_count = 0;
 
         for (component_t cid = 0; cid < network_cs->ecs->registered_component_count; cid++) {
@@ -160,7 +167,7 @@ void send_dirty_entities_batch(network_cs_t* network_cs) {
                 memcpy(comp_ptr, &cid, sizeof(component_t));
                 comp_ptr += sizeof(component_t);
                 // Añadir los datos del componente
-                const void* comp_data = ecs_get_component(network_cs->ecs, entity, cid);
+                const void *comp_data = ecs_get_component(network_cs->ecs, entity, cid);
                 memcpy(comp_ptr, comp_data, comp_size);
                 comp_ptr += comp_size;
                 comp_count++;
@@ -200,7 +207,7 @@ void send_dirty_entities_batch(network_cs_t* network_cs) {
 
     // Enviar este único paquete a todos los peers
     for (int i = 0; i < network_cs->connection_manager.peer_count; i++) {
-        const char* peer_id = network_cs->connection_manager.peers[i].id;
+        const char *peer_id = network_cs->connection_manager.peers[i].id;
         connection_manager_send_to_peer(&network_cs->connection_manager, peer_id, &pkt, pkt.header.size);
     }
 }
@@ -213,7 +220,6 @@ void network_cs_update(network_cs_t *network_cs) {
     connection_manager_update(&network_cs->connection_manager);
 
     if (network_cs->config.is_server) {
-
         send_dirty_entities_batch(network_cs);
     }
 }

@@ -208,6 +208,14 @@ int net_socket_bind(net_socket_t *socket, const char *ip, uint16_t port) {
     return 0;
 }
 
+uint16_t net_socket_get_local_port(const net_socket_t* s) {
+    struct sockaddr_in addr; int len = (int)sizeof(addr);
+    if (!s || s->fd == INVALID_SOCKET) return 0;
+    if (getsockname(s->fd, (struct sockaddr*)&addr, &len) == 0)
+        return ntohs(addr.sin_port);
+    return 0;
+}
+
 /**
  * @brief Sets the socket in listening mode (only for TCP sockets).
  *

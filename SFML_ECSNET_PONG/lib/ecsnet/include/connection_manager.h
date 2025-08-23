@@ -39,6 +39,7 @@ ECSNET_API typedef struct peer_t {
     struct sockaddr_in addr_udp;            /**< The UDP address of the peer. */
     net_socket_t net_sockets[PROTOCOL_COUNT]; /**< Sockets used for communication with this peer. */
     bool is_connected;                      /**< A flag indicating if the peer connection is currently active. */
+    bool udp_ready;                      /**< A flag indicating if the peer udp connection is ready. */
 } peer_t;
 
 
@@ -130,6 +131,10 @@ void connection_manager_destroy(connection_manager_t* connection_manager);
  * @return A pointer to the net_socket_t instance, or NULL if not found.
  */
 net_socket_t* connection_manager_get_listen_socket(connection_manager_t* cm, socket_type_t type);
+
+uint16_t connection_manager_get_udp_local_port(connection_manager_t* cm);
+
+int connection_manager_set_peer_udp_remote_port_by_id(connection_manager_t* cm, const char* peer_id, uint16_t remote_udp_port);
 
 /**
  * @brief Finds a peer by its network address.

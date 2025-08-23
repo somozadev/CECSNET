@@ -113,6 +113,12 @@ void protocol_handler_process_received_data(protocol_handler_t *handler, ecs_t *
                 // Log the extracted information. The actual logic is handled elsewhere.
                 printf("[ProtocolHandler] Client %s sent UDP port %hu. Waiting for Network_cs to handle the logic.\n",
                        peer->id, udp_port);
+                peer->addr_udp = peer->addr_tcp;
+                peer->addr_udp.sin_port = htons(udp_port);
+                peer->udp_ready = 1;
+
+                // Opcional: empuja estado inicial ya por UDP
+                // send_full_state_to_peer(ecs, ARCH_PTR, peer);
             }
             break;
         }

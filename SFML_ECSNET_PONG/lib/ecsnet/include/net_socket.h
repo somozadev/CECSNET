@@ -105,6 +105,8 @@ int net_socket_receive_from(net_socket_t* socket, void* buffer, int max_len, str
  */
 int net_socket_bind(net_socket_t* socket, const char* ip, uint16_t port);
 
+
+uint16_t net_socket_get_local_port(const net_socket_t* s);
 /**
  * @brief Sets the socket in listening mode (only for TCP sockets).
  * @param socket A pointer to the net_socket_t instance.

@@ -77,23 +77,52 @@ void connection_manager_remove_peer(connection_manager_t* connection_manager, co
 }
 
 int connection_manager_send_to_peer(connection_manager_t* connection_manager, const char* peer_id, const void* data, int len) {
-    // Find the target peer by its unique ID.
+    const network_packet_t* pkt = (const network_packet_t*)data;
+
     for (int i = 0; i < connection_manager->peer_count; ++i) {
         if (strcmp(connection_manager->peers[i].id, peer_id) == 0) {
-            peer_t* peer = &connection_manager->peers[i];
+            peer_t* p = &connection_manager->peers[i];
 
-            // Prioritize sending via TCP if the socket is valid.
-            if (peer->net_sockets[SOCKET_TYPE_TCP].fd != -1) {
-                return net_socket_send(&connection_manager->peers[i].net_sockets[SOCKET_TYPE_TCP], data, len);
+            int is_ecs_update = pkt &&
+                (pkt->header.type == PACKET_TYPE_ENTITY_UPDATE ||
+                 pkt->header.type == PACKET_TYPE_MULTI_ENTITY_UPDATE);
+
+            if (is_ecs_update && p->udp_ready && connection_manager->listen_sockets[SOCKET_TYPE_UDP].fd != INVALID_SOCKET) {
+                // usa SIEMPRE el socket UDP del manager
+                return net_socket_sendto(&connection_manager->listen_sockets[SOCKET_TYPE_UDP], data, len, &p->addr_udp);
             }
-            // If TCP is not available, try to send via UDP if a valid UDP address is known.
-            if (peer->net_sockets[SOCKET_TYPE_UDP].fd != -1) {
-                return net_socket_sendto(&peer->net_sockets[SOCKET_TYPE_UDP], data, len, &peer->addr_udp);
+
+            if (p->net_sockets[SOCKET_TYPE_TCP].fd != INVALID_SOCKET) {
+                return net_socket_send(&p->net_sockets[SOCKET_TYPE_TCP], data, len);
             }
-            return -3; // Return an error if no valid socket is found.
+            if (connection_manager->listen_sockets[SOCKET_TYPE_UDP].fd != INVALID_SOCKET) {
+                // fallback UDP (aunque no sea update)
+                return net_socket_sendto(&connection_manager->listen_sockets[SOCKET_TYPE_UDP], data, len, &p->addr_udp);
+            }
+            return -3;
         }
     }
-    return -1; // Return an error if the peer is not found.
+    return -1;
+
+    //
+    //
+    // // Find the target peer by its unique ID.
+    // for (int i = 0; i < connection_manager->peer_count; ++i) {
+    //     if (strcmp(connection_manager->peers[i].id, peer_id) == 0) {
+    //         peer_t* peer = &connection_manager->peers[i];
+    //
+    //         // Prioritize sending via TCP if the socket is valid.
+    //         if (peer->net_sockets[SOCKET_TYPE_TCP].fd != -1) {
+    //             return net_socket_send(&connection_manager->peers[i].net_sockets[SOCKET_TYPE_TCP], data, len);
+    //         }
+    //         // If TCP is not available, try to send via UDP if a valid UDP address is known.
+    //         if (peer->net_sockets[SOCKET_TYPE_UDP].fd != -1) {
+    //             return net_socket_sendto(&peer->net_sockets[SOCKET_TYPE_UDP], data, len, &peer->addr_udp);
+    //         }
+    //         return -3; // Return an error if no valid socket is found.
+    //     }
+    // }
+    // return -1; // Return an error if the peer is not found.
 }
 
 int connection_manager_broadcast(connection_manager_t* connection_manager, const void* data, int len) {
@@ -258,6 +287,31 @@ net_socket_t* connection_manager_get_listen_socket(connection_manager_t* cm, soc
     }
     return NULL;
 }
+
+uint16_t connection_manager_get_udp_local_port(connection_manager_t* cm) {
+    if (!cm) return 0;
+    net_socket_t* udp = &cm->listen_sockets[SOCKET_TYPE_UDP];
+    if (udp->fd == INVALID_SOCKET) return 0;
+    return net_socket_get_local_port(udp);
+}
+
+int connection_manager_set_peer_udp_remote_port_by_id(connection_manager_t* cm, const char* peer_id, uint16_t remote_udp_port)
+{
+    if (!cm || !peer_id) return -1;
+    for (int i = 0; i < cm->peer_count; ++i) {
+        if (strcmp(cm->peers[i].id, peer_id) == 0) {
+            peer_t* p = &cm->peers[i];
+            // Usa la IP del TCP y el puerto UDP remoto indicado
+            p->addr_udp = p->addr_tcp;
+            p->addr_udp.sin_port = htons(remote_udp_port);
+            // Asegura que el socket local UDP sea el de escucha del CM
+            p->net_sockets[SOCKET_TYPE_UDP] = cm->listen_sockets[SOCKET_TYPE_UDP];
+            return 0;
+        }
+    }
+    return -2;
+}
+
 void connection_manager_update(connection_manager_t* connection_manager) {
     if (!connection_manager) return;
 

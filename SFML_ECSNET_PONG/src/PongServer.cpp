@@ -26,7 +26,7 @@ namespace config {
 constexpr float kWindowWidth        = 800.0f;
 constexpr float kWindowHeight       = 600.0f;
 
-constexpr int   kNumBalls           = 10;
+constexpr int   kNumBalls           = 150;
 constexpr float kTopSpawnY          = 5.0f;    // slightly inside the screen
 constexpr float kWrapResetY         = -5.0f;   // just above the screen
 
