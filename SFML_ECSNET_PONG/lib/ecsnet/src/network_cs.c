@@ -10,6 +10,16 @@
 #include "net_socket.h"
 #include "protocol_handler.h"
 
+
+static bool prioritized_entities[MAX_ENTITIES] = { false };
+
+static void ecsnet_dirty_hook(entity_t e) {
+    if (e < MAX_ENTITIES) {
+        prioritized_entities[e] = true;
+    }
+}
+
+
 // ---------- helpers de escritura ----------
 static size_t wr_mem(uint8_t* dst, size_t cap, size_t pos, const void* p, size_t n) {
     if (pos + n > cap) return (size_t)-1;
@@ -125,8 +135,8 @@ static void sd_flush_if_needed(connection_manager_t* cm,
     // reset
     *pos  = sizeof(packet_header_t) + sizeof(uint16_t);
     *ents = 0;
-}
-static void send_dirty_chunked_rr(ecs_t* ecs, connection_manager_t* cm, const char* peer_id, size_t soft_limit) {
+}static void send_dirty_chunked_rr(ecs_t* ecs, connection_manager_t* cm,
+                                  const char* peer_id, size_t soft_limit) {
     static entity_t rr = 0;
     if (!ecs || !cm) return;
     if (soft_limit == 0 || soft_limit > MAX_PACKET_SIZE) soft_limit = 1200;
@@ -139,10 +149,39 @@ static void send_dirty_chunked_rr(ecs_t* ecs, connection_manager_t* cm, const ch
     size_t pos  = base_sz;
     uint16_t ents = 0;
 
+    /* Construir lista ordenada de entidades: primero las que se han marcado como
+       dirty recientemente (prioritized_entities[e] == true), luego las demás en
+       el orden round‑robin habitual.  El array 'added' evita duplicados. */
+    entity_t order[MAX_ENTITIES];
+    bool added[MAX_ENTITIES] = { false };
+    size_t order_count = 0;
+    // Añadir entidades priorizadas
+    for (entity_t e = 0; e < MAX_ENTITIES; ++e) {
+        if (prioritized_entities[e]) {
+            order[order_count++] = e;
+            added[e] = true;
+            /* Limpiar la marca de prioridad: sólo queremos priorizar la primera
+               vez que una entidad queda sucia; las siguientes veces vuelve al
+               ciclo normal. */
+            prioritized_entities[e] = false;
+        }
+    }
+    // Añadir el resto en orden round‑robin
     for (entity_t step = 0; step < MAX_ENTITIES; ++step) {
         entity_t e = (rr + step) % MAX_ENTITIES;
+        if (!added[e]) {
+            order[order_count++] = e;
+            added[e] = true;
+        }
+    }
 
-        // cabecera entidad
+    /* Recorremos la lista ordenada y empaquetamos los componentes sucios.  Si
+       al intentar escribir una entidad no cabe ni un componente, se hace flush
+       del paquete actual y se reproc esa misma entidad en el siguiente. */
+    for (size_t idx = 0; idx < order_count; ++idx) {
+        entity_t e = order[idx];
+
+        // Reservar cabecera de entidad
         size_t ent_pos = pos;
         pos = wr_mem(buf, cap, pos, &e, sizeof(entity_t));
         if (pos == (size_t)-1) goto flush;
@@ -158,6 +197,11 @@ static void send_dirty_chunked_rr(ecs_t* ecs, connection_manager_t* cm, const ch
             const void* comp_data = ecs_get_component(ecs, e, c);
             size_t comp_size      = ecs->components[c].descriptor.size;
 
+            /* Si añadir este componente supera el soft_limit, decide: si no se ha
+               escrito ninguno aún para esta entidad, deja 'pos' en ent_pos y
+               envía el paquete actual para empezar uno nuevo (reprocesará
+               nuevamente esta entidad).  Si ya se han escrito algunos
+               componentes, cierra la entidad, envía el paquete, y reproc. */
             if (pos + sizeof(component_t) + comp_size > soft_limit) {
                 if (comp_count == 0) { pos = ent_pos; goto flush; }
                 buf[cc_pos] = comp_count;
@@ -170,39 +214,51 @@ static void send_dirty_chunked_rr(ecs_t* ecs, connection_manager_t* cm, const ch
             if (pos == (size_t)-1) { pos = ent_pos; goto flush; }
 
             comp_count++;
+            /* Limpiamos el flag dirty ahora que se ha escrito este componente.
+               Nota: si más tarde hay que reproc. la entidad porque el paquete
+               se llenó, los componentes restantes seguirán sucios y por tanto
+               se volverán a enviar. */
             ecs_clear_component_dirty(ecs, e, c);
         }
 
-        if (comp_count == 0) { pos = ent_pos; continue; }
+        if (comp_count == 0) {
+            // no se escribió nada de esta entidad
+            pos = ent_pos;
+            continue;
+        }
 
+        // Escribir el número de componentes en la cabecera de entidad
         buf[cc_pos] = comp_count;
         ents++;
 
+        /* Si no queda espacio para al menos otra entidad y un componente, envia
+           ahora y empieza un paquete nuevo. */
         if (pos + sizeof(entity_t) + 1 + 8 > soft_limit) {
-            flush:
-         if (ents > 0) {
-             // escribir el número de entidades al final de la cabecera
-             memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+flush:
+            if (ents > 0) {
+                // Rellenar count e inicializar cabecera
+                memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+                packet_header_t* hdr = (packet_header_t*)buf;
+                hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+                hdr->size = (uint16_t)pos;
 
-             // Inicializar explícitamente el encabezado: rellenar type y size
-             packet_header_t* hdr = (packet_header_t*)buf;
-             hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
-             hdr->size = (uint16_t)pos;
-
-             if (peer_id) {
-                 // envío unicast (UDP preferente, TCP fallback)
-                 send_multi_to_peer(cm, peer_id, buf, pos);
-             } else {
-                 // difusión a todos los clientes
-                 connection_manager_broadcast(cm, buf, (int)pos);
-             }
-         }
-            // reiniciar posición y contador
+                if (peer_id) {
+                    // Envío unicast (UDP preferente, TCP fallback)
+                    send_multi_to_peer(cm, peer_id, buf, pos);
+                } else {
+                    // Broadcast: siempre inicializa hdr antes de enviar
+                    connection_manager_broadcast(cm, buf, (int)pos);
+                }
+            }
+            // Reiniciar buffer y contadores para nuevo paquete
             pos  = base_sz;
             ents = 0;
+            // Decrementa idx para reprocesar la misma entidad si saltamos por flush
+            idx--;
         }
     }
 
+    // Enviar cualquier entidad restante en el buffer al final
     if (ents > 0) {
         memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
         packet_header_t* hdr = (packet_header_t*)buf;
@@ -215,8 +271,11 @@ static void send_dirty_chunked_rr(ecs_t* ecs, connection_manager_t* cm, const ch
             connection_manager_broadcast(cm, buf, (int)pos);
         }
     }
+
+    // Avanzar el round‑robin para la próxima llamada
     rr = (rr + 1) % MAX_ENTITIES;
 }
+
 
 // ---------- callbacks de connection_manager ----------
 void on_packet_received_cs(void *user_data, peer_t *peer, const void *data, int len) {
@@ -312,7 +371,11 @@ void on_peer_disconnected_cs(void *user_data, peer_t *peer) {
 network_cs_t *network_cs_init(const network_architecture_config_t *config, ecs_t *ecs) {
     network_cs_t *cs_arch = (network_cs_t*)malloc(sizeof(network_cs_t));
     if (!cs_arch) return NULL;
-
+    if (config->is_server) {
+        ecs_set_dirty_hook(ecsnet_dirty_hook);
+    } else {
+        ecs_set_dirty_hook(NULL);
+    }
     cs_arch->ecs = ecs;
     cs_arch->config = *config;
     cs_arch->sync_acc = 0.f; // si tu struct lo tiene; si no, ignora

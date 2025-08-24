@@ -129,6 +129,7 @@ ECSNET_API bool ecs_remove_component(ecs_t *ecs, entity_t entity, component_t co
  */
 void ecs_mark_component_dirty(ecs_t *ecs, entity_t entity, component_t component);
 
+void ecs_set_dirty_hook(void (*hook)(entity_t));
 /**
  * @brief Gets the number of dirty components for a given entity.
  * @param ecs A pointer to the ECS instance.

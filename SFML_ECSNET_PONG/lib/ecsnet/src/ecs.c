@@ -253,11 +253,21 @@ bool ecs_remove_component(ecs_t* ecs, entity_t entity, component_t component) {
     return true;
 }
 
+static void (*ecs_dirty_hook)(entity_t) = NULL;
+
 void ecs_mark_component_dirty(ecs_t* ecs, entity_t entity, component_t component) {
     if (entity >= MAX_ENTITIES || component >= ecs->registered_component_count)
         return;
+    bool was_dirty = ecs->components[component].is_dirty[entity];
     ecs->components[component].is_dirty[entity] = true;
+    if (!was_dirty && ecs_dirty_hook) ecs_dirty_hook(entity);
 }
+
+void ecs_set_dirty_hook(void (*hook)(entity_t)) {
+    ecs_dirty_hook = hook;
+}
+
+
 
 int ecs_get_dirty_components(ecs_t* ecs, entity_t entity, dirty_component_t* out_dirty_components) {
     if (entity >= MAX_ENTITIES || !ecs->entities[entity].in_use)

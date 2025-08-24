@@ -26,7 +26,7 @@ namespace config {
 constexpr float kWindowWidth        = 800.0f;
 constexpr float kWindowHeight       = 600.0f;
 
-constexpr int   kNumBalls           = 150;
+constexpr int   kNumBalls           = 50;
 constexpr float kTopSpawnY          = 5.0f;    // slightly inside the screen
 constexpr float kWrapResetY         = -5.0f;   // just above the screen
 
@@ -243,7 +243,7 @@ private:
      self->HandleInputReceived(from, eid, cmd, extra, extra_len);
     }
     void HandleInputReceived(peer_t* from, entity_t eid, uint8_t cmd, const void* extra, uint16_t extra_len) {
-        printf("[Server] Received input from %s -> e=%u cmd=%u\n" ,from,eid, cmd);
+        printf("[Server] Received input from %s -> e=%u cmd=%u\n" ,from->id,eid, cmd);
         if (cmd == INPUT_SPAWN) {
             if (extra_len < sizeof(float)*2) return;
             float x, y;
@@ -274,7 +274,7 @@ private:
         server_config.on_client_input = &GameServer::OnClientInputReceived;
         server_config.user_data            = this;
         network_architecture_t* arch = nullptr;
-        server_config.ecs_sync_hz = 20.0f; // por ejemplo
+        server_config.ecs_sync_hz = 230.0f; // por ejemplo
 
         network_architecture_init(&arch, &server_config, &ecs_);
         ctx_.arch = arch;
