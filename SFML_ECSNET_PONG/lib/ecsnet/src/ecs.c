@@ -4,29 +4,112 @@
 #include "ecs_internal.h"
 #include <stdio.h> // Debug printing
 
+// Expand the capacity for entity arrays and update all component storages accordingly.
+static void ecs_expand_entities(ecs_t *ecs, size_t new_capacity) {
+    if (!ecs || new_capacity <= ecs->entity_capacity) return;
+    // Allocate new arrays
+    entity_meta_t *new_entities = calloc(new_capacity, sizeof(entity_meta_t));
+    component_signature_t *new_signatures = calloc(new_capacity, sizeof(component_signature_t));
+    if (!new_entities || !new_signatures) {
+        fprintf(stderr, "ECS expand: failed to allocate memory for %zu entities\n", new_capacity);
+        return;
+    }
+    // Copy existing data
+    memcpy(new_entities, ecs->entities, ecs->entity_capacity * sizeof(entity_meta_t));
+    memcpy(new_signatures, ecs->signatures, ecs->entity_capacity * sizeof(component_signature_t));
+    // Initialize new region
+    memset(new_entities + ecs->entity_capacity, 0, (new_capacity - ecs->entity_capacity) * sizeof(entity_meta_t));
+    memset(new_signatures + ecs->entity_capacity, 0, (new_capacity - ecs->entity_capacity) * sizeof(component_signature_t));
+    // Update component storages to handle larger entity capacity
+    for (size_t i = 0; i < ecs->registered_component_count; ++i) {
+        component_storage_t *storage = &ecs->components[i];
+        size_t old_cap = storage->capacity;
+        size_t new_cap = new_capacity;
+        // Reallocate component data
+        void *new_data = calloc(new_cap, storage->descriptor.size);
+        if (!new_data) {
+            fprintf(stderr, "ECS expand: failed to allocate component data for component %zu\n", i);
+            continue;
+        }
+        // Copy old data per entity
+        for (size_t e = 0; e < ecs->entity_capacity; ++e) {
+            memcpy((uint8_t*)new_data + storage->descriptor.size * e,
+                   (uint8_t*)storage->data + storage->descriptor.size * e,
+                   storage->descriptor.size);
+        }
+        free(storage->data);
+        storage->data = new_data;
+        // Reallocate used and is_dirty arrays
+        bool *new_used = calloc(new_cap, sizeof(bool));
+        bool *new_dirty = calloc(new_cap, sizeof(bool));
+        if (!new_used || !new_dirty) {
+            fprintf(stderr, "ECS expand: failed to allocate used/dirty arrays\n");
+            // We intentionally leak to avoid corrupting existing pointers
+        } else {
+            memcpy(new_used, storage->used, ecs->entity_capacity * sizeof(bool));
+            memcpy(new_dirty, storage->is_dirty, ecs->entity_capacity * sizeof(bool));
+            free(storage->used);
+            free(storage->is_dirty);
+            storage->used = new_used;
+            storage->is_dirty = new_dirty;
+        }
+        storage->capacity = new_cap;
+    }
+    // Free old arrays and assign new
+    free(ecs->entities);
+    free(ecs->signatures);
+    ecs->entities = new_entities;
+    ecs->signatures = new_signatures;
+    ecs->entity_capacity = new_capacity;
+}
+
+// Expand the component storage array when new component types are registered beyond capacity
+static void ecs_expand_component_array(ecs_t *ecs, size_t new_capacity) {
+    if (!ecs || new_capacity <= ecs->component_capacity) return;
+    component_storage_t *new_components = calloc(new_capacity, sizeof(component_storage_t));
+    if (!new_components) {
+        fprintf(stderr, "ECS expand components: allocation failed\n");
+        return;
+    }
+    // Copy old component storages; the storage's internal pointers stay valid
+    memcpy(new_components, ecs->components, ecs->registered_component_count * sizeof(component_storage_t));
+    // Initialize new empty slots
+    memset(new_components + ecs->component_capacity, 0, (new_capacity - ecs->component_capacity) * sizeof(component_storage_t));
+    free(ecs->components);
+    ecs->components = new_components;
+    ecs->component_capacity = new_capacity;
+}
+
+// Forward declarations of internal helper functions
+static void ecs_expand_entities(ecs_t *ecs, size_t new_capacity);
+static void ecs_expand_component_array(ecs_t *ecs, size_t new_capacity);
+
 void ecs_init(ecs_t* ecs)
 {
     if (!ecs) return;
 
-    // Fully reset entity and component storage to a clean state.
-    // This ensures no "garbage" memory remains from previous use.
-    memset(ecs->entities, 0, sizeof(ecs->entities));
-    memset(ecs->components, 0, sizeof(ecs->components));
-
-    ecs->registered_component_count = 0;
+    // Initialize dynamic capacities
+    ecs->entity_capacity = INITIAL_ENTITY_CAPACITY;
+    ecs->component_capacity = INITIAL_COMPONENT_CAPACITY;
     ecs->registered_entities_count = 0;
+    ecs->registered_component_count = 0;
     ecs->system_count = 0;
 
-    // Register built-in ECS components and systems.
+    // Allocate entity metadata and signatures
+    ecs->entities = calloc(ecs->entity_capacity, sizeof(entity_meta_t));
+    ecs->signatures = calloc(ecs->entity_capacity, sizeof(component_signature_t));
+    // Allocate component storage array
+    ecs->components = calloc(ecs->component_capacity, sizeof(component_storage_t));
+    if (!ecs->entities || !ecs->components || !ecs->signatures) {
+        fprintf(stderr, "ECS init: memory allocation failed\n");
+        return;
+    }
+
+    // Register built-in ECS components and systems. These functions will
+    // populate ecs->components using ecs_register_component(), which handles
+    // dynamic allocation for component storages.
     ecs_register_builtin_components(ecs);
     ecs_register_builtin_systems(ecs);
-
-    // Reset 'is_dirty' flags for all registered components.
-    // The memset above already covers this, but the loop is kept
-    // for clarity and possible future explicit initialization needs.
-    for (int i = 0; i < ecs->registered_component_count; i++) {
-        memset(&ecs->components[i].is_dirty, 0, sizeof(ecs->components[i].is_dirty));
-    }
 }
 
 void ecs_update(ecs_t* ecs, float dt) {
@@ -37,50 +120,64 @@ void ecs_update(ecs_t* ecs, float dt) {
 #pragma region ENTITIES
 entity_t ecs_create_entity(ecs_t* ecs)
 {
+    if (!ecs) return (entity_t)-1;
     // Search for the first unused entity slot.
-    for (entity_t i = 0; i < MAX_ENTITIES; ++i)
+    for (entity_t i = 0; i < ecs->entity_capacity; ++i)
     {
         if (!ecs->entities[i].in_use)
         {
             ecs->entities[i].in_use = true;
             ecs->registered_entities_count++;
+            ecs->signatures[i] = 0;
             return i;
         }
     }
-    // No free entity slots available.
-    return (entity_t)-1;
+    // No free entity slots available; expand capacity and try again.
+    size_t new_capacity = ecs->entity_capacity == 0 ? INITIAL_ENTITY_CAPACITY : ecs->entity_capacity * 2;
+    ecs_expand_entities(ecs, new_capacity);
+    // After expanding, retry creation recursively.
+    return ecs_create_entity(ecs);
 }
 entity_t ecs_try_create_entity_by_id(ecs_t* ecs, entity_t id)
 {
-    // Search for the first unused entity slot.
-        if (!ecs->entities[id].in_use)
-        {
-            ecs->entities[id].in_use = true;
-            ecs->registered_entities_count++;
-            return id;
-        }
-    // No free entity slots available.
+    if (!ecs) return (entity_t)-1;
+    // Ensure the entity array is large enough.
+    if (id >= ecs->entity_capacity) {
+        size_t new_capacity = ecs->entity_capacity;
+        while (new_capacity <= id) new_capacity *= 2;
+        ecs_expand_entities(ecs, new_capacity);
+    }
+    if (!ecs->entities[id].in_use) {
+        ecs->entities[id].in_use = true;
+        ecs->registered_entities_count++;
+        ecs->signatures[id] = 0;
+        return id;
+    }
     return (entity_t)-1;
 }
 
 void ecs_destroy_entity(ecs_t* ecs, entity_t entity)
 {
-    if (entity >= MAX_ENTITIES || !ecs->entities[entity].in_use)
+    if (!ecs || entity >= ecs->entity_capacity || !ecs->entities[entity].in_use)
         return;
 
     ecs->entities[entity].in_use = false;
-
-    // Remove all components associated with this entity.
-    for (int i = 0; i < ecs->registered_component_count; ++i)
+    ecs->registered_entities_count--;
+    // Remove all components associated with this entity and clear signature bit
+    for (uint32_t i = 0; i < ecs->registered_component_count; ++i)
     {
-        if (ecs->components[i].used[entity])
-            ecs->components[i].used[entity] = false;
-            ecs->registered_entities_count--;
+        component_storage_t *storage = &ecs->components[i];
+        if (storage->used && storage->used[entity]) {
+            storage->used[entity] = false;
+            storage->is_dirty[entity] = true;
+        }
     }
+    // Clear signature bits
+    ecs->signatures[entity] = 0;
 }
 
 bool ecs_serialize_entity(ecs_t* ecs, entity_t entity, uint8_t* out_buffer, size_t* out_size, size_t max_buffer_size) {
-    if (entity >= MAX_ENTITIES || !ecs->entities[entity].in_use) {
+    if (!ecs || entity >= ecs->entity_capacity || !ecs->entities[entity].in_use) {
         *out_size = 0;
         return false;
     }
@@ -90,8 +187,9 @@ bool ecs_serialize_entity(ecs_t* ecs, entity_t entity, uint8_t* out_buffer, size
     size_t required_size = sizeof(int); // Space for storing the number of components.
 
     // Calculate how much space the serialized entity will take.
-    for (int i = 0; i < ecs->registered_component_count; ++i) {
-        if (ecs->components[i].used[entity]) {
+    for (uint32_t i = 0; i < ecs->registered_component_count; ++i) {
+        component_storage_t *storage = &ecs->components[i];
+        if (storage->used && storage->used[entity]) {
             required_size += sizeof(component_t) + ecs->components[i].descriptor.size;
             components_to_serialize++;
         }
@@ -108,19 +206,19 @@ bool ecs_serialize_entity(ecs_t* ecs, entity_t entity, uint8_t* out_buffer, size
     buffer_ptr += sizeof(int);
 
     // Serialize each component's ID and its data.
-    for (int i = 0; i < ecs->registered_component_count; ++i) {
-        if (ecs->components[i].used[entity]) {
+    for (uint32_t i = 0; i < ecs->registered_component_count; ++i) {
+        component_storage_t *storage = &ecs->components[i];
+        if (storage->used && storage->used[entity]) {
             component_t component_id = i;
-
             memcpy(buffer_ptr, &component_id, sizeof(component_t));
             buffer_ptr += sizeof(component_t);
 
-            ecs->components[i].descriptor.serialize(
-                (uint8_t*)ecs->components[i].data + ecs->components[i].descriptor.size * entity,
+            storage->descriptor.serialize(
+                (uint8_t*)storage->data + storage->descriptor.size * entity,
                 buffer_ptr
             );
 
-            buffer_ptr += ecs->components[i].descriptor.size;
+            buffer_ptr += storage->descriptor.size;
         }
     }
 
@@ -177,49 +275,60 @@ entity_t ecs_deserialize_entity(ecs_t* ecs, const uint8_t* in_buffer) {
 #pragma region COMPONENTS
 component_t ecs_register_component(ecs_t* ecs, component_descriptor_t descriptor)
 {
-    if (ecs->registered_component_count >= MAX_COMPONENTS)
-        return (component_t)-1;
-
+    if (!ecs) return (component_t)-1;
+    // Expand component array if needed
+    if (ecs->registered_component_count >= ecs->component_capacity) {
+        size_t new_capacity = ecs->component_capacity == 0 ? INITIAL_COMPONENT_CAPACITY : ecs->component_capacity * 2;
+        ecs_expand_component_array(ecs, new_capacity);
+    }
     component_t component_id = ecs->registered_component_count++;
     component_storage_t* storage = &ecs->components[component_id];
 
     storage->descriptor = descriptor;
-    storage->data = calloc(MAX_ENTITIES, descriptor.size);
-    if (!storage->data) {
-        printf("Error: Failed to allocate memory for component data.\n");
+    storage->capacity = ecs->entity_capacity;
+    storage->data = calloc(storage->capacity, descriptor.size);
+    storage->used = calloc(storage->capacity, sizeof(bool));
+    storage->is_dirty = calloc(storage->capacity, sizeof(bool));
+    if (!storage->data || !storage->used || !storage->is_dirty) {
+        fprintf(stderr, "Error: Failed to allocate memory for component storage.\n");
         return (component_t)-1;
     }
-
-    // Reset usage and dirty flags for all entities.
-    memset(storage->used, 0, sizeof(storage->used));
-    memset(storage->is_dirty, 0, sizeof(storage->is_dirty));
-
+    // Initialize usage and dirty flags to zero
+    memset(storage->used, 0, storage->capacity * sizeof(bool));
+    memset(storage->is_dirty, 0, storage->capacity * sizeof(bool));
     return component_id;
 }
 
 bool ecs_add_component(ecs_t* ecs, entity_t entity, component_t component, void *data)
 {
-    if (entity >= MAX_ENTITIES || component >= ecs->registered_component_count)
-        return false;
-
+    if (!ecs || component >= ecs->registered_component_count) return false;
+    // Ensure entity capacity
+    if (entity >= ecs->entity_capacity) {
+        size_t new_capacity = ecs->entity_capacity;
+        while (new_capacity <= entity) new_capacity *= 2;
+        ecs_expand_entities(ecs, new_capacity);
+    }
     component_storage_t* component_storage = &ecs->components[component];
+    // Ensure component storage arrays are large enough for this entity
+    if (entity >= component_storage->capacity) {
+        // Expand each component's arrays: triggered when entity capacity grew.
+        ecs_expand_entities(ecs, entity + 1);
+    }
     void *ptr = (uint8_t *)component_storage->data + component_storage->descriptor.size * entity;
-
     memcpy(ptr, data, component_storage->descriptor.size);
     component_storage->used[entity] = true;
     component_storage->is_dirty[entity] = true;
-
+    // Update entity signature bit
+    ecs->signatures[entity] |= (1ULL << component);
     return true;
 }
 
 void* ecs_get_component(ecs_t* ecs, entity_t entity, component_t component) {
-    if (entity >= MAX_ENTITIES || component >= ecs->registered_component_count)
+    if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return NULL;
-
-    component_storage_t* component_storage = &ecs->components[component];
-    if (!component_storage->used[entity]) return NULL;
-
-    return (uint8_t*)component_storage->data + component_storage->descriptor.size * entity;
+    component_storage_t* storage = &ecs->components[component];
+    if (!storage->used || !storage->used[entity]) return NULL;
+    return (uint8_t*)storage->data + storage->descriptor.size * entity;
 }
 
 const char* ecs_get_component_name(ecs_t* ecs, component_t component) {
@@ -230,36 +339,38 @@ const char* ecs_get_component_name(ecs_t* ecs, component_t component) {
 }
 
 bool ecs_has_component(ecs_t* ecs, entity_t entity, component_t component) {
-    if (entity >= MAX_ENTITIES || component >= ecs->registered_component_count)
+    if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return false;
-
-    return ecs->components[component].used[entity];
+    return (ecs->signatures[entity] & (1ULL << component)) != 0;
 }
 
 bool ecs_is_component_dirty(ecs_t* ecs, entity_t entity, component_t component) {
-    if (entity >= MAX_ENTITIES || component >= ecs->registered_component_count)
+    if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return false;
-
-    return ecs->components[component].is_dirty;
+    component_storage_t *storage = &ecs->components[component];
+    if (!storage->is_dirty) return false;
+    return storage->is_dirty[entity];
 }
 
 bool ecs_remove_component(ecs_t* ecs, entity_t entity, component_t component) {
-    if (entity >= MAX_ENTITIES || component >= ecs->registered_component_count)
+    if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return false;
-
-    ecs->components[component].used[entity] = false;
-    ecs->components[component].is_dirty[entity] = true;
-
+    component_storage_t *storage = &ecs->components[component];
+    if (storage->used) storage->used[entity] = false;
+    if (storage->is_dirty) storage->is_dirty[entity] = true;
+    // Clear signature bit
+    ecs->signatures[entity] &= ~(1ULL << component);
     return true;
 }
 
 static void (*ecs_dirty_hook)(entity_t) = NULL;
 
 void ecs_mark_component_dirty(ecs_t* ecs, entity_t entity, component_t component) {
-    if (entity >= MAX_ENTITIES || component >= ecs->registered_component_count)
+    if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return;
-    bool was_dirty = ecs->components[component].is_dirty[entity];
-    ecs->components[component].is_dirty[entity] = true;
+    component_storage_t *storage = &ecs->components[component];
+    bool was_dirty = storage->is_dirty ? storage->is_dirty[entity] : false;
+    if (storage->is_dirty) storage->is_dirty[entity] = true;
     if (!was_dirty && ecs_dirty_hook) ecs_dirty_hook(entity);
 }
 
@@ -270,14 +381,14 @@ void ecs_set_dirty_hook(void (*hook)(entity_t)) {
 
 
 int ecs_get_dirty_components(ecs_t* ecs, entity_t entity, dirty_component_t* out_dirty_components) {
-    if (entity >= MAX_ENTITIES || !ecs->entities[entity].in_use)
+    if (!ecs || entity >= ecs->entity_capacity || !ecs->entities[entity].in_use)
         return 0;
-
     int dirty_count = 0;
-    for (int i = 0; i < ecs->registered_component_count; ++i) {
-        if (ecs->components[i].used[entity] && ecs->components[i].is_dirty[entity]) {
+    for (uint32_t i = 0; i < ecs->registered_component_count; ++i) {
+        component_storage_t *storage = &ecs->components[i];
+        if (storage->used && storage->used[entity] && storage->is_dirty && storage->is_dirty[entity]) {
             out_dirty_components[dirty_count].component_id = i;
-            out_dirty_components[dirty_count].data = (uint8_t*)ecs->components[i].data + ecs->components[i].descriptor.size * entity;
+            out_dirty_components[dirty_count].data = (uint8_t*)storage->data + storage->descriptor.size * entity;
             dirty_count++;
         }
     }
@@ -285,9 +396,10 @@ int ecs_get_dirty_components(ecs_t* ecs, entity_t entity, dirty_component_t* out
 }
 
 void ecs_clear_component_dirty(ecs_t* ecs, entity_t entity, component_t component) {
-    if (entity >= MAX_ENTITIES || component >= ecs->registered_component_count)
+    if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return;
-    ecs->components[component].is_dirty[entity] = false;
+    component_storage_t *storage = &ecs->components[component];
+    if (storage->is_dirty) storage->is_dirty[entity] = false;
 }
 #pragma endregion
 

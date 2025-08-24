@@ -1,6 +1,24 @@
 #include "net_socket.h"
 #include <winsock2.h>
 #include <windows.h>
+#include <stdio.h>
+// Initialize the socket subsystem. On Windows this invokes WSAStartup().
+void net_socket_init(void) {
+#ifdef _WIN32
+    WSADATA wsa_data;
+    int result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
+    if (result != 0) {
+        fprintf(stderr, "WSAStartup failed: %d\n", result);
+    }
+#endif
+}
+
+// Clean up the socket subsystem. On Windows this invokes WSACleanup().
+void net_socket_cleanup(void) {
+#ifdef _WIN32
+    WSACleanup();
+#endif
+}
 #include <ws2def.h>
 #include "config.h"
 #include <fcntl.h>
@@ -249,14 +267,4 @@ int net_socket_close(net_socket_t *socket) {
 #else
     return close(socket->fd);
 #endif
-}
-
-/**
- * @brief Performs any necessary cleanup after closing a connection.
- *
- * This is primarily for Windows platforms to clean up the Winsock library.
- */
-void net_socket_cleanup(void) {
-    if (PLATFORM_NAME == "Windows")
-        WSACleanup();
 }

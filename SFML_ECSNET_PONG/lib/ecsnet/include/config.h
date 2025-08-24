@@ -36,14 +36,40 @@
 /* ========================= ECS CONFIGURATION ========================= */
 
 /**
- * @brief Maximum number of entities allowed in the ECS world.
+ * @brief Initial capacity for entities in the ECS world.
+ *
+ * Instead of hard‑coding a maximum number of entities, the ECS allocates
+ * memory dynamically and expands these arrays as necessary. This value
+ * defines the initial allocation size; if more entities are created,
+ * the arrays will be reallocated with a larger capacity.  Use
+ * ecs_expand_entities() when the capacity is exceeded.
  */
-#define MAX_ENTITIES 1024
+#define INITIAL_ENTITY_CAPACITY 1024
 
 /**
- * @brief Maximum number of different component types that can be registered.
+ * @brief Initial capacity for different component types that can be registered.
+ *
+ * Similar to entities, the ECS grows the component type array on demand.
  */
-#define MAX_COMPONENTS 32
+#define INITIAL_COMPONENT_CAPACITY 32
+
+/* -------------------------------------------------------------------------
+ * Compatibility macros
+ *
+ * The original implementation relied on compile‑time constants MAX_ENTITIES
+ * and MAX_COMPONENTS.  To avoid extensive refactoring of all modules at
+ * once, these macros are defined in terms of the initial capacities.
+ * Network and legacy code can still refer to MAX_ENTITIES or MAX_COMPONENTS
+ * without causing compilation errors.  Dynamic growth is implemented in
+ * the ECS core and can exceed these values; network modules should be
+ * updated to use ecs->entity_capacity for correctness.
+ */
+#ifndef MAX_ENTITIES
+#define MAX_ENTITIES INITIAL_ENTITY_CAPACITY
+#endif
+#ifndef MAX_COMPONENTS
+#define MAX_COMPONENTS INITIAL_COMPONENT_CAPACITY
+#endif
 
 /**
  * @brief Maximum number of systems that can be registered and run.

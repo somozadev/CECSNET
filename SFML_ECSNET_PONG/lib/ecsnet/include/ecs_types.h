@@ -28,6 +28,17 @@ typedef uint32_t entity_t;
 typedef uint32_t component_t;
 
 /**
+ * @brief Signature bitset for an entity.
+ *
+ * Each bit in this 64‑bit value corresponds to a registered component type.
+ * When a component is attached to an entity, its bit is set; when removed,
+ * the bit is cleared.  The ECS uses this signature to quickly filter
+ * entities that match the requirements of a system.  If you register more
+ * than 64 component types, consider extending this to a dynamic bitset.
+ */
+typedef uint64_t component_signature_t;
+
+/**
  * @brief Function pointer type for ECS systems.
  *
  * A system is a function that operates on the ECS world each update cycle.

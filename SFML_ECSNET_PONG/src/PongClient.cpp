@@ -1,10 +1,10 @@
-﻿// client.cpp
-// Cleaned & refactored for SOLID / Clean Code principles
-// Date: 2025-08-22
+﻿// PongClient_updated.cpp
+// Updated client for improved ECSNet library
+// Date: 2025-08-24
 
 #include <cstdint>
 #include <cstdio>
-#include <cstring>  // memcpy
+#include <cstring>
 #include <iostream>
 
 #include <SFML/Graphics.hpp>
@@ -12,78 +12,41 @@
 
 #include "ecs.h"
 #include "ecs_builtin.h"
+// Include internal definitions to allow stack allocation of ecs_t
 #include "ecs_internal.h"
+// Network architecture and connection implementation
+#include "network_architecture.h"
 #include "network_cs.h"
-
-#ifdef _WIN32
-  #include <winsock2.h>
-#endif
+// Socket abstraction
+#include "net_socket.h"
 
 // --------------------------- Configuration ----------------------------------
 
 namespace config {
-constexpr unsigned kHandlerPoolSize = 64;
-
-constexpr float kDropWidth  = 3.0f;
-constexpr float kDropHeight = 14.0f;
-
-constexpr unsigned kWindowWidth  = 800;
-constexpr unsigned kWindowHeight = 600;
-
-constexpr char kWindowTitle[] = "Pong ECSNET Client";
-
-constexpr char  kServerIp[]   = "127.0.0.1";
-constexpr uint16_t kTcpPort   = 51660;
-constexpr uint16_t kUdpPort   = 51660;
-
-constexpr unsigned kSpawnRateLimitMs = 30; // anti-spam
-constexpr unsigned kSleepMs          = 16; // ~60 fps
-
+constexpr unsigned kHandlerPoolSize    = 64;
+constexpr float    kDropWidth          = 3.0f;
+constexpr float    kDropHeight         = 14.0f;
+constexpr unsigned kWindowWidth        = 800;
+constexpr unsigned kWindowHeight       = 600;
+constexpr char     kWindowTitle[]      = "Pong ECSNet Client";
+constexpr char     kServerIp[]         = "127.0.0.1";
+constexpr uint16_t kTcpPort            = 51660;
+constexpr uint16_t kUdpPort            = 51660;
+constexpr unsigned kSpawnRateLimitMs   = 30;   // anti‑spam
+constexpr unsigned kSleepMs            = 16;   // ~60 fps
 // Input flags (bitfield)
 constexpr std::uint8_t kInputUp    = 0x01;
 constexpr std::uint8_t kInputDown  = 0x02;
 constexpr std::uint8_t kInputSpawn = 0x80;
 } // namespace config
 
-// --------------------------- RAII Utilities ---------------------------------
-
-#ifdef _WIN32
-class WinSockInit {
-public:
-    WinSockInit() {
-        WSADATA wsaData{};
-        if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-            std::cerr << "[Client] WSAStartup failed.\n";
-        }
-    }
-    ~WinSockInit() { WSACleanup(); }
-};
-#endif
-
-// ------------------------------ Small Helpers -------------------------------
-
-/// Optional debug table
-static void print_entity_table(ecs_t* ecs) {
-    std::printf("\033[2J\033[H");
-    std::printf("| Entity ID | Component ID | Data Preview |\n");
-    std::printf("|-----------|--------------|--------------|\n");
-    for (int entity = 0; entity < ecs->registered_entities_count; ++entity) {
-        for (int comp_id = 0; comp_id < ecs->registered_component_count; ++comp_id) {
-            if (ecs_has_component(ecs, entity, comp_id)) {
-                void* comp_data = ecs_get_component(ecs, entity, comp_id);
-                std::printf("| %9d | %12d | %12p |\n", entity, comp_id, comp_data);
-            }
-        }
-    }
-}
-
 // --------------------------- Networking Services ----------------------------
 
-/// Simple static pool for protocol handlers (avoids allocs).
+/// Simple static pool for protocol handlers (avoids allocations).
 class HandlerPool {
 public:
     HandlerPool() : next_(0) {
-        // lazily init per allocation to keep parity with original
+        // lazily init per allocation
     }
 
     protocol_handler_t* alloc() {
@@ -125,12 +88,16 @@ public:
     }
 
     int run() {
-        // Init ECS
+        // Initialize socket subsystem
+        net_socket_init();
+
+        // Initialize ECS
         ecs_init(&ecs_);
 
-        // Init networking
+        // Initialize networking
         if (!initNetwork()) {
             std::cerr << "[Client] Failed to initialize networking.\n";
+            net_socket_cleanup();
             return 1;
         }
 
@@ -139,12 +106,13 @@ public:
         while (window_.isOpen()) {
             const float dt = frameClock.restart().asSeconds();
             handleWindowEvents();
-            network_architecture_update(netArch_, dt);
+            if (netArch_) network_architecture_update(netArch_, dt);
             renderFrame();
             sf::sleep(sf::milliseconds(config::kSleepMs));
         }
 
         shutdownNetwork();
+        net_socket_cleanup();
         return 0;
     }
 
@@ -152,70 +120,99 @@ private:
     // ------------------------- Packet Handling ------------------------------
 
     static void onPacketReceived(void* user_data, peer_t* peer, const void* data, int len) {
-        // We pass `this` as user_data in the config.
         auto* self = static_cast<ClientApp*>(user_data);
         if (!self) return;
         self->handlePacket(peer, data, len);
     }
 
     void handlePacket(peer_t* peer, const void* data, int len) {
-        if (!data || len < (int)sizeof(packet_header_t)) return;
+        if (!data || len < static_cast<int>(sizeof(packet_header_t))) return;
 
+        // Cache server peer ID on first packet
         if (!serverPeerId_ && peer && peer->id) {
             serverPeerId_ = peer->id;
             std::printf("[Client] Server peer id cached (on_packet): %s\n", serverPeerId_);
         }
 
         const auto* packet = static_cast<const network_packet_t*>(data);
-        if (packet->header.size > static_cast<uint16_t>(len))  return; // paquete truncado
+        if (packet->header.size > static_cast<uint16_t>(len)) return; // truncated
 
-        // resto: snapshots / updates
         switch (packet->header.type) {
-            case PACKET_TYPE_MULTI_ENTITY_UPDATE: parseMultiEntityUpdate(packet); break;
-            case PACKET_TYPE_ENTITY_UPDATE:       parseEntityUpdate(packet);      break;
-            default: break;
+            case PACKET_TYPE_MULTI_ENTITY_UPDATE:
+                parseMultiEntityUpdate(packet);
+                break;
+            case PACKET_TYPE_ENTITY_UPDATE:
+                parseEntityUpdate(packet);
+                break;
+            default:
+                break;
         }
     }
-bool readComponentId(const std::uint8_t*& cur, const std::uint8_t* end, component_t& outCid) {
-    if (end - cur < (ptrdiff_t)sizeof(component_t)) return false;
-    std::memcpy(&outCid, cur, sizeof(component_t));
-    cur += sizeof(component_t);
-    if (outCid < 0 || outCid >= ecs_.registered_component_count) {
-        std::printf("[Client] Skipping invalid component id %d\n", (int)outCid);
-        return false;
+
+    bool readComponentId(const std::uint8_t*& cur, const std::uint8_t* end, component_t& outCid) {
+        if (end - cur < static_cast<ptrdiff_t>(sizeof(component_t))) return false;
+        std::memcpy(&outCid, cur, sizeof(component_t));
+        cur += sizeof(component_t);
+        if (outCid >= ecs_.registered_component_count) {
+            std::printf("[Client] Skipping invalid component id %u\n", static_cast<unsigned>(outCid));
+            return false;
+        }
+        return true;
     }
-    return true;
-}
 
-void parseMultiEntityUpdate(const network_packet_t* packet) {
-    const std::uint8_t* cur = packet->data;
-    const std::uint8_t* end = reinterpret_cast<const std::uint8_t*>(packet) + packet->header.size;
+    void parseMultiEntityUpdate(const network_packet_t* packet) {
+        const std::uint8_t* cur = packet->data;
+        const std::uint8_t* end = reinterpret_cast<const std::uint8_t*>(packet) + packet->header.size;
 
-    if (end - cur < (ptrdiff_t)sizeof(std::uint16_t)) return;
-    std::uint16_t entityCount = 0;
-    std::memcpy(&entityCount, cur, sizeof(entityCount));
-    cur += sizeof(entityCount);
+        if (end - cur < static_cast<ptrdiff_t>(sizeof(std::uint16_t))) return;
+        std::uint16_t entityCount = 0;
+        std::memcpy(&entityCount, cur, sizeof(entityCount));
+        cur += sizeof(entityCount);
 
-    for (std::uint16_t i = 0; i < entityCount; ++i) {
-        if (end - cur < (ptrdiff_t)sizeof(entity_t)) break;
-        entity_t eid = 0;
+        for (std::uint16_t i = 0; i < entityCount; ++i) {
+            if (end - cur < static_cast<ptrdiff_t>(sizeof(entity_t))) break;
+            entity_t eid = 0;
+            std::memcpy(&eid, cur, sizeof(eid));
+            cur += sizeof(eid);
+            ecs_try_create_entity_by_id(&ecs_, eid);
+
+            if (end - cur < static_cast<ptrdiff_t>(sizeof(std::uint8_t))) break;
+            std::uint8_t compCount = 0;
+            std::memcpy(&compCount, cur, sizeof(compCount));
+            cur += sizeof(compCount);
+
+            for (std::uint8_t c = 0; c < compCount; ++c) {
+                component_t cid{};
+                if (!readComponentId(cur, end, cid)) break;
+                size_t compSize = ecs_.components[cid].descriptor.size;
+                if (end - cur < static_cast<ptrdiff_t>(compSize)) return; // truncated
+
+                if (!ecs_has_component(&ecs_, eid, cid)) {
+                    ecs_add_component(&ecs_, eid, cid, const_cast<std::uint8_t*>(cur));
+                } else {
+                    void* dst = ecs_get_component(&ecs_, eid, cid);
+                    if (dst) std::memcpy(dst, cur, compSize);
+                }
+                ecs_mark_component_dirty(&ecs_, eid, cid);
+                cur += compSize;
+            }
+        }
+    }
+
+    void parseEntityUpdate(const network_packet_t* packet) {
+        const std::uint8_t* cur = packet->data;
+        const std::uint8_t* end = reinterpret_cast<const std::uint8_t*>(packet) + packet->header.size;
+        if (end - cur < static_cast<ptrdiff_t>(sizeof(entity_t))) return;
+        entity_t eid{};
         std::memcpy(&eid, cur, sizeof(eid));
         cur += sizeof(eid);
-
         ecs_try_create_entity_by_id(&ecs_, eid);
 
-        if (end - cur < (ptrdiff_t)sizeof(std::uint8_t)) break;
-        std::uint8_t compCount = 0;
-        std::memcpy(&compCount, cur, sizeof(compCount));
-        cur += sizeof(compCount);
-
-        for (std::uint8_t c = 0; c < compCount; ++c) {
+        while (end - cur >= static_cast<ptrdiff_t>(sizeof(component_t))) {
             component_t cid{};
             if (!readComponentId(cur, end, cid)) break;
-
-            const size_t compSize = ecs_.components[cid].descriptor.size;
-            if (end - cur < (ptrdiff_t)compSize) return; // truncado
-
+            size_t compSize = ecs_.components[cid].descriptor.size;
+            if (end - cur < static_cast<ptrdiff_t>(compSize)) break;
             if (!ecs_has_component(&ecs_, eid, cid)) {
                 ecs_add_component(&ecs_, eid, cid, const_cast<std::uint8_t*>(cur));
             } else {
@@ -226,37 +223,6 @@ void parseMultiEntityUpdate(const network_packet_t* packet) {
             cur += compSize;
         }
     }
-}
-
-void parseEntityUpdate(const network_packet_t* packet) {
-    const std::uint8_t* cur = packet->data;
-    const std::uint8_t* end = reinterpret_cast<const std::uint8_t*>(packet) + packet->header.size;
-
-    if (end - cur < (ptrdiff_t)sizeof(entity_t)) return;
-    entity_t eid{};
-    std::memcpy(&eid, cur, sizeof(eid));
-    cur += sizeof(eid);
-
-    ecs_try_create_entity_by_id(&ecs_, eid);
-
-    while (end - cur >= (ptrdiff_t)sizeof(component_t)) {
-        component_t cid{};
-        if (!readComponentId(cur, end, cid)) break;
-
-        const size_t compSize = ecs_.components[cid].descriptor.size;
-        if (end - cur < (ptrdiff_t)compSize) break;
-
-        if (!ecs_has_component(&ecs_, eid, cid)) {
-            ecs_add_component(&ecs_, eid, cid, const_cast<std::uint8_t*>(cur));
-        } else {
-            void* dst = ecs_get_component(&ecs_, eid, cid);
-            if (dst) std::memcpy(dst, cur, compSize);
-        }
-        ecs_mark_component_dirty(&ecs_, eid, cid);
-        cur += compSize;
-    }
-}
-
 
     // --------------------------- Window & Input -----------------------------
 
@@ -267,9 +233,7 @@ void parseEntityUpdate(const network_packet_t* packet) {
                 window_.close();
                 return;
             }
-
-            if (event.type == sf::Event::MouseButtonPressed &&
-                event.mouseButton.button == sf::Mouse::Left) {
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                 handleSpawnAtClick(event.mouseButton.x, event.mouseButton.y);
             }
         }
@@ -280,25 +244,14 @@ void parseEntityUpdate(const network_packet_t* packet) {
             std::printf("[Client] No server peer id yet; cannot send SPAWN.\n");
             return;
         }
-
-        // World coords (in case view changes later)
-        sf::Vector2i pixel(mouseX, mouseY);
-        sf::Vector2f world = window_.mapPixelToCoords(pixel);
-
+        sf::Vector2f world = window_.mapPixelToCoords(sf::Vector2i(mouseX, mouseY));
         struct SpawnXY { float x; float y; } xy{world.x, world.y};
-
-        // Simple rate limiter
-        if (spawnRateClock_.getElapsedTime().asMilliseconds() < config::kSpawnRateLimitMs) {
-            return;
-        }
+        if (spawnRateClock_.getElapsedTime().asMilliseconds() < config::kSpawnRateLimitMs) return;
         spawnRateClock_.restart();
-
         protocol_handler_t* h = handlerPool_.alloc();
         protocol_handler_pack_client_input(h, 0, config::kInputSpawn, &xy, sizeof(xy));
-
         NetSender sender(netArch_);
         sender.sendToPeer(serverPeerId_, h);
-
         std::printf("[Client] Sent SPAWN at (%.1f, %.1f)\n", xy.x, xy.y);
     }
 
@@ -306,12 +259,12 @@ void parseEntityUpdate(const network_packet_t* packet) {
 
     void renderFrame() {
         window_.clear(sf::Color::Black);
-
-        for (entity_t e = 0; e < MAX_ENTITIES; ++e) {
+        // Draw all entities that have a Position component
+        for (entity_t e = 0; e < ecs_.entity_capacity; ++e) {
+            if (!ecs_.entities[e].in_use) continue;
             if (!ecs_has_component(&ecs_, e, COMPONENT_POSITION)) continue;
-            auto* pos = (position_t*)ecs_get_component(&ecs_, e, COMPONENT_POSITION);
+            auto* pos = static_cast<position_t*>(ecs_get_component(&ecs_, e, COMPONENT_POSITION));
             if (!pos) continue;
-
             dropShape_.setPosition(pos->x, pos->y);
             window_.draw(dropShape_);
         }
@@ -321,16 +274,15 @@ void parseEntityUpdate(const network_packet_t* packet) {
     // ------------------------------ Networking ------------------------------
 
     bool initNetwork() {
-        // Configure client architecture
         network_architecture_config_t cfg{};
         cfg.type               = ARCH_CLIENT_SERVER;
-        cfg.ip_address         = const_cast<char*>(config::kServerIp);
+        cfg.ip_address         = config::kServerIp;
         cfg.is_server          = false;
         cfg.tcp_port           = config::kTcpPort;
         cfg.udp_port           = config::kUdpPort;
         cfg.on_packet_received = &ClientApp::onPacketReceived;
-        cfg.user_data          = this; // so callback can reach the instance
-
+        cfg.user_data          = this;
+        cfg.ecs_sync_hz        = 60.0f;
         network_architecture_init(&netArch_, &cfg, &ecs_);
         return netArch_ != nullptr;
     }
@@ -343,28 +295,18 @@ void parseEntityUpdate(const network_packet_t* packet) {
     }
 
 private:
-    // State
     ecs_t ecs_{};
     network_architecture_t* netArch_{nullptr};
-
-    const char* serverPeerId_{nullptr}; // cached pointer provided by networking layer
+    const char* serverPeerId_{nullptr};
     HandlerPool handlerPool_{};
-
-    // Rendering
-    sf::RenderWindow  window_;
+    sf::RenderWindow window_;
     sf::RectangleShape dropShape_;
-
-    // Rate limiting
     sf::Clock spawnRateClock_;
 };
 
 // ---------------------------------- main ------------------------------------
 
 int main() {
-#ifdef _WIN32
-    WinSockInit wsa; // RAII
-#endif
-
     ClientApp app;
     return app.run();
 }

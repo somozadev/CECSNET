@@ -46,19 +46,20 @@ void ecs_register_builtin_systems(ecs_t* ecs)
  */
 void system_movement(ecs_t* ecs, float dt)
 {
-    for (entity_t e = 0; e < ecs->registered_entities_count; ++e)
+    if (!ecs) return;
+    // Precompute bit mask for required components
+    component_signature_t required = (1ULL << COMPONENT_POSITION) | (1ULL << COMPONENT_VELOCITY);
+    for (entity_t e = 0; e < ecs->entity_capacity; ++e)
     {
-        if (ecs_has_component(ecs, e, COMPONENT_POSITION) &&
-            ecs_has_component(ecs, e, COMPONENT_VELOCITY))
-        {
-            position_t* pos = ecs_get_component(ecs, e, COMPONENT_POSITION);
-            velocity_t* vel = ecs_get_component(ecs, e, COMPONENT_VELOCITY);
-
-            pos->x += vel->x * dt;
-            pos->y += vel->y * dt;
-            // printf("Moved entity %u to (%f, %f)\n", e, pos->x, pos->y);
-            ecs_mark_component_dirty(ecs, e, COMPONENT_POSITION);
-        }
+        if (!ecs->entities[e].in_use) continue;
+        // Fast check using signature bits
+        if ((ecs->signatures[e] & required) != required) continue;
+        position_t* pos = ecs_get_component(ecs, e, COMPONENT_POSITION);
+        velocity_t* vel = ecs_get_component(ecs, e, COMPONENT_VELOCITY);
+        if (!pos || !vel) continue;
+        pos->x += vel->x * dt;
+        pos->y += vel->y * dt;
+        ecs_mark_component_dirty(ecs, e, COMPONENT_POSITION);
     }
 }
 
