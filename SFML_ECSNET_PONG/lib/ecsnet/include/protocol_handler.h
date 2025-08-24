@@ -90,6 +90,7 @@ void protocol_handler_pack_entity_update(protocol_handler_t *handler, entity_t e
  * @param udp_port The UDP port of the client.
  */
 void protocol_handler_pack_client_register(protocol_handler_t *handler, uint16_t udp_port);
+bool protocol_handler_unpack_client_register(const network_packet_t* pkt, uint16_t* out_port);
 
 /**
  * @brief Packs a server acknowledgment message into the outgoing packet.
@@ -107,6 +108,9 @@ void protocol_handler_pack_server_ack(protocol_handler_t *handler);
  * @param extra_len Size of @p extra in bytes (0 ok; oversize is truncated).
  */
 void protocol_handler_pack_client_input(protocol_handler_t* handler, entity_t entity_id, uint8_t input_cmd, const void* extra, uint16_t extra_len);
+
+bool protocol_handler_unpack_client_input(const network_packet_t* pkt, entity_t* out_eid, uint8_t* out_cmd, const void** out_extra, uint16_t* out_extra_len);
+
 /**
  * @brief Processes received network data.
  * @param handler A pointer to the protocol_handler_t instance.
@@ -123,6 +127,7 @@ void protocol_handler_process_received_data(protocol_handler_t *handler, ecs_t* 
  * @param handler A pointer to the protocol_handler_t instance.
  */
 void protocol_handler_send_packet(connection_manager_t *cm, const char *peer_id, protocol_handler_t *handler);
+
 
 #ifdef __cplusplus
 }

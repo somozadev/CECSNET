@@ -8,19 +8,10 @@
 // #include "network_ls.h"
 
 
-typedef struct {
-    network_architecture_config_t config; // public struct
-    void (*on_peer_connected_internal)(void* user_data, peer_t* peer);
-    void (*on_peer_disconnected_internal)(void* user_data, peer_t* peer);
-    void (*on_packet_received_internal)(void* user_data, peer_t* peer, const void* data, int len);
-    void* user_data;  /**< User data passed to callbacks */
-} network_architecture_internal_t;
-
 void network_architecture_init(network_architecture_t **architecture, const network_architecture_config_t *config,
                                ecs_t *ecs) {
-    if ( !config ) {
-        return;
-    }
+    if (!architecture || !config || !ecs) return;
+
     // Allocate memory for the main network architecture struct.
     *architecture = (network_architecture_t *) malloc(sizeof(network_architecture_t));
     if (!*architecture) return;
@@ -36,22 +27,13 @@ void network_architecture_init(network_architecture_t **architecture, const netw
         case ARCH_CLIENT_SERVER:
             // Call the initialization function for the Client-Server module.
             network_cs_t *cs_impl = network_cs_init(config, ecs);
-            if (cs_impl) {
-                // Configure callbacks if provided
-                if (config->on_peer_connected) {
-                    cs_impl->connection_manager.on_connect = config->on_peer_connected;
-                }
-                if (config->on_peer_disconnected) {
-                    cs_impl->connection_manager.on_disconnect = config->on_peer_disconnected;
-                }
-                if (config->on_packet_received) {
-                    cs_impl->connection_manager.on_receive = config->on_packet_received;
-                }
-                if (config->user_data) {
-                    cs_impl->connection_manager.user_data = config->user_data;
-                }
-            }
             (*architecture)->impl = cs_impl;
+            if (cs_impl) {
+                cs_impl->config.on_peer_connected    = config->on_peer_connected;
+                cs_impl->config.on_peer_disconnected = config->on_peer_disconnected;
+                cs_impl->config.on_packet_received   = config->on_packet_received;
+                cs_impl->config.user_data            = config->user_data;
+            }
             if (!config->is_server)
             connection_manager_connect_to_server(&cs_impl->connection_manager, config->ip_address, config->tcp_port);
             break;
@@ -76,7 +58,7 @@ void network_architecture_update(network_architecture_t *architecture, float dt)
     // This is the core of the polymorphic design pattern.
     switch (architecture->type) {
         case ARCH_CLIENT_SERVER:
-            network_cs_update((network_cs_t *) architecture->impl);
+            network_cs_update((network_cs_t *) architecture->impl, dt);
             break;
         default: ;
             // case ARCH_P2P:

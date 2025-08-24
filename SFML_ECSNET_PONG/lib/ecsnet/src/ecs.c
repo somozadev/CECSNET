@@ -236,6 +236,13 @@ bool ecs_has_component(ecs_t* ecs, entity_t entity, component_t component) {
     return ecs->components[component].used[entity];
 }
 
+bool ecs_is_component_dirty(ecs_t* ecs, entity_t entity, component_t component) {
+    if (entity >= MAX_ENTITIES || component >= ecs->registered_component_count)
+        return false;
+
+    return ecs->components[component].is_dirty;
+}
+
 bool ecs_remove_component(ecs_t* ecs, entity_t entity, component_t component) {
     if (entity >= MAX_ENTITIES || component >= ecs->registered_component_count)
         return false;

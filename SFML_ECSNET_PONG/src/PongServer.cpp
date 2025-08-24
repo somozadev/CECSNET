@@ -108,8 +108,7 @@ public:
                 protocol_handler_t handler;
                 protocol_handler_init(&handler);
                 protocol_handler_pack_entity_update(&handler, e, syncData, syncSize);
-
-                auto* cs = static_cast<network_cs_t*>(ctx_.arch->impl);
+                auto* cs = (network_cs_t*)ctx_.arch->impl;
                 protocol_handler_send_packet(&cs->connection_manager, peer->id, &handler);
             }
         }
@@ -230,14 +229,39 @@ private:
 
     static void onPeerConnected(void* /*user_data*/, peer_t* peer) {
         if (!s_instance || !peer) return;
-        s_instance->syncService_.sendFullStateToPeer(peer);
+        std::printf("[Server] Peer %s connected. Waiting for library snapshot/ACK.\n", peer->id);
     }
 
     static void onPeerDisconnected(void* /*user_data*/, peer_t* peer) {
         if (!peer) return;
         std::printf("[Server] Peer %s disconnected.\n", peer->id);
     }
+    static void OnClientInputReceived(void* user_data, peer_t* from, entity_t eid, uint8_t cmd,const void* extra, uint16_t extra_len)
+    {
+        auto* self = static_cast<GameServer*>(user_data);
+        if (!self) return;
+     self->HandleInputReceived(from, eid, cmd, extra, extra_len);
+    }
+    void HandleInputReceived(peer_t* from, entity_t eid, uint8_t cmd, const void* extra, uint16_t extra_len) {
+        printf("[Server] Received input from %s -> e=%u cmd=%u\n" ,from,eid, cmd);
+        if (cmd == INPUT_SPAWN) {
+            if (extra_len < sizeof(float)*2) return;
+            float x, y;
+            memcpy(&x, extra, sizeof(float));
+            memcpy(&y, (const uint8_t*)extra + sizeof(float), sizeof(float));
 
+            position_t pos = { x, y };
+            velocity_t vel = { 0.f, 120.f };
+            entity_t e = ecs_create_entity(&ecs_);
+            ecs_add_component(&ecs_, e, COMPONENT_POSITION, &pos);
+            ecs_add_component(&ecs_, e, COMPONENT_VELOCITY, &vel);
+            ecs_mark_component_dirty(&ecs_, e, COMPONENT_POSITION);
+            ecs_mark_component_dirty(&ecs_, e, COMPONENT_VELOCITY);
+
+            printf("[Server] SPAWN from %s -> e=%u (%.1f, %.1f)\n",
+                   from ? from->id : "(null)", e, x, y);
+        }
+    }
     bool initNetwork() {
         network_architecture_config_t server_config{};
         server_config.type               = ARCH_CLIENT_SERVER;
@@ -247,8 +271,11 @@ private:
         server_config.udp_port           = config::kUdpPort;
         server_config.on_peer_connected  = &GameServer::onPeerConnected;
         server_config.on_peer_disconnected = &GameServer::onPeerDisconnected;
-
+        server_config.on_client_input = &GameServer::OnClientInputReceived;
+        server_config.user_data            = this;
         network_architecture_t* arch = nullptr;
+        server_config.ecs_sync_hz = 20.0f; // por ejemplo
+
         network_architecture_init(&arch, &server_config, &ecs_);
         ctx_.arch = arch;
 

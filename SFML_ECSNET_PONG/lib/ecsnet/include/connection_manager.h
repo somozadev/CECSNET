@@ -15,7 +15,9 @@ extern "C" {
  * @brief Defines the number of network protocols being used (TCP and UDP).
  */
 #define PROTOCOL_COUNT 2
-
+#ifndef MAX_PACKET_SIZE
+#define MAX_PACKET_SIZE 1024
+#endif
 /**
  * @brief Forward declaration of the protocol_handler_t, network_cs_t and connection_manager_t structures.
  */
@@ -40,6 +42,10 @@ ECSNET_API typedef struct peer_t {
     net_socket_t net_sockets[PROTOCOL_COUNT]; /**< Sockets used for communication with this peer. */
     bool is_connected;                      /**< A flag indicating if the peer connection is currently active. */
     bool udp_ready;                      /**< A flag indicating if the peer udp connection is ready. */
+
+    // ---- TCP reassembly (framing) ----
+    uint8_t tcp_rx_buf[MAX_PACKET_SIZE * 2];
+    int     tcp_rx_len;
 } peer_t;
 
 
@@ -92,6 +98,16 @@ void connection_manager_remove_peer(connection_manager_t* connection_manager, co
  * @return The number of bytes sent, or a negative value on failure.
  */
 int connection_manager_send_to_peer(connection_manager_t* connection_manager, const char* peer_id, const void* data, int len);
+
+/**
+ * @brief Sends data to a specific peer by ID via UDP.
+ * @param cm A pointer to the connection_manager_t instance.
+ * @param peer_id The ID of the peer to send the data to.
+ * @param data A pointer to the data buffer.
+ * @param len The length of the data to send.
+ * @return The number of bytes sent, or a negative value on failure.
+ */
+int connection_manager_send_to_peer_udp(connection_manager_t* cm, const char* peer_id, const void* data, int len);
 
 /**
  * @brief Sends data to all connected peers.

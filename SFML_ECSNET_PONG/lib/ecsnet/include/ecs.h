@@ -103,6 +103,15 @@ const char *ecs_get_component_name(ecs_t *ecs, component_t component);
 ECSNET_API bool ecs_has_component(ecs_t *ecs, entity_t entity, component_t component);
 
 /**
+ * @brief Checks if an entity's component is dirty.
+ * @param ecs A pointer to the ECS instance.
+ * @param entity The ID of the entity.
+ * @param component The ID of the component to check.
+ * @return True if the entity has the component, false otherwise.
+ */
+ECSNET_API  bool ecs_is_component_dirty(ecs_t* ecs, entity_t entity, component_t component);
+
+/**
  * @brief Removes a given component from an entity.
  * @param ecs A pointer to the ECS instance.
  * @param entity The ID of the entity.

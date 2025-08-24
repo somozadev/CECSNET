@@ -1,234 +1,371 @@
+// network_cs.c  — limpio y autocontenido
 #include "network_cs.h"
+#include <string.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "ecs.h"
 #include "ecs_internal.h"
 #include "net_socket.h"
 #include "protocol_handler.h"
 
-void on_packet_received_cs(void *user_data, peer_t *peer, const void *data, int len) {
-    network_cs_t *network_cs = (network_cs_t *) user_data;
-    if (!network_cs || !network_cs->ecs) return;
+// ---------- helpers de escritura ----------
+static size_t wr_mem(uint8_t* dst, size_t cap, size_t pos, const void* p, size_t n) {
+    if (pos + n > cap) return (size_t)-1;
+    memcpy(dst + pos, p, n);
+    return pos + n;
+}
+// Encapsula MULTI_ENTITY_UPDATE y envía (UDP si listo, fallback TCP)
+static int send_multi_to_peer(connection_manager_t* cm, const char* peer_id, uint8_t* buf, size_t size) {
+    if (size > MAX_PACKET_SIZE) return -1;
+    packet_header_t* hdr = (packet_header_t*)buf;
+    hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+    hdr->size = (uint16_t)size;
 
-    // Process the packet with the Protocol Handler.
-    protocol_handler_process_received_data(&network_cs->protocol_handler, network_cs->ecs, peer, data, len);
+    // Primero UDP si está listo; si falla, TCP
+    int s = connection_manager_send_to_peer_udp(cm, peer_id, buf, (int)size);
+    if (s < 0) s = connection_manager_send_to_peer(cm, peer_id, buf, (int)size);
+    return s;
+}
 
-    // Get the packet type after processing.
-    const network_packet_t *packet = (const network_packet_t *) data;
+// ---------- snapshot completo por UDP, troceado ----------
+static void send_full_state_chunked(ecs_t* ecs, connection_manager_t* cm, const char* peer_id, size_t soft_limit) {
+    if (!ecs || !cm || !peer_id) return;
+    if (soft_limit == 0 || soft_limit > MAX_PACKET_SIZE) soft_limit = 1200;
 
-    // Handle a client registration packet.
-    if (packet->header.type == PACKET_TYPE_CLIENT_REGISTER) {
-        // The registration logic is performed here on the server.
-        // It's assumed the UDP port has already been extracted by the protocol_handler.
+    uint8_t buf[MAX_PACKET_SIZE];
+    const size_t cap     = sizeof(buf);
+    const size_t hdr_sz  = sizeof(packet_header_t);
+    const size_t base_sz = hdr_sz + sizeof(uint16_t); // entity_count
 
-        // Get the UDP listen socket from the connection_manager.
-        net_socket_t *udp_listen_socket = connection_manager_get_listen_socket(
-            &network_cs->connection_manager, SOCKET_TYPE_UDP);
-        if (udp_listen_socket) {
-            // Assign the UDP listen socket to the peer.
-            peer->net_sockets[SOCKET_TYPE_UDP] = *udp_listen_socket;
-            printf("[network_cs] Assigning UDP listen socket to peer %s.\n", peer->id);
+    size_t pos  = base_sz;
+    uint16_t ents = 0;
 
-            // Pack and send an acknowledgment (ACK) to the client.
-            protocol_handler_pack_server_ack(&network_cs->protocol_handler);
-            connection_manager_send_to_peer(&network_cs->connection_manager, peer->id,
-                                            &network_cs->protocol_handler.out_packet,
-                                            network_cs->protocol_handler.out_packet.header.size);
-        } else {
-            printf("[network_cs] ERROR: UDP listen socket not found.\n");
+    for (entity_t e = 0; e < MAX_ENTITIES; ++e) {
+        // Reservar cabecera de entidad
+        size_t ent_pos = pos;
+        pos = wr_mem(buf, cap, pos, &e, sizeof(entity_t));
+        if (pos == (size_t)-1) goto flush;
+        size_t cc_pos = pos; // comp_count
+        if (pos + 1 > cap) goto flush;
+        buf[pos++] = 0;
+        uint8_t comp_count = 0;
+
+        for (component_t c = 0; c < ecs->registered_component_count; ++c) {
+            if (!ecs_has_component(ecs, e, c)) continue;
+            const void* comp_data = ecs_get_component(ecs, e, c);
+            size_t comp_size      = ecs->components[c].descriptor.size;
+
+            // ¿cabe [cid][blob]?
+            if (pos + sizeof(component_t) + comp_size > soft_limit) {
+                // Si nada escrito aún para esta entidad, flushea paquete y vuelve a empezar con ella
+                if (comp_count == 0) {
+                    pos = ent_pos;
+                    goto flush;
+                }
+                // Cierra entidad actual y flushea
+                buf[cc_pos] = comp_count;
+                ents++;
+                goto flush;
+            }
+
+            pos = wr_mem(buf, cap, pos, &c, sizeof(component_t));
+            pos = wr_mem(buf, cap, pos, comp_data, comp_size);
+            if (pos == (size_t)-1) { pos = ent_pos; goto flush; }
+            comp_count++;
+        }
+
+        if (comp_count == 0) {
+            // Nada que enviar de esta entidad
+            pos = ent_pos;
+            continue;
+        }
+        buf[cc_pos] = comp_count;
+        ents++;
+
+        // margen para próxima entidad
+        if (pos + sizeof(entity_t) + 1 + 8 > soft_limit) {
+        flush:
+            if (ents > 0) {
+                memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+                send_multi_to_peer(cm, peer_id, buf, pos);
+            }
+            pos  = base_sz;
+            ents = 0;
         }
     }
+
+    if (ents > 0) {
+        memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+        send_multi_to_peer(cm, peer_id, buf, pos);
+    }
+}
+
+static void sd_flush_if_needed(connection_manager_t* cm,
+                               const char* peer_id,
+                               uint8_t* buf,
+                               size_t* pos,
+                               uint16_t* ents)
+{
+    if (*ents == 0) { return; }
+    packet_header_t* hdr = (packet_header_t*)buf;
+    hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+    hdr->size = (uint16_t)(*pos);
+
+    // backfill entity_count
+    memcpy(buf + sizeof(packet_header_t), ents, sizeof(uint16_t));
+
+    // UDP preferente, TCP fallback
+    int s = connection_manager_send_to_peer_udp(cm, peer_id, buf, (int)hdr->size);
+    if (s < 0) {
+        connection_manager_send_to_peer(cm, peer_id, buf, (int)hdr->size);
+    }
+
+    // reset
+    *pos  = sizeof(packet_header_t) + sizeof(uint16_t);
+    *ents = 0;
+}
+static void send_dirty_chunked_rr(ecs_t* ecs, connection_manager_t* cm, const char* peer_id, size_t soft_limit) {
+    static entity_t rr = 0;
+    if (!ecs || !cm) return;
+    if (soft_limit == 0 || soft_limit > MAX_PACKET_SIZE) soft_limit = 1200;
+
+    uint8_t buf[MAX_PACKET_SIZE];
+    const size_t cap     = sizeof(buf);
+    const size_t hdr_sz  = sizeof(packet_header_t);
+    const size_t base_sz = hdr_sz + sizeof(uint16_t);
+
+    size_t pos  = base_sz;
+    uint16_t ents = 0;
+
+    for (entity_t step = 0; step < MAX_ENTITIES; ++step) {
+        entity_t e = (rr + step) % MAX_ENTITIES;
+
+        // cabecera entidad
+        size_t ent_pos = pos;
+        pos = wr_mem(buf, cap, pos, &e, sizeof(entity_t));
+        if (pos == (size_t)-1) goto flush;
+        size_t cc_pos = pos;
+        if (pos + 1 > cap) goto flush;
+        buf[pos++] = 0;
+        uint8_t comp_count = 0;
+
+        for (component_t c = 0; c < ecs->registered_component_count; ++c) {
+            if (!ecs_has_component(ecs, e, c)) continue;
+            if (!ecs_is_component_dirty(ecs, e, c)) continue;
+
+            const void* comp_data = ecs_get_component(ecs, e, c);
+            size_t comp_size      = ecs->components[c].descriptor.size;
+
+            if (pos + sizeof(component_t) + comp_size > soft_limit) {
+                if (comp_count == 0) { pos = ent_pos; goto flush; }
+                buf[cc_pos] = comp_count;
+                ents++;
+                goto flush;
+            }
+
+            pos = wr_mem(buf, cap, pos, &c, sizeof(component_t));
+            pos = wr_mem(buf, cap, pos, comp_data, comp_size);
+            if (pos == (size_t)-1) { pos = ent_pos; goto flush; }
+
+            comp_count++;
+            ecs_clear_component_dirty(ecs, e, c);
+        }
+
+        if (comp_count == 0) { pos = ent_pos; continue; }
+
+        buf[cc_pos] = comp_count;
+        ents++;
+
+        if (pos + sizeof(entity_t) + 1 + 8 > soft_limit) {
+            flush:
+         if (ents > 0) {
+             // escribir el número de entidades al final de la cabecera
+             memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+
+             // Inicializar explícitamente el encabezado: rellenar type y size
+             packet_header_t* hdr = (packet_header_t*)buf;
+             hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+             hdr->size = (uint16_t)pos;
+
+             if (peer_id) {
+                 // envío unicast (UDP preferente, TCP fallback)
+                 send_multi_to_peer(cm, peer_id, buf, pos);
+             } else {
+                 // difusión a todos los clientes
+                 connection_manager_broadcast(cm, buf, (int)pos);
+             }
+         }
+            // reiniciar posición y contador
+            pos  = base_sz;
+            ents = 0;
+        }
+    }
+
+    if (ents > 0) {
+        memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+        packet_header_t* hdr = (packet_header_t*)buf;
+        hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+        hdr->size = (uint16_t)pos;
+
+        if (peer_id) {
+            send_multi_to_peer(cm, peer_id, buf, pos);
+        } else {
+            connection_manager_broadcast(cm, buf, (int)pos);
+        }
+    }
+    rr = (rr + 1) % MAX_ENTITIES;
+}
+
+// ---------- callbacks de connection_manager ----------
+void on_packet_received_cs(void *user_data, peer_t *peer, const void *data, int len) {
+    network_cs_t *cs = (network_cs_t *) user_data;
+    if (!cs || !peer || !data || len < (int)sizeof(packet_header_t)) return;
+
+    const network_packet_t *pkt = (const network_packet_t *) data;
+
+    if (cs->connection_manager.is_server && pkt->header.type == PACKET_TYPE_CLIENT_REGISTER) {
+        if (len >= (int)(sizeof(packet_header_t) + sizeof(uint16_t))) {
+            uint16_t client_udp_port = 0;
+            memcpy(&client_udp_port, pkt->data, sizeof(uint16_t));
+
+            // wire UDP de ese peer
+            peer->addr_udp = peer->addr_tcp;
+            peer->addr_udp.sin_port = htons(client_udp_port);
+
+            net_socket_t *udp_listen =
+                connection_manager_get_listen_socket(&cs->connection_manager, SOCKET_TYPE_UDP);
+            if (udp_listen) {
+                peer->net_sockets[SOCKET_TYPE_UDP] = *udp_listen;
+                peer->udp_ready = 1;
+                printf("[network_cs] UDP ready for %s\n", peer->id);
+            }
+
+            // snapshot inicial por UDP (troceado)
+            send_full_state_chunked(cs->ecs, &cs->connection_manager, peer->id, 1200);
+        }
+        return; // <- no lo reenvíes a PH ni a la app
+    }
+
+    // resto de paquetes → si quieres, PH + app
+    protocol_handler_process_received_data(&cs->protocol_handler, cs->ecs, peer, data, len);
+    if (cs->config.on_packet_received)
+        cs->config.on_packet_received(cs->config.user_data, peer, data, len);
 }
 
 void on_peer_connected_cs(void *user_data, peer_t *peer) {
-    network_cs_t *network_cs = (network_cs_t *) user_data;
-    if (network_cs) {
-        printf("[network_cs] Peer %s connected.\n", peer->id);
-        // If it is a server, this is the opportunity to send an ACK or registration.
-        // In this case, the client already sent the registration, so the server just replies.
-        if (!network_cs->config.is_server) return;
-        for (entity_t e = 0; e < MAX_ENTITIES; ++e) {
-            bool entity_has_data = false;
-            uint8_t sync_data[MAX_PACKET_SIZE];
-            size_t sync_data_size = 0;
+    network_cs_t *cs = (network_cs_t *) user_data;
+    if (!cs || !peer) return;
 
-            for (component_t c = 0; c < network_cs->ecs->registered_component_count; ++c) {
-                if (ecs_has_component(network_cs->ecs, e, c)) {
-                    const void *component_data = ecs_get_component(network_cs->ecs, e, c);
-                    size_t component_size = network_cs->ecs->components[c].descriptor.size;
+    printf("[network_cs] Peer %s connected.\n", peer->id);
 
-                    if (sync_data_size + sizeof(component_t) + component_size > MAX_PACKET_SIZE) {
-                        break;
-                    }
+    if (cs->config.is_server) {
+        // SERVER -> manda ACK por TCP (el cliente responderá con CLIENT_REGISTER)
+        protocol_handler_pack_server_ack(&cs->protocol_handler);
+        connection_manager_send_to_peer(&cs->connection_manager, peer->id,
+                                        &cs->protocol_handler.out_packet,
+                                        cs->protocol_handler.out_packet.header.size);
+        if (cs->config.on_peer_connected)
+            cs->config.on_peer_connected(cs->config.user_data, peer);
+        return;
+    }
 
-                    memcpy(sync_data + sync_data_size, &c, sizeof(component_t));
-                    sync_data_size += sizeof(component_t);
+    // ===== CLIENT =====
+    // 1) Prepara el mapeo UDP hacia el servidor (misma IP TCP, puerto UDP del server del config)
+    peer->addr_udp = peer->addr_tcp;
+    peer->addr_udp.sin_port = htons(cs->config.udp_port);
 
-                    memcpy(sync_data + sync_data_size, component_data, component_size);
-                    sync_data_size += component_size;
+    net_socket_t *udp_listen =
+        connection_manager_get_listen_socket(&cs->connection_manager, SOCKET_TYPE_UDP);
+    if (udp_listen) {
+        peer->net_sockets[SOCKET_TYPE_UDP] = *udp_listen;
+        peer->udp_ready = 1;
+    }
 
-                    entity_has_data = true;
-                }
-            }
+    // 2) Envía CLIENT_REGISTER por TCP con tu puerto UDP local efímero
+    uint16_t local_udp = connection_manager_get_udp_local_port(&cs->connection_manager);
+    protocol_handler_pack_client_register(&cs->protocol_handler, local_udp);
+    connection_manager_send_to_peer(&cs->connection_manager, peer->id,
+                                    &cs->protocol_handler.out_packet,
+                                    cs->protocol_handler.out_packet.header.size);
+    printf("[Client] Sent CLIENT_REGISTER with UDP port %hu\n", local_udp);
 
-            if (entity_has_data) {
-                protocol_handler_pack_entity_update(
-                    &network_cs->protocol_handler,
-                    e,
-                    sync_data,
-                    sync_data_size
-                );
+    if (cs->config.on_peer_connected)
+        cs->config.on_peer_connected(cs->config.user_data, peer);
+}
 
-                protocol_handler_send_packet(
-                    &network_cs->connection_manager,
-                    peer->id,
-                    &network_cs->protocol_handler
-                );
-            }
+
+void on_peer_disconnected_cs(void *user_data, peer_t *peer) {
+    network_cs_t *cs = (network_cs_t *) user_data;
+    if (cs) {
+        printf("[network_cs] Peer %s disconnected.\n", peer->id);
+        if (cs->config.on_peer_disconnected) {
+            cs->config.on_peer_disconnected(cs->config.user_data, peer);
         }
     }
 }
 
-void on_peer_disconnected_cs(void *user_data, peer_t *peer) {
-    network_cs_t *network_cs = (network_cs_t *) user_data;
-    if (network_cs) {
-        printf("[network_cs] Peer %s disconnected.\n", peer->id);
-    }
-}
+
+// ---------- init / update / destroy ----------
 
 network_cs_t *network_cs_init(const network_architecture_config_t *config, ecs_t *ecs) {
-    // Allocate memory for the client-server architecture struct.
-    network_cs_t *cs_arch = malloc(sizeof(network_cs_t));
-    if (!cs_arch) {
-        return NULL;
-    }
+    network_cs_t *cs_arch = (network_cs_t*)malloc(sizeof(network_cs_t));
+    if (!cs_arch) return NULL;
+
     cs_arch->ecs = ecs;
     cs_arch->config = *config;
+    cs_arch->sync_acc = 0.f; // si tu struct lo tiene; si no, ignora
 
-    // Initialize the connection manager and assign callbacks.
     connection_manager_init(&cs_arch->connection_manager);
-    cs_arch->connection_manager.is_server = config->is_server;
-    cs_arch->connection_manager.user_data = cs_arch;
-    cs_arch->connection_manager.on_receive = on_packet_received_cs;
-    cs_arch->connection_manager.on_connect = on_peer_connected_cs;
+    cs_arch->connection_manager.is_server   = config->is_server;
+    cs_arch->connection_manager.user_data   = cs_arch;
+    cs_arch->connection_manager.on_receive  = on_packet_received_cs;
+    cs_arch->connection_manager.on_connect  = on_peer_connected_cs;
     cs_arch->connection_manager.on_disconnect = on_peer_disconnected_cs;
 
-    // Initialize the protocol handler.
     protocol_handler_init(&cs_arch->protocol_handler);
 
-    // Create and configure the TCP listen socket.
-    net_socket_t tcp_listen_socket = net_socket_create(SOCKET_TYPE_TCP);
+    // TCP
+    net_socket_t tcp_listen = net_socket_create(SOCKET_TYPE_TCP);
     if (config->is_server) {
-        net_socket_bind(&tcp_listen_socket, config->ip_address, config->tcp_port);
-        // Bind the socket to the specified IP and port.
-        net_socket_listen(&tcp_listen_socket, 10);
+        net_socket_bind(&tcp_listen, config->ip_address, config->tcp_port);
+        net_socket_listen(&tcp_listen, 10);
     } else {
-        // For a client, set the socket to non-blocking mode.
-        net_socket_set_non_blocking(&tcp_listen_socket);
+        net_socket_set_non_blocking(&tcp_listen);
     }
-    // Add the TCP socket to the connection manager.
-    connection_manager_add_listen_socket(&cs_arch->connection_manager, tcp_listen_socket, SOCKET_TYPE_TCP);
+    connection_manager_add_listen_socket(&cs_arch->connection_manager, tcp_listen, SOCKET_TYPE_TCP);
 
-    // Create, bind, and add the UDP listen socket.
-    net_socket_t udp_listen_socket = net_socket_create(SOCKET_TYPE_UDP);
+    // UDP
+    net_socket_t udp_listen = net_socket_create(SOCKET_TYPE_UDP);
     if (config->is_server) {
-        // Server: Fixed port
-        net_socket_bind(&udp_listen_socket, config->ip_address, config->udp_port);
+        net_socket_bind(&udp_listen, config->ip_address, config->udp_port);
     } else {
-        // Client: Ephemeral port (0)
-        net_socket_bind(&udp_listen_socket, config->ip_address, 0);
+        // puerto efímero
+        net_socket_bind(&udp_listen, config->ip_address, 0);
     }
-    connection_manager_add_listen_socket(&cs_arch->connection_manager, udp_listen_socket, SOCKET_TYPE_UDP);
+    connection_manager_add_listen_socket(&cs_arch->connection_manager, udp_listen, SOCKET_TYPE_UDP);
 
     return cs_arch;
 }
+void network_cs_update(network_cs_t *cs, float dt) {
+    if (!cs) return;
 
-void send_dirty_entities_batch(network_cs_t *network_cs) {
-    network_packet_t pkt;
-    pkt.header.type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+    connection_manager_update(&cs->connection_manager);
 
-    uint8_t *write_ptr = pkt.data;
-
-    // Reservamos espacio para entity_count (2 bytes). Lo escribiremos al final.
-    write_ptr += sizeof(uint16_t);
-    uint16_t entity_count = 0;
-
-    // Recorrer todas las entidades y componentes sucios
-    for (entity_t entity = 0; entity < network_cs->ecs->registered_entities_count; entity++) {
-        // Preparar un buffer temporal con las parejas (component_id + datos) de la entidad
-        uint8_t comp_buffer[512];
-        uint8_t *comp_ptr = comp_buffer;
-        uint8_t comp_count = 0;
-
-        for (component_t cid = 0; cid < network_cs->ecs->registered_component_count; cid++) {
-            if (network_cs->ecs->components[cid].is_dirty[entity]) {
-                size_t comp_size = network_cs->ecs->components[cid].descriptor.size;
-                // Añadir el ID del componente
-                memcpy(comp_ptr, &cid, sizeof(component_t));
-                comp_ptr += sizeof(component_t);
-                // Añadir los datos del componente
-                const void *comp_data = ecs_get_component(network_cs->ecs, entity, cid);
-                memcpy(comp_ptr, comp_data, comp_size);
-                comp_ptr += comp_size;
-                comp_count++;
-            }
+    if (cs->config.is_server) {
+        float hz = (cs->config.ecs_sync_hz > 0.f ? cs->config.ecs_sync_hz : 20.f);
+        cs->sync_acc += dt;
+        if (cs->sync_acc >= 1.0f / hz) {
+            cs->sync_acc = 0.f;
+            // broadcast de componentes dirty por UDP usando chunking/round-robin
+            send_dirty_chunked_rr(cs->ecs, &cs->connection_manager, /*peer_id*/NULL, /*soft_limit*/1200);
         }
-
-        if (comp_count > 0) {
-            // Comprobar que cabe la entidad en el paquete
-            size_t entity_bytes = sizeof(entity_t) + sizeof(uint8_t) + (comp_ptr - comp_buffer);
-            if ((write_ptr - pkt.data) + entity_bytes > sizeof(pkt.data)) {
-                // Si no cabe, deja de añadir entidades (o envía un paquete parcial y continúa)
-                break;
-            }
-
-            // Escribir entity_id
-            memcpy(write_ptr, &entity, sizeof(entity_t));
-            write_ptr += sizeof(entity_t);
-            // Escribir número de componentes
-            memcpy(write_ptr, &comp_count, sizeof(uint8_t));
-            write_ptr += sizeof(uint8_t);
-            // Copiar los pares (component_id + datos)
-            memcpy(write_ptr, comp_buffer, comp_ptr - comp_buffer);
-            write_ptr += (comp_ptr - comp_buffer);
-
-            // Marcar que esta entidad se incluirá y limpia sus dirty flags
-            entity_count++;
-            for (component_t cid = 0; cid < network_cs->ecs->registered_component_count; cid++) {
-                network_cs->ecs->components[cid].is_dirty[entity] = false;
-            }
-        }
-    }
-
-    // Escribir entity_count al principio del payload
-    memcpy(pkt.data, &entity_count, sizeof(uint16_t));
-    // Calcular el tamaño total del paquete (cabecera + payload)
-    pkt.header.size = sizeof(packet_header_t) + (write_ptr - pkt.data);
-
-    // Enviar este único paquete a todos los peers
-    for (int i = 0; i < network_cs->connection_manager.peer_count; i++) {
-        const char *peer_id = network_cs->connection_manager.peers[i].id;
-        connection_manager_send_to_peer(&network_cs->connection_manager, peer_id, &pkt, pkt.header.size);
     }
 }
 
-
-void network_cs_update(network_cs_t *network_cs) {
-    if (!network_cs) return;
-
-    // Actualizar el gestor de conexiones (procesa paquetes entrantes y vacía 1 paquete saliente)
-    connection_manager_update(&network_cs->connection_manager);
-
-    if (network_cs->config.is_server) {
-        send_dirty_entities_batch(network_cs);
-    }
-}
-
-
-void network_cs_destroy(network_cs_t *network_cs) {
-    if (!network_cs) return;
-    // Destroy the connection manager first to close sockets.
-    connection_manager_destroy(&network_cs->connection_manager);
-    // Free the memory for the main struct.
-    free(network_cs);
+void network_cs_destroy(network_cs_t *cs) {
+    if (!cs) return;
+    connection_manager_destroy(&cs->connection_manager);
+    free(cs);
 }

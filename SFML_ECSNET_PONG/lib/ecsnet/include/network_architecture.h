@@ -31,10 +31,13 @@ ECSNET_API typedef struct {
     uint16_t tcp_port;                  /**< The TCP port to use. */
     uint16_t udp_port;                  /**< The UDP port to use. */
 
+    float ecs_sync_hz;            /**< The ECS synchronization frequency in Hz. */
+
     // Unified callbacks
     void (*on_peer_connected)(void* user_data, peer_t* peer);
     void (*on_peer_disconnected)(void* user_data, peer_t* peer);
     void (*on_packet_received)(void* user_data, peer_t* peer, const void* data, int len);
+    void (*on_client_input)(void* user_data, peer_t* from, entity_t entity_id, uint8_t cmd, const void* extra, uint16_t extra_len);
     void* user_data;                    /**< User data passed to callbacks */
 } network_architecture_config_t;
 

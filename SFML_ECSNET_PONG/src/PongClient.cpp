@@ -159,120 +159,104 @@ private:
     }
 
     void handlePacket(peer_t* peer, const void* data, int len) {
-        // 1) Cache server peer id
+        if (!data || len < (int)sizeof(packet_header_t)) return;
+
         if (!serverPeerId_ && peer && peer->id) {
-            serverPeerId_ = peer->id; // pointer as delivered by networking layer
-            std::printf("[Client] Server peer id cached: %s\n", serverPeerId_);
-            auto* cs = static_cast<network_cs_t*>(netArch_->impl);
-
-
-            if (cs) {
-                connection_manager_set_peer_udp_remote_port_by_id(&cs->connection_manager, serverPeerId_, cs->config.udp_port);
-                uint16_t udp_port = connection_manager_get_udp_local_port(&cs->connection_manager);
-                protocol_handler_t h;
-                protocol_handler_init(&h);
-                protocol_handler_pack_client_register(&h, udp_port);
-                protocol_handler_send_packet(&cs->connection_manager, serverPeerId_, &h);
-                printf("[Client] Sent CLIENT_REGISTER with UDP port %hu\n", udp_port);
-            }
+            serverPeerId_ = peer->id;
+            std::printf("[Client] Server peer id cached (on_packet): %s\n", serverPeerId_);
         }
-
-        // 2) Basic validation
-        if (!data || len < static_cast<int>(sizeof(packet_header_t))) return;
 
         const auto* packet = static_cast<const network_packet_t*>(data);
+        if (packet->header.size > static_cast<uint16_t>(len))  return; // paquete truncado
 
+        // resto: snapshots / updates
         switch (packet->header.type) {
-            case PACKET_TYPE_MULTI_ENTITY_UPDATE:
-                parseMultiEntityUpdate(packet);
-                break;
-            case PACKET_TYPE_ENTITY_UPDATE:
-                parseEntityUpdate(packet);
-                break;
-            default:
-                // Ignore other packet types
-                break;
-        }
-
-        // If needed for debugging:
-        // print_entity_table(&ecs_);
-    }
-
-    void parseMultiEntityUpdate(const network_packet_t* packet) {
-        const std::uint8_t* cur = packet->data;
-        const std::uint8_t* end = reinterpret_cast<const std::uint8_t*>(packet) + packet->header.size;
-
-        if (end - cur < static_cast<ptrdiff_t>(sizeof(std::uint16_t))) return;
-
-        std::uint16_t entityCount{};
-        std::memcpy(&entityCount, cur, sizeof(entityCount));
-        cur += sizeof(entityCount);
-
-        for (std::uint16_t i = 0; i < entityCount; ++i) {
-            if (end - cur < static_cast<ptrdiff_t>(sizeof(entity_t))) break;
-
-            entity_t eid{};
-            std::memcpy(&eid, cur, sizeof(eid));
-            cur += sizeof(eid);
-
-            ecs_try_create_entity_by_id(&ecs_, eid);
-
-            if (end - cur < static_cast<ptrdiff_t>(sizeof(std::uint8_t))) break;
-
-            std::uint8_t compCount{};
-            std::memcpy(&compCount, cur, sizeof(compCount));
-            cur += sizeof(compCount);
-
-            for (std::uint8_t c = 0; c < compCount; ++c) {
-                component_t cid{};
-                if (!readComponentId(cur, end, cid)) break;
-
-                const size_t compSize = ecs_.components[cid].descriptor.size;
-                if (end - cur < static_cast<ptrdiff_t>(compSize)) break;
-
-                ecs_add_component(&ecs_, eid, cid, const_cast<std::uint8_t*>(cur));
-                cur += compSize;
-            }
+            case PACKET_TYPE_MULTI_ENTITY_UPDATE: parseMultiEntityUpdate(packet); break;
+            case PACKET_TYPE_ENTITY_UPDATE:       parseEntityUpdate(packet);      break;
+            default: break;
         }
     }
+bool readComponentId(const std::uint8_t*& cur, const std::uint8_t* end, component_t& outCid) {
+    if (end - cur < (ptrdiff_t)sizeof(component_t)) return false;
+    std::memcpy(&outCid, cur, sizeof(component_t));
+    cur += sizeof(component_t);
+    if (outCid < 0 || outCid >= ecs_.registered_component_count) {
+        std::printf("[Client] Skipping invalid component id %d\n", (int)outCid);
+        return false;
+    }
+    return true;
+}
 
-    void parseEntityUpdate(const network_packet_t* packet) {
-        const std::uint8_t* cur = packet->data;
-        const std::uint8_t* end = reinterpret_cast<const std::uint8_t*>(packet) + packet->header.size;
+void parseMultiEntityUpdate(const network_packet_t* packet) {
+    const std::uint8_t* cur = packet->data;
+    const std::uint8_t* end = reinterpret_cast<const std::uint8_t*>(packet) + packet->header.size;
 
-        if (end - cur < static_cast<ptrdiff_t>(sizeof(entity_t))) return;
+    if (end - cur < (ptrdiff_t)sizeof(std::uint16_t)) return;
+    std::uint16_t entityCount = 0;
+    std::memcpy(&entityCount, cur, sizeof(entityCount));
+    cur += sizeof(entityCount);
 
-        entity_t eid{};
+    for (std::uint16_t i = 0; i < entityCount; ++i) {
+        if (end - cur < (ptrdiff_t)sizeof(entity_t)) break;
+        entity_t eid = 0;
         std::memcpy(&eid, cur, sizeof(eid));
         cur += sizeof(eid);
 
         ecs_try_create_entity_by_id(&ecs_, eid);
 
-        while (cur < end) {
+        if (end - cur < (ptrdiff_t)sizeof(std::uint8_t)) break;
+        std::uint8_t compCount = 0;
+        std::memcpy(&compCount, cur, sizeof(compCount));
+        cur += sizeof(compCount);
+
+        for (std::uint8_t c = 0; c < compCount; ++c) {
             component_t cid{};
             if (!readComponentId(cur, end, cid)) break;
 
             const size_t compSize = ecs_.components[cid].descriptor.size;
-            if (end - cur < static_cast<ptrdiff_t>(compSize)) break;
+            if (end - cur < (ptrdiff_t)compSize) return; // truncado
 
-            ecs_add_component(&ecs_, eid, cid, const_cast<std::uint8_t*>(cur));
+            if (!ecs_has_component(&ecs_, eid, cid)) {
+                ecs_add_component(&ecs_, eid, cid, const_cast<std::uint8_t*>(cur));
+            } else {
+                void* dst = ecs_get_component(&ecs_, eid, cid);
+                if (dst) std::memcpy(dst, cur, compSize);
+            }
+            ecs_mark_component_dirty(&ecs_, eid, cid);
             cur += compSize;
         }
     }
+}
 
-    bool readComponentId(const std::uint8_t*& cur, const std::uint8_t* end, component_t& outCid) {
-        if (end - cur < static_cast<ptrdiff_t>(sizeof(component_t))) return false;
+void parseEntityUpdate(const network_packet_t* packet) {
+    const std::uint8_t* cur = packet->data;
+    const std::uint8_t* end = reinterpret_cast<const std::uint8_t*>(packet) + packet->header.size;
 
-        std::memcpy(&outCid, cur, sizeof(component_t));
-        cur += sizeof(component_t);
+    if (end - cur < (ptrdiff_t)sizeof(entity_t)) return;
+    entity_t eid{};
+    std::memcpy(&eid, cur, sizeof(eid));
+    cur += sizeof(eid);
 
-        // Guard invalid ids
-        if (outCid < 0 || outCid >= ecs_.registered_component_count) {
-            std::printf("[Client] Skipping invalid component id %d\n", static_cast<int>(outCid));
-            return false;
+    ecs_try_create_entity_by_id(&ecs_, eid);
+
+    while (end - cur >= (ptrdiff_t)sizeof(component_t)) {
+        component_t cid{};
+        if (!readComponentId(cur, end, cid)) break;
+
+        const size_t compSize = ecs_.components[cid].descriptor.size;
+        if (end - cur < (ptrdiff_t)compSize) break;
+
+        if (!ecs_has_component(&ecs_, eid, cid)) {
+            ecs_add_component(&ecs_, eid, cid, const_cast<std::uint8_t*>(cur));
+        } else {
+            void* dst = ecs_get_component(&ecs_, eid, cid);
+            if (dst) std::memcpy(dst, cur, compSize);
         }
-        return true;
+        ecs_mark_component_dirty(&ecs_, eid, cid);
+        cur += compSize;
     }
+}
+
 
     // --------------------------- Window & Input -----------------------------
 
@@ -323,16 +307,14 @@ private:
     void renderFrame() {
         window_.clear(sf::Color::Black);
 
-        for (entity_t e = 0; e < ecs_.registered_entities_count; ++e) {
+        for (entity_t e = 0; e < MAX_ENTITIES; ++e) {
             if (!ecs_has_component(&ecs_, e, COMPONENT_POSITION)) continue;
-
-            auto* pos = static_cast<position_t*>(ecs_get_component(&ecs_, e, COMPONENT_POSITION));
+            auto* pos = (position_t*)ecs_get_component(&ecs_, e, COMPONENT_POSITION);
             if (!pos) continue;
 
             dropShape_.setPosition(pos->x, pos->y);
             window_.draw(dropShape_);
         }
-
         window_.display();
     }
 
