@@ -4,7 +4,9 @@
 #include "connection_manager.h"
 #include "protocol_handler.h"
 #include "ecs.h"
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 /**
  * @brief Represents the client-server network architecture implementation.
  *
@@ -17,6 +19,7 @@ ECSNET_API typedef struct network_cs_t {
     network_architecture_config_t config;      /**< Configuration for this network instance. */
     connection_manager_t connection_manager;    /**< The connection manager instance. */
     protocol_handler_t protocol_handler;        /**< The protocol handler instance. */
+    float sync_acc;        /**< The synchronization accuracy factor. */
 } network_cs_t;
 
 // callbacks
@@ -56,11 +59,17 @@ network_cs_t* network_cs_init(const network_architecture_config_t* config, ecs_t
  * @brief Updates the client-server network architecture.
  * This function should be called regularly in the main loop to process network events.
  * @param network_cs A pointer to the network_cs_t instance.
+ * @param dt delta time.
  */
-void network_cs_update(network_cs_t* network_cs);
+void network_cs_update(network_cs_t* network_cs, float dt);
 
 /**
  * @brief Shuts down and frees all resources used by the client-server network architecture.
  * @param network_cs A pointer to the network_cs_t instance to destroy.
  */
 void network_cs_destroy(network_cs_t* network_cs);
+
+#ifdef __cplusplus
+}
+#endif
+

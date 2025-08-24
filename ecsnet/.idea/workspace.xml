@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakePresetLoader"><![CDATA[{
+  "useNewFormat": true
+}]]></component>
+  <component name="CMakeProjectFlavorService">
+    <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="ecsnet" targetName="ecsnet" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" GENERATION_OPTIONS="-G &quot;Visual Studio 17 2022&quot;" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="08ebdc84-a846-4c5a-ac8d-4292e4b0002b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/generate.stamp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongClient.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongClient.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongServer.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongServer.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.dir/Debug/PongClient.ilk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.dir/Debug/PongClient.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.dir/Debug/vc143.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.dir/Debug/PongServer.ilk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.dir/Debug/PongServer.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.dir/Debug/vc143.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/CMakeFiles/generate.stamp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/Debug/ecsnet.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/Debug/ecsnet.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/connection_manager.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecs.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecs_builtin.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/net_socket.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/network_architecture.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/network_cs.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/protocol_handler.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG_CASICASI.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG_CASIFUNCIONAL.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG_MISSINGUDPMSGTOCLIENTCORRECT.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_RAINDROPS.zip" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_RAINDROPS.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ecsnet.dir/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ecsnet.dir/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ecsnet.dir/.idea/indexLayout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ecsnet.dir/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ecsnet.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ALL_BUILD.vcxproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ALL_BUILD.vcxproj.filters" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeCache.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CMakeCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CMakeRCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CMakeSystem.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/CompilerIdC.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/CompilerIdC.vcxproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/Debug/CMakeCCompilerId.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/Debug/CompilerIdC.exe.recipe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/Debug/CompilerIdC.tlog/CL.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/Debug/CompilerIdC.tlog/CL.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/Debug/CompilerIdC.tlog/CL.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/Debug/CompilerIdC.tlog/Cl.items.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/Debug/CompilerIdC.tlog/CompilerIdC.lastbuildstate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/Debug/CompilerIdC.tlog/link.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/Debug/CompilerIdC.tlog/link.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/Debug/CompilerIdC.tlog/link.secondary.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/CompilerIdC/Debug/CompilerIdC.tlog/link.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/VCTargetsPath.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/VCTargetsPath.vcxproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/VCTargetsPath/x64/Debug/VCTargetsPath.recipe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/3.30.4/VCTargetsPath/x64/Debug/VCTargetsPath.tlog/VCTargetsPath.lastbuildstate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/CMakeConfigureLog.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/cmake.check_cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/e80a6ccf3d8cfbecf5df1958544ef9b3/generate.stamp.rule" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/generate.stamp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/generate.stamp.depend" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/CMakeFiles/generate.stamp.list" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/Debug/ecsnet.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/Debug/ecsnet.exp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/Debug/ecsnet.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/Debug/ecsnet.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ZERO_CHECK.vcxproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ZERO_CHECK.vcxproj.filters" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/cmake_install.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/connection_manager.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecs.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecs_builtin.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.dll.recipe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.ilk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/CL.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/CL.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/CL.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/Cl.items.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/CustomBuild.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/CustomBuild.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/CustomBuild.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/ecsnet.lastbuildstate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/link.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/link.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/link.secondary.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/ecsnet.tlog/link.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/main.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/net_socket.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/network_architecture.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/network_cs.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/protocol_handler.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.dir/Debug/vc143.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.sln" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.vcxproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/ecsnet.vcxproj.filters" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/x64/Debug/ALL_BUILD/ALL_BUILD.recipe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/x64/Debug/ALL_BUILD/ALL_BUILD.tlog/ALL_BUILD.lastbuildstate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/x64/Debug/ALL_BUILD/ALL_BUILD.tlog/CustomBuild.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/x64/Debug/ALL_BUILD/ALL_BUILD.tlog/CustomBuild.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/x64/Debug/ALL_BUILD/ALL_BUILD.tlog/CustomBuild.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/x64/Debug/ZERO_CHECK/ZERO_CHECK.recipe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/x64/Debug/ZERO_CHECK/ZERO_CHECK.tlog/CustomBuild.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/x64/Debug/ZERO_CHECK/ZERO_CHECK.tlog/CustomBuild.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/x64/Debug/ZERO_CHECK/ZERO_CHECK.tlog/CustomBuild.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSVC/build/x64/Debug/ZERO_CHECK/ZERO_CHECK.tlog/ZERO_CHECK.lastbuildstate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ALL_BUILD.vcxproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ALL_BUILD.vcxproj.filters" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeCache.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.30.4/CMakeCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.30.4/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.30.4/CMakeRCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.30.4/CMakeSystem.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.30.4/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.30.4/CompilerIdC/a.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/4.0.2/CMakeCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/4.0.2/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/4.0.2/CMakeRCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/4.0.2/CMakeSystem.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/4.0.2/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/4.0.2/CompilerIdC/a.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/CMakeConfigureLog.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/InstallScripts.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/Makefile.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/Makefile2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/cmake.check_cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/compiler_depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/compiler_depend.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/includes_C.rsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/linkLibs.rsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/objects.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/objects1.rsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/connection_manager.c.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/connection_manager.c.obj.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/ecs.c.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/ecs.c.obj.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/ecs_builtin.c.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/ecs_builtin.c.obj.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/main.c.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/main.c.obj.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/net_socket.c.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/net_socket.c.obj.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/network_architecture.c.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/network_architecture.c.obj.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/network_cs.c.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/network_cs.c.obj.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/protocol_handler.c.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/ecsnet.dir/src/protocol_handler.c.obj.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/progress.marks" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Debug/ecsnet.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Debug/ecsnet.exp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Debug/ecsnet.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Debug/ecsnet.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ZERO_CHECK.vcxproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ZERO_CHECK.vcxproj.filters" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/cmake_install.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/connection_manager.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecs.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecs_builtin.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.dll.recipe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.ilk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/CL.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/CL.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/CL.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/Cl.items.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/CustomBuild.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/CustomBuild.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/CustomBuild.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/ecsnet.lastbuildstate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/link.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/link.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/link.secondary.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/ecsnet.tlog/link.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/main.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/net_socket.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/network_architecture.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/network_cs.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/protocol_handler.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.dir/Debug/vc143.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.sln" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.vcxproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet.vcxproj.filters" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/libecsnet.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/libecsnet.dll.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/x64/Debug/ALL_BUILD/ALL_BUILD.recipe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/x64/Debug/ALL_BUILD/ALL_BUILD.tlog/ALL_BUILD.lastbuildstate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/x64/Debug/ALL_BUILD/ALL_BUILD.tlog/CustomBuild.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/x64/Debug/ALL_BUILD/ALL_BUILD.tlog/CustomBuild.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/x64/Debug/ALL_BUILD/ALL_BUILD.tlog/CustomBuild.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/x64/Debug/ZERO_CHECK/ZERO_CHECK.recipe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/x64/Debug/ZERO_CHECK/ZERO_CHECK.tlog/CustomBuild.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/x64/Debug/ZERO_CHECK/ZERO_CHECK.tlog/CustomBuild.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/x64/Debug/ZERO_CHECK/ZERO_CHECK.tlog/CustomBuild.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/x64/Debug/ZERO_CHECK/ZERO_CHECK.tlog/ZERO_CHECK.lastbuildstate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/compile.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/config.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/connection_manager.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/connection_manager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/ecs.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/ecs.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/ecs_builtin.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/ecs_builtin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/ecs_internal.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/ecs_internal.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/ecs_types.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/ecs_types.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/ecsnet.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/ecsnet.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/net_socket.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/net_socket.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/network_architecture.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/network_architecture.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/network_cs.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/network_cs.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/protocol_handler.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/protocol_handler.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/connection_manager.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/connection_manager.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ecs.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ecs_builtin.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs_builtin.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/net_socket.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/net_socket.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network_architecture.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/network_architecture.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network_cs.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/network_cs.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/protocol_handler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/protocol_handler.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/PreviousBackups/ecsnet.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/PreviousBackups/simple_server.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/PreviousBackups/test.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/PreviousBackups/test.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/PreviousBackups/test_ecs.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/PreviousBackups/test_ecs.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/PreviousBackups/test_net.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/PreviousBackups/test_net.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/simple_server.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_client_server.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_client_server_full_package_sending_receiving.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_ecs.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_ecs.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_net.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_net.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_networking_architecture.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_networking_architecture.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_10082025/test.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_10082025/test.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_10082025/test_ecs.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_10082025/test_ecs.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_10082025/test_net.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_10082025/test_net.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_10082025/test_networking_architecture.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_10082025/test_networking_architecture.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_15082025/simple_server.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_15082025/test.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_15082025/test.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_15082025/test_client_server.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_15082025/test_ecs.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_15082025/test_ecs.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_15082025/test_net.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_15082025/test_net.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_15082025/test_networking_architecture.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/working_tests_15082025/test_networking_architecture.h" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2025" />
+    <option name="minorVersion" value="1.3" />
+    <option name="productBranch" value="Classic" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 5
+}]]></component>
+  <component name="ProjectId" id="31iK9iQ3sd4UuzJtaPvEwMdz8eQ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "C/C++ File.test_dirty_flags.c.executor": "Run",
+    "C/C++ File.test_serialization.c.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.RadMigrateCodeStyle": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.west.config.association.type.startup.service": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "ECSNET-0.1",
+    "last_opened_file_path": "C:/Users/mesom/Documents/GitHub/CECSNET/ecsnet",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="C/C++ File.test_serialization.c">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ecsnet" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ecsnet" TARGET_NAME="ecsnet" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="test_dirty_flags.c" type="CppFileRunConfiguration" factoryName="CppFileRunConfiguration" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ecsnet" TARGET_NAME="test_dirty_flags.c" CONFIG_NAME="test_dirty_flags.c">
+      <option name="sourceFile" value="tests\test_dirty_flags.c" />
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.runfile.CppFileBuildBeforeRunTaskProvider$BasicBuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="test_serialization.c" type="CppFileRunConfiguration" factoryName="CppFileRunConfiguration" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ecsnet" TARGET_NAME="test_serialization.c" CONFIG_NAME="test_serialization.c">
+      <option name="sourceFile" value="tests\test_serialization.c" />
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.runfile.CppFileBuildBeforeRunTaskProvider$BasicBuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="C/C++ File.test_dirty_flags.c" />
+      <item itemvalue="C/C++ File.test_serialization.c" />
+      <item itemvalue="CMake Application.ecsnet" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="C/C++ File.test_serialization.c" />
+        <item itemvalue="C/C++ File.test_dirty_flags.c" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="08ebdc84-a846-4c5a-ac8d-4292e4b0002b" name="Changes" comment="" />
+      <created>1756001303502</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1756001303502</updated>
+      <workItem from="1756001304556" duration="3802000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VCPKGProject">
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticReloadCMake value="true" />
+  </component>
+</project>

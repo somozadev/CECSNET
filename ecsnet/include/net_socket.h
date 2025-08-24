@@ -9,7 +9,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #endif
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 /**
  * @brief Enumeration of available socket types (TCP and UDP).
  */
@@ -103,6 +105,8 @@ int net_socket_receive_from(net_socket_t* socket, void* buffer, int max_len, str
  */
 int net_socket_bind(net_socket_t* socket, const char* ip, uint16_t port);
 
+
+uint16_t net_socket_get_local_port(const net_socket_t* s);
 /**
  * @brief Sets the socket in listening mode (only for TCP sockets).
  * @param socket A pointer to the net_socket_t instance.
@@ -119,6 +123,24 @@ int net_socket_listen(net_socket_t* socket, int backlog);
 int net_socket_close(net_socket_t* socket);
 
 /**
- * @brief Performs any necessary cleanup after closing a connection (e.g., for Windows).
+ * @brief Initializes underlying socket subsystem.
+ *
+ * On Windows platforms, this function calls WSAStartup() to initialize the
+ * Winsock library. On POSIX systems it does nothing.  Call this once
+ * before creating any sockets.
+ */
+void net_socket_init(void);
+
+/**
+ * @brief Performs any necessary cleanup of the socket subsystem.
+ *
+ * On Windows platforms, this function calls WSACleanup() to tear down
+ * Winsock. On POSIX systems it does nothing.  Call this once when
+ * shutting down networking.
  */
 void net_socket_cleanup(void);
+
+#ifdef __cplusplus
+}
+#endif
+

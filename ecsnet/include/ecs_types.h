@@ -3,7 +3,9 @@
 
 #include <stdint.h>
 #include "config.h"
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 /**
  * @brief Forward declaration of the ECS world structure.
  *
@@ -24,6 +26,17 @@ typedef uint32_t entity_t;
  * Components are represented internally as integers.
  */
 typedef uint32_t component_t;
+
+/**
+ * @brief Signature bitset for an entity.
+ *
+ * Each bit in this 64‑bit value corresponds to a registered component type.
+ * When a component is attached to an entity, its bit is set; when removed,
+ * the bit is cleared.  The ECS uses this signature to quickly filter
+ * entities that match the requirements of a system.  If you register more
+ * than 64 component types, consider extending this to a dynamic bitset.
+ */
+typedef uint64_t component_signature_t;
 
 /**
  * @brief Function pointer type for ECS systems.
@@ -75,5 +88,10 @@ typedef struct component_descriptor_t {
  * The full definition is provided in ecs_internal.h.
  */
 ECSNET_API typedef struct component_storage_t component_storage_t;
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif

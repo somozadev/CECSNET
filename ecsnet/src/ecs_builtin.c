@@ -1,6 +1,11 @@
 #include "ecs_builtin.h"
+
+#include <stdio.h>
+
 #include "ecs.h"
 #include <string.h>
+
+#include "ecs_internal.h"
 
 /**
  * @brief Macro to write a float value into a byte buffer.
@@ -8,7 +13,6 @@
  * This performs a binary copy of a float into a memory location at the specified offset.
  */
 #define WRITE_FLOAT(out, offset, value) memcpy((out) + (offset), &(value), sizeof(float))
-#define WRITE_BOOLEAN(out, offset, value) memcpy((out) + (offset), &(value), sizeof(bool))
 
 /**
  * @brief Macro to read a float value from a byte buffer.
@@ -18,10 +22,10 @@
 #define READ_FLOAT(var, in, offset) memcpy(&(var), (in) + (offset), sizeof(float))
 
 // Global component identifiers, initialized to an invalid value (-1).
-component_t COMPONENT_POSITION = (component_t)-1;
-component_t COMPONENT_ROTATION = (component_t)-1;
-component_t COMPONENT_TRANSFORM = (component_t)-1;
-component_t COMPONENT_VELOCITY = (component_t)-1;
+ECSNET_API component_t COMPONENT_POSITION = (component_t)-1;
+ECSNET_API component_t COMPONENT_ROTATION = (component_t)-1;
+ECSNET_API component_t COMPONENT_TRANSFORM = (component_t)-1;
+ECSNET_API component_t COMPONENT_VELOCITY = (component_t)-1;
 
 /**
  * @brief Registers all built-in ECS systems into the given ECS world.
@@ -42,21 +46,20 @@ void ecs_register_builtin_systems(ecs_t* ecs)
  */
 void system_movement(ecs_t* ecs, float dt)
 {
-    for (entity_t e = 0; e < MAX_ENTITIES; ++e)
+    if (!ecs) return;
+    // Precompute bit mask for required components
+    component_signature_t required = (1ULL << COMPONENT_POSITION) | (1ULL << COMPONENT_VELOCITY);
+    for (entity_t e = 0; e < ecs->entity_capacity; ++e)
     {
-        if (ecs_has_component(ecs, e, COMPONENT_POSITION) &&
-            ecs_has_component(ecs, e, COMPONENT_VELOCITY))
-        {
-
-            velocity_t* vel = ecs_get_component(ecs, e, COMPONENT_VELOCITY);
-            if (!vel->is_moving) return;
-            position_t* pos = ecs_get_component(ecs, e, COMPONENT_POSITION);
-
-            pos->x += vel->x * dt;
-            pos->y += vel->y * dt;
-
-            ecs_mark_component_dirty(ecs, e, COMPONENT_POSITION);
-        }
+        if (!ecs->entities[e].in_use) continue;
+        // Fast check using signature bits
+        if ((ecs->signatures[e] & required) != required) continue;
+        position_t* pos = ecs_get_component(ecs, e, COMPONENT_POSITION);
+        velocity_t* vel = ecs_get_component(ecs, e, COMPONENT_VELOCITY);
+        if (!pos || !vel) continue;
+        pos->x += vel->x * dt;
+        pos->y += vel->y * dt;
+        ecs_mark_component_dirty(ecs, e, COMPONENT_POSITION);
     }
 }
 
@@ -174,7 +177,6 @@ void serialize_velocity(const void *data, uint8_t *out)
     const velocity_t *vel = (const velocity_t *)data;
     WRITE_FLOAT(out, 0, vel->x);
     WRITE_FLOAT(out, 4, vel->y);
-    WRITE_BOOLEAN(out, 8, vel->is_moving);
 }
 
 /**
@@ -185,5 +187,4 @@ void deserialize_velocity(const uint8_t *in, void *data)
     velocity_t *vel = (velocity_t *)data;
     READ_FLOAT(vel->x, in, 0);
     READ_FLOAT(vel->y, in, 4);
-    READ_FLOAT(vel->is_moving, in, 8);
 }

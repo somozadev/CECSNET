@@ -8,6 +8,9 @@
 #include "config.h"
 #include "ecs_builtin.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 /**
  * @brief Dirty flag used by the networking layer to sync ECS data.
  * It marks whether an entity's component has been modified.
@@ -17,19 +20,25 @@ typedef struct {
     const void *data;
 } dirty_component_t;
 
-
 /**
  * @brief Initializes the ECS engine, setting up the default built-in components.
  * @param ecs A pointer to the ECS instance to initialize.
  */
 ECSNET_API void ecs_init(ecs_t *ecs);
 
-/**
- * @brief Creates a new entity and adds it to the entities pool.
- * @param ecs A pointer to the ECS instance.
- * @return The ID of the newly created entity.
- */
-ECSNET_API entity_t ecs_create_entity(ecs_t *ecs);
+    /**
+     * @brief Creates a new entity and adds it to the entities pool.
+     * @param ecs A pointer to the ECS instance.
+     * @return The ID of the newly created entity.
+     */
+    ECSNET_API entity_t ecs_create_entity(ecs_t *ecs);
+    /**
+     * @brief Tries to create a new entity by id and adds it to the entities pool.
+     * @param ecs A pointer to the ECS instance.
+     * @param id A given id.
+     * @return The ID of the newly created entity.
+     */
+    ECSNET_API entity_t ecs_try_create_entity_by_id(ecs_t* ecs, entity_t id);
 
 /**
  * @brief Destroys a given entity and removes it from the entities pool.
@@ -94,6 +103,15 @@ const char *ecs_get_component_name(ecs_t *ecs, component_t component);
 ECSNET_API bool ecs_has_component(ecs_t *ecs, entity_t entity, component_t component);
 
 /**
+ * @brief Checks if an entity's component is dirty.
+ * @param ecs A pointer to the ECS instance.
+ * @param entity The ID of the entity.
+ * @param component The ID of the component to check.
+ * @return True if the entity has the component, false otherwise.
+ */
+ECSNET_API  bool ecs_is_component_dirty(ecs_t* ecs, entity_t entity, component_t component);
+
+/**
  * @brief Removes a given component from an entity.
  * @param ecs A pointer to the ECS instance.
  * @param entity The ID of the entity.
@@ -111,6 +129,7 @@ ECSNET_API bool ecs_remove_component(ecs_t *ecs, entity_t entity, component_t co
  */
 void ecs_mark_component_dirty(ecs_t *ecs, entity_t entity, component_t component);
 
+void ecs_set_dirty_hook(void (*hook)(entity_t));
 /**
  * @brief Gets the number of dirty components for a given entity.
  * @param ecs A pointer to the ECS instance.
@@ -170,5 +189,10 @@ ECSNET_API void ecs_register_builtin_systems(ecs_t *ecs);
  */
 ECSNET_API void ecs_register_builtin_components(ecs_t *ecs);
 
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

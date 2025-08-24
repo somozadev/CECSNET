@@ -6,18 +6,28 @@
 #include <winsock2.h>
 #include "config.h" 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif // Cierra el bloque extern "C"
+
 /**
  * @brief Defines the number of network protocols being used (TCP and UDP).
  */
 #define PROTOCOL_COUNT 2
-
+#ifndef MAX_PACKET_SIZE
+#define MAX_PACKET_SIZE 1024
+#endif
 /**
  * @brief Forward declaration of the protocol_handler_t, network_cs_t and connection_manager_t structures.
  */
 typedef struct protocol_handler_t protocol_handler_t;
 typedef struct network_cs_t network_cs_t;
 typedef struct connection_manager_t connection_manager_t;
-
+/**
+ * @brief Defines the maximum number of peers that can be managed simultaneously.
+ */
+#define MAX_PEERS 32
 
 /**
  * @brief Represents a connected network peer.
@@ -31,12 +41,13 @@ ECSNET_API typedef struct peer_t {
     struct sockaddr_in addr_udp;            /**< The UDP address of the peer. */
     net_socket_t net_sockets[PROTOCOL_COUNT]; /**< Sockets used for communication with this peer. */
     bool is_connected;                      /**< A flag indicating if the peer connection is currently active. */
+    bool udp_ready;                      /**< A flag indicating if the peer udp connection is ready. */
+
+    // ---- TCP reassembly (framing) ----
+    uint8_t tcp_rx_buf[MAX_PACKET_SIZE * 2];
+    int     tcp_rx_len;
 } peer_t;
 
-/**
- * @brief Defines the maximum number of peers that can be managed simultaneously.
- */
-#define MAX_PEERS 32
 
 /**
  * @brief Manages all active network connections (peers) for a client or server.
@@ -89,6 +100,16 @@ void connection_manager_remove_peer(connection_manager_t* connection_manager, co
 int connection_manager_send_to_peer(connection_manager_t* connection_manager, const char* peer_id, const void* data, int len);
 
 /**
+ * @brief Sends data to a specific peer by ID via UDP.
+ * @param cm A pointer to the connection_manager_t instance.
+ * @param peer_id The ID of the peer to send the data to.
+ * @param data A pointer to the data buffer.
+ * @param len The length of the data to send.
+ * @return The number of bytes sent, or a negative value on failure.
+ */
+int connection_manager_send_to_peer_udp(connection_manager_t* cm, const char* peer_id, const void* data, int len);
+
+/**
  * @brief Sends data to all connected peers.
  * @param connection_manager A pointer to the connection_manager_t instance.
  * @param data A pointer to the data buffer.
@@ -127,6 +148,10 @@ void connection_manager_destroy(connection_manager_t* connection_manager);
  */
 net_socket_t* connection_manager_get_listen_socket(connection_manager_t* cm, socket_type_t type);
 
+uint16_t connection_manager_get_udp_local_port(connection_manager_t* cm);
+
+int connection_manager_set_peer_udp_remote_port_by_id(connection_manager_t* cm, const char* peer_id, uint16_t remote_udp_port);
+
 /**
  * @brief Finds a peer by its network address.
  * @param connection_manager A pointer to the connection_manager_t instance.
@@ -135,3 +160,7 @@ net_socket_t* connection_manager_get_listen_socket(connection_manager_t* cm, soc
  * @return A pointer to the peer_t instance, or NULL if not found.
  */
 peer_t* find_peer_by_addr(connection_manager_t* connection_manager, const struct sockaddr_in* addr, socket_type_t socket_type);
+
+#ifdef __cplusplus
+}
+#endif

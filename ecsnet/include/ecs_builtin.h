@@ -1,11 +1,13 @@
 #ifndef ECS_BUILTIN_H
 #define ECS_BUILTIN_H
 
-#include <stdbool.h>
 #include <stdint.h>
 #include "ecs_types.h"
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 /**
  * @brief Component data structure for entity position.
  */
@@ -40,7 +42,6 @@ ECSNET_API typedef struct {
 ECSNET_API typedef struct {
     float x; /**< X-axis velocity. */
     float y; /**< Y-axis velocity. */
-    bool is_moving; /**< Indicates whether the entity is currently moving. */
 } velocity_t;
 
 // /**
@@ -127,5 +128,10 @@ ECSNET_API  void serialize_velocity(const void *data, uint8_t *out);
  * @param data Pointer to the velocity_t structure to populate.
  */
 ECSNET_API  void deserialize_velocity(const uint8_t *in, void *data);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

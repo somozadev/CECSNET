@@ -76,55 +76,70 @@ void connection_manager_remove_peer(connection_manager_t* connection_manager, co
     }
 }
 
-int connection_manager_send_to_peer(connection_manager_t* connection_manager, const char* peer_id, const void* data, int len) {
-    // Find the target peer by its unique ID.
-    for (int i = 0; i < connection_manager->peer_count; ++i) {
-        if (strcmp(connection_manager->peers[i].id, peer_id) == 0) {
-            peer_t* peer = &connection_manager->peers[i];
+int connection_manager_send_to_peer(connection_manager_t* cm, const char* peer_id, const void* data, int len) {
+    if (!cm || !peer_id || !data || len <= 0) return -1;
 
-            // Prioritize sending via TCP if the socket is valid.
-            if (peer->net_sockets[SOCKET_TYPE_TCP].fd != -1) {
-                return net_socket_send(&connection_manager->peers[i].net_sockets[SOCKET_TYPE_TCP], data, len);
+    const network_packet_t* pkt = (const network_packet_t*)data;
+
+    for (int i = 0; i < cm->peer_count; ++i) {
+        peer_t* p = &cm->peers[i];
+        if (strcmp(p->id, peer_id) != 0) continue;
+
+        const int fd_tcp = p->net_sockets[SOCKET_TYPE_TCP].fd;
+        const int fd_udp = cm->listen_sockets[SOCKET_TYPE_UDP].fd; // siempre usar el listen UDP del manager
+
+        // Solo los updates ECS van por UDP
+        const int is_ecs_update =
+            pkt &&
+            (pkt->header.type == PACKET_TYPE_ENTITY_UPDATE ||
+             pkt->header.type == PACKET_TYPE_MULTI_ENTITY_UPDATE);
+
+        if (is_ecs_update && p->udp_ready && fd_udp != INVALID_SOCKET && p->addr_udp.sin_port != 0) {
+            return net_socket_sendto(&cm->listen_sockets[SOCKET_TYPE_UDP], data, len, &p->addr_udp);
+        }
+
+        // Todo lo demás por TCP
+        if (fd_tcp != INVALID_SOCKET) {
+            return net_socket_send(&p->net_sockets[SOCKET_TYPE_TCP], data, len);
+        }
+
+        return -3; // sin ruta válida
+    }
+    return -1; // peer no encontrado
+}
+int connection_manager_send_to_peer_udp(connection_manager_t* connection_manager, const char* peer_id, const void* data, int len) {
+    if (!connection_manager || !peer_id || !data || len <= 0) return -1;
+    for (int i = 0; i < connection_manager->peer_count; ++i) {
+        peer_t* p = &connection_manager->peers[i];
+        if (strcmp(p->id, peer_id) == 0) {
+            if (connection_manager->listen_sockets[SOCKET_TYPE_UDP].fd != INVALID_SOCKET && p->udp_ready && p->addr_udp.sin_port != 0) {
+                return net_socket_sendto(&connection_manager->listen_sockets[SOCKET_TYPE_UDP], data, len, &p->addr_udp);
             }
-            // If TCP is not available, try to send via UDP if a valid UDP address is known.
-            if (peer->net_sockets[SOCKET_TYPE_UDP].fd != -1) {
-                return net_socket_sendto(&peer->net_sockets[SOCKET_TYPE_UDP], data, len, &peer->addr_udp);
-            }
-            return -3; // Return an error if no valid socket is found.
+            return -2;
         }
     }
-    return -1; // Return an error if the peer is not found.
+    return -3;
 }
 
-int connection_manager_broadcast(connection_manager_t* connection_manager, const void* data, int len) {
-    int success_count = 0;
-    // Prevent sending empty data.
-    if (len <= 0) {
-        printf("[CM-Server] Broadcast called with empty data.\n");
-        return 0;
-    }
+int connection_manager_broadcast(connection_manager_t* cm, const void* data, int len) {
+    if (!cm || !data || len <= 0) return 0;
+    int ok = 0;
+    for (int i = 0; i < cm->peer_count; ++i) {
+        peer_t* p = &cm->peers[i];
+        int sent = -1;
 
-    // Iterate through all peers to broadcast the message.
-    for (int i = 0; i < connection_manager->peer_count; ++i) {
-        peer_t* peer = &connection_manager->peers[i];
-        int bytes_sent = -1;
-
-        // Prioritize UDP for broadcasting if the peer has a valid UDP address.
-        if (peer->net_sockets[SOCKET_TYPE_UDP].fd != -1 && peer->addr_udp.sin_port != 0) {
-            bytes_sent = net_socket_sendto(&peer->net_sockets[SOCKET_TYPE_UDP], data, len, &peer->addr_udp);
-        } else if (peer->net_sockets[SOCKET_TYPE_TCP].fd != -1) {
-            // Fallback to TCP if UDP is not an option.
-            bytes_sent = net_socket_send(&peer->net_sockets[SOCKET_TYPE_TCP], data, len);
+        if (p->udp_ready && cm->listen_sockets[SOCKET_TYPE_UDP].fd != INVALID_SOCKET) {
+            sent = net_socket_sendto(&cm->listen_sockets[SOCKET_TYPE_UDP], data, len, &p->addr_udp);
         }
-
-        if (bytes_sent >= 0) {
-            success_count++;
-        } else {
-            printf("[CM-Server] Failed to send to peer %s. Bytes sent: %d\n", peer->id, bytes_sent);
+        if (sent < 0 && p->net_sockets[SOCKET_TYPE_TCP].fd != INVALID_SOCKET) {
+            sent = net_socket_send(&p->net_sockets[SOCKET_TYPE_TCP], data, len);
         }
+        if (sent >= 0) ok++;
     }
-    return success_count;
+    return ok;
 }
+
+
 
 int connection_manager_add_peer_tcp(connection_manager_t* cm, SOCKET accepted_fd, const struct sockaddr_in* addr) {
     // Check if the maximum number of peers has been reached.
@@ -258,6 +273,31 @@ net_socket_t* connection_manager_get_listen_socket(connection_manager_t* cm, soc
     }
     return NULL;
 }
+
+uint16_t connection_manager_get_udp_local_port(connection_manager_t* cm) {
+    if (!cm) return 0;
+    net_socket_t* udp = &cm->listen_sockets[SOCKET_TYPE_UDP];
+    if (udp && udp->fd != INVALID_SOCKET) {
+        return net_socket_get_local_port(udp);
+    }
+    return 0;
+}
+
+int connection_manager_set_peer_udp_remote_port_by_id(connection_manager_t* cm, const char* peer_id, uint16_t port) {
+    for (int i = 0; i < cm->peer_count; ++i) {
+        peer_t* p = &cm->peers[i];
+        if (strcmp(p->id, peer_id) == 0) {
+            p->addr_udp = p->addr_tcp;
+            p->addr_udp.sin_port = htons(port);
+            // usar SIEMPRE el socket UDP listen del manager para enviar a este peer
+            p->net_sockets[SOCKET_TYPE_UDP] = cm->listen_sockets[SOCKET_TYPE_UDP];
+            p->udp_ready = 1;
+            return 0;
+        }
+    }
+    return -1;
+}
+
 void connection_manager_update(connection_manager_t* connection_manager) {
     if (!connection_manager) return;
 
@@ -369,16 +409,49 @@ void connection_manager_update(connection_manager_t* connection_manager) {
             int bytes_received = recv(peer_tcp_socket->fd, buffer, sizeof(buffer), 0);
 
             if (bytes_received <= 0) {
-                // A value <= 0 indicates a disconnection or an error.
                 fprintf(stdout, "[CM] TCP Peer %s disconnected or reception error.\n", peer->id);
                 connection_manager_remove_peer(connection_manager, peer->id);
                 peer_removed = true;
             } else {
-                if (connection_manager->on_receive) {
-                    connection_manager->on_receive(connection_manager->user_data, peer, buffer, bytes_received);
+                // Append al buffer del peer
+                if (peer->tcp_rx_len + bytes_received > (int)sizeof(peer->tcp_rx_buf)) {
+                    // Desbordado: resetea (o desconecta, como prefieras)
+                    peer->tcp_rx_len = 0;
+                } else {
+                    memcpy(peer->tcp_rx_buf + peer->tcp_rx_len, buffer, bytes_received);
+                    peer->tcp_rx_len += bytes_received;
+
+                    // Extrae paquetes completos
+                    for (;;) {
+                        if (peer->tcp_rx_len < (int)sizeof(packet_header_t)) break;
+
+                        packet_header_t hdr;
+                        memcpy(&hdr, peer->tcp_rx_buf, sizeof(packet_header_t));
+
+                        // sanity
+                        if (hdr.size < sizeof(packet_header_t) || hdr.size > MAX_PACKET_SIZE) {
+                            // stream corrupto: resetea (o desconecta)
+                            peer->tcp_rx_len = 0;
+                            break;
+                        }
+                        if (peer->tcp_rx_len < (int)hdr.size) break; // espera más bytes
+
+                        // Tenemos paquete completo [0..hdr.size)
+                        if (connection_manager->on_receive) {
+                            connection_manager->on_receive(connection_manager->user_data,
+                                                           peer,
+                                                           peer->tcp_rx_buf,
+                                                           (int)hdr.size);
+                        }
+                        // Desplaza el sobrante a la cabeza
+                        int remain = peer->tcp_rx_len - (int)hdr.size;
+                        if (remain > 0) {
+                            memmove(peer->tcp_rx_buf, peer->tcp_rx_buf + hdr.size, remain);
+                        }
+                        peer->tcp_rx_len = remain;
+                    }
                 }
             }
-            if (--activity <= 0) break;
         }
 
         // Only increment the counter if the current peer was not removed.

@@ -7,26 +7,10 @@
 // #include "network_p2p.h"
 // #include "network_ls.h"
 
-/**
- * @brief Represents the opaque network architecture structure.
- *
- * This struct serves as a wrapper that holds a pointer to the specific
- * implementation (e.g., Client-Server, P2P) and a reference to the ECS.
- */
-struct network_architecture_t {
-    network_architecture_type_t type;
-    network_architecture_config_t config;
-    // A pointer to the specific network implementation (e.g., network_cs_t).
-    void *impl;
-    // A pointer to the ECS instance.
-    ecs_t *ecs;
-};
 
 void network_architecture_init(network_architecture_t **architecture, const network_architecture_config_t *config,
                                ecs_t *ecs) {
-    if (!architecture || !config || !ecs) {
-        return;
-    }
+    if (!architecture || !config || !ecs) return;
 
     // Allocate memory for the main network architecture struct.
     *architecture = (network_architecture_t *) malloc(sizeof(network_architecture_t));
@@ -43,22 +27,15 @@ void network_architecture_init(network_architecture_t **architecture, const netw
         case ARCH_CLIENT_SERVER:
             // Call the initialization function for the Client-Server module.
             network_cs_t *cs_impl = network_cs_init(config, ecs);
-            if (cs_impl) {
-                // Configure callbacks if provided
-                if (config->on_peer_connected) {
-                    cs_impl->connection_manager.on_connect = config->on_peer_connected;
-                }
-                if (config->on_peer_disconnected) {
-                    cs_impl->connection_manager.on_disconnect = config->on_peer_disconnected;
-                }
-                if (config->on_packet_received) {
-                    cs_impl->connection_manager.on_receive = config->on_packet_received;
-                }
-                if (config->user_data) {
-                    cs_impl->connection_manager.user_data = config->user_data;
-                }
-            }
             (*architecture)->impl = cs_impl;
+            if (cs_impl) {
+                cs_impl->config.on_peer_connected    = config->on_peer_connected;
+                cs_impl->config.on_peer_disconnected = config->on_peer_disconnected;
+                cs_impl->config.on_packet_received   = config->on_packet_received;
+                cs_impl->config.user_data            = config->user_data;
+            }
+            if (!config->is_server)
+            connection_manager_connect_to_server(&cs_impl->connection_manager, config->ip_address, config->tcp_port);
             break;
         // case ARCH_P2P:
         //     // Call the initialization function for the P2P module.
@@ -74,17 +51,16 @@ void network_architecture_init(network_architecture_t **architecture, const netw
     }
 }
 
-void network_architecture_update(network_architecture_t *architecture) {
+void network_architecture_update(network_architecture_t *architecture, float dt) {
     if (!architecture || !architecture->impl) {
         return;
     }
-    ecs_update(architecture->ecs, 1.0);
-    // Delegate the update call to the specific implementation.
     // This is the core of the polymorphic design pattern.
     switch (architecture->type) {
         case ARCH_CLIENT_SERVER:
-            network_cs_update((network_cs_t *) architecture->impl);
+            network_cs_update((network_cs_t *) architecture->impl, dt);
             break;
+        default: ;
             // case ARCH_P2P:
             //     network_p2p_update((network_p2p_t*)architecture->impl);
             //     break;

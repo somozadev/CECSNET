@@ -4,7 +4,9 @@
 #include "ecs.h"
 #include <stdint.h>
 #include <stdbool.h>
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 // Forward declarations
 ECSNET_API typedef struct peer_t peer_t;
 typedef void (*on_receive_func_t)(const struct sockaddr_in *sender_addr, const void *data, int len);
@@ -29,18 +31,35 @@ ECSNET_API typedef struct {
     uint16_t tcp_port;                  /**< The TCP port to use. */
     uint16_t udp_port;                  /**< The UDP port to use. */
 
+    float ecs_sync_hz;            /**< The ECS synchronization frequency in Hz. */
+
     // Unified callbacks
     void (*on_peer_connected)(void* user_data, peer_t* peer);
     void (*on_peer_disconnected)(void* user_data, peer_t* peer);
     void (*on_packet_received)(void* user_data, peer_t* peer, const void* data, int len);
+    void (*on_client_input)(void* user_data, peer_t* from, entity_t entity_id, uint8_t cmd, const void* extra, uint16_t extra_len);
     void* user_data;                    /**< User data passed to callbacks */
 } network_architecture_config_t;
 
+    /**
+     * @brief Represents the opaque network architecture structure.
+     *
+     * This struct serves as a wrapper that holds a pointer to the specific
+     * implementation (e.g., Client-Server, P2P) and a reference to the ECS.
+     */
+    ECSNET_API typedef struct {
+        network_architecture_type_t type;
+        network_architecture_config_t config;
+        // A pointer to the specific network implementation (e.g., network_cs_t).
+        void *impl;
+        // A pointer to the ECS instance.
+        ecs_t *ecs;
+    } network_architecture_t;
 /**
  * @brief Opaque type for the network architecture.
  * This hides the internal implementation details from the user.
  */
-ECSNET_API typedef struct network_architecture_t network_architecture_t;
+// ECSNET_API typedef struct network_architecture_t network_architecture_t;
 
 /**
  * @brief Initializes the network architecture based on the configuration.
@@ -55,7 +74,7 @@ ECSNET_API void network_architecture_init(network_architecture_t** architecture,
  * This handles all network-related tasks like receiving data and managing connections.
  * @param architecture A pointer to the network_architecture_t instance.
  */
-ECSNET_API void network_architecture_update(network_architecture_t* architecture);
+ECSNET_API void network_architecture_update(network_architecture_t* architecture, float dt);
 
 /**
  * @brief Shuts down and frees all network resources.
@@ -135,3 +154,9 @@ ECSNET_API void network_architecture_set_callbacks(network_architecture_t* archi
                                        void (*on_connect)(void*, peer_t*),
                                        void (*on_disconnect)(void*, peer_t*),
                                        void (*on_receive)(void*, peer_t*, const void*, int));
+
+
+#ifdef __cplusplus
+}
+#endif
+
