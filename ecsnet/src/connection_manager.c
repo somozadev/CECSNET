@@ -43,6 +43,10 @@ void connection_manager_init(connection_manager_t* connection_manager) {
     connection_manager->on_connect = NULL;
     connection_manager->on_disconnect = NULL;
     connection_manager->user_data = NULL;
+    // Initialize interest masks for all peers to full interest (all bits set).
+    for (int i = 0; i < MAX_PEERS; ++i) {
+        connection_manager->peers[i].interest_mask = (interest_mask_t)0xFFFFFFFF;
+    }
 }
 
 void connection_manager_add_listen_socket(connection_manager_t* connection_manager, net_socket_t socket, socket_type_t socket_type) {
@@ -296,6 +300,24 @@ int connection_manager_set_peer_udp_remote_port_by_id(connection_manager_t* cm, 
         }
     }
     return -1;
+}
+
+// Retrieve a peer by its ID (string).  Returns NULL if not found.
+peer_t* connection_manager_get_peer(connection_manager_t* cm, const char* peer_id) {
+    if (!cm || !peer_id) return NULL;
+    for (int i = 0; i < cm->peer_count; ++i) {
+        if (strcmp(cm->peers[i].id, peer_id) == 0) {
+            return &cm->peers[i];
+        }
+    }
+    return NULL;
+}
+
+// Set the interest mask for a given peer (server‑side).  Has no effect on clients.
+void connection_manager_set_peer_interest(connection_manager_t* cm, const char* peer_id, interest_mask_t mask) {
+    peer_t* p = connection_manager_get_peer(cm, peer_id);
+    if (!p) return;
+    p->interest_mask = mask;
 }
 
 void connection_manager_update(connection_manager_t* connection_manager) {

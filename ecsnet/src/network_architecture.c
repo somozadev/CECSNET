@@ -32,6 +32,7 @@ void network_architecture_init(network_architecture_t **architecture, const netw
                 cs_impl->config.on_peer_connected    = config->on_peer_connected;
                 cs_impl->config.on_peer_disconnected = config->on_peer_disconnected;
                 cs_impl->config.on_packet_received   = config->on_packet_received;
+                cs_impl->config.on_client_input   = config->on_client_input;
                 cs_impl->config.user_data            = config->user_data;
             }
             if (!config->is_server)

@@ -5,6 +5,10 @@
 #include <stdbool.h>
 #include <winsock2.h>
 #include "config.h" 
+// Include networked_entity.h to obtain the definition of interest_mask_t.
+// This header does not depend on connection_manager, so including it here
+// avoids circular dependencies and allows peers to have an interest mask.
+#include "networked_entity.h"
 
 
 #ifdef __cplusplus
@@ -42,6 +46,15 @@ ECSNET_API typedef struct peer_t {
     net_socket_t net_sockets[PROTOCOL_COUNT]; /**< Sockets used for communication with this peer. */
     bool is_connected;                      /**< A flag indicating if the peer connection is currently active. */
     bool udp_ready;                      /**< A flag indicating if the peer udp connection is ready. */
+
+    /**
+     * @brief Bitmask of interest groups for this peer.
+     *
+     * Each bit corresponds to a group; clients will only receive updates
+     * for entities whose NetworkedEntity.interest_groups overlap with this mask.
+     * Initialized to all bits set (0xFFFFFFFF) for maximum interest.
+     */
+    interest_mask_t interest_mask;
 
     // ---- TCP reassembly (framing) ----
     uint8_t tcp_rx_buf[MAX_PACKET_SIZE * 2];
@@ -160,6 +173,29 @@ int connection_manager_set_peer_udp_remote_port_by_id(connection_manager_t* cm, 
  * @return A pointer to the peer_t instance, or NULL if not found.
  */
 peer_t* find_peer_by_addr(connection_manager_t* connection_manager, const struct sockaddr_in* addr, socket_type_t socket_type);
+
+/**
+ * @brief Retrieves a peer by its ID.
+ *
+ * Searches the connection manager's peer list for a peer with the given ID.
+ *
+ * @param cm Pointer to the connection manager instance.
+ * @param peer_id Null‑terminated string identifying the peer (e.g. "IP:port").
+ * @return Pointer to the peer if found; NULL otherwise.
+ */
+peer_t* connection_manager_get_peer(connection_manager_t* cm, const char* peer_id);
+
+/**
+ * @brief Sets the interest mask for a specific peer.
+ *
+ * Adjusts which entity groups the peer will receive updates for.  The
+ * server uses this bitmask to filter outgoing replication traffic.
+ *
+ * @param cm Pointer to the connection manager instance.
+ * @param peer_id ID of the peer to update.
+ * @param mask New interest bitmask.  Each bit corresponds to a group.
+ */
+void connection_manager_set_peer_interest(connection_manager_t* cm, const char* peer_id, interest_mask_t mask);
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include "protocol_handler.h"
 #include "connection_manager.h"
 #include "ecs.h"
 #include <stdint.h>
@@ -23,7 +22,7 @@ ECSNET_API typedef enum {
 /**
  * @brief Structure for configuring the network architecture.
  */
-ECSNET_API typedef struct {
+ECSNET_API typedef struct  {
     network_architecture_type_t type;   /**< The type of network architecture to use. */
     const char *ip_address;             /**< The IP address to bind to or connect to. */
     uint16_t port;                      /**< The main port for communication. */
@@ -47,7 +46,7 @@ ECSNET_API typedef struct {
      * This struct serves as a wrapper that holds a pointer to the specific
      * implementation (e.g., Client-Server, P2P) and a reference to the ECS.
      */
-    ECSNET_API typedef struct {
+    ECSNET_API typedef struct network_architecture_t {
         network_architecture_type_t type;
         network_architecture_config_t config;
         // A pointer to the specific network implementation (e.g., network_cs_t).

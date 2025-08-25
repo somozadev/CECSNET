@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "ecs_internal.h"
+#include "networked_entity.h"
 
 /**
  * @brief Macro to write a float value into a byte buffer.
@@ -26,6 +27,8 @@ ECSNET_API component_t COMPONENT_POSITION = (component_t)-1;
 ECSNET_API component_t COMPONENT_ROTATION = (component_t)-1;
 ECSNET_API component_t COMPONENT_TRANSFORM = (component_t)-1;
 ECSNET_API component_t COMPONENT_VELOCITY = (component_t)-1;
+// Networked entity component ID
+ECSNET_API component_t COMPONENT_NETWORKED_ENTITY = (component_t)-1;
 
 /**
  * @brief Registers all built-in ECS systems into the given ECS world.
@@ -97,6 +100,9 @@ void ecs_register_builtin_components(ecs_t* ecs)
         .serialize = serialize_velocity,
         .deserialize = deserialize_velocity
     });
+
+    // Register the networked entity component as the last built‑in component.
+    ecs_register_networked_component(ecs);
 }
 
 /* ====== Serialization / Deserialization Implementations ====== */

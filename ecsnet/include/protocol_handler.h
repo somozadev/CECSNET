@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "ecs.h"
 #include "ecs_types.h"
+#include "network_architecture.h"
 #include "connection_manager.h"
 #ifdef __cplusplus
 extern "C" {

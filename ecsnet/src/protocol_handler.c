@@ -1,4 +1,5 @@
 #include "protocol_handler.h"
+#include "network_architecture.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -181,34 +182,43 @@ void protocol_handler_process_received_data(protocol_handler_t *handler,ecs_t *e
     }
     break;
     }
-        case PACKET_TYPE_CLIENT_INPUT: {
-        const uint8_t* p = packet->data;
-        const uint8_t* end = ((const uint8_t*)packet) + packet->header.size;
-
-        if (end - p < (ptrdiff_t)(sizeof(entity_t) + sizeof(uint8_t))) {
-            printf("[PH] CLIENT_INPUT too small\n");
-            break;
-        }
-        entity_t eid; uint8_t cmd;
-        memcpy(&eid, p, sizeof(entity_t)); p += sizeof(entity_t);
-        memcpy(&cmd,  p, sizeof(uint8_t));  p += sizeof(uint8_t);
-
-        if (cmd == INPUT_SPAWN) {
-            if (end - p < (ptrdiff_t)(sizeof(float)*2)) { printf("[PH] SPAWN missing xy\n"); break; }
-            float x,y; memcpy(&x,p,sizeof(float)); p+=sizeof(float); memcpy(&y,p,sizeof(float)); p+=sizeof(float);
-
-            position_t pos = { x, y };
-            velocity_t vel = { 0.f, 120.f };
-            entity_t e = ecs_create_entity(ecs);
-            ecs_add_component(ecs, e, COMPONENT_POSITION, &pos);
-            ecs_add_component(ecs, e, COMPONENT_VELOCITY, &vel);
-            ecs_mark_component_dirty(ecs, e, COMPONENT_POSITION);
-            ecs_mark_component_dirty(ecs, e, COMPONENT_VELOCITY);
-
-            printf("[PH] SPAWN ok -> entity %u at (%.1f, %.1f)\n", e, x, y);
-        }
-        break;
-        }
+        // case PACKET_TYPE_CLIENT_INPUT: {
+        //
+        // const uint8_t* p = packet->data;
+        // const uint8_t* end = ((const uint8_t*)packet) + packet->header.size;
+        //
+        // if (end - p < (ptrdiff_t)(sizeof(entity_t) + sizeof(uint8_t))) {
+        //     printf("[PH] CLIENT_INPUT too small\n");
+        //     break;
+        // }
+        // entity_t eid; uint8_t cmd;
+        // memcpy(&eid, p, sizeof(entity_t)); p += sizeof(entity_t);
+        // memcpy(&cmd,  p, sizeof(uint8_t));  p += sizeof(uint8_t);
+        //
+        // size_t payload_size = end - p;
+        // const uint8_t *payload = p;
+        // if (handler->arch && handler->arch->config.on_client_input)
+        //     handler->arch->config.on_client_input(handler->arch->config.user_data,peer,eid,cmd,payload,payload_size);
+        // else {
+        //     printf("[PH] CLIENT_INPUT (cmd=%u) received but no handler set\n", cmd);
+        // }break;
+        //
+        // if (cmd == INPUT_SPAWN) {
+        //     if (end - p < (ptrdiff_t)(sizeof(float)*2)) { printf("[PH] SPAWN missing xy\n"); break; }
+        //     float x,y; memcpy(&x,p,sizeof(float)); p+=sizeof(float); memcpy(&y,p,sizeof(float)); p+=sizeof(float);
+        //
+        //     position_t pos = { x, y };
+        //     velocity_t vel = { 0.f, 120.f };
+        //     entity_t e = ecs_create_entity(ecs);
+        //     ecs_add_component(ecs, e, COMPONENT_POSITION, &pos);
+        //     ecs_add_component(ecs, e, COMPONENT_VELOCITY, &vel);
+        //     ecs_mark_component_dirty(ecs, e, COMPONENT_POSITION);
+        //     ecs_mark_component_dirty(ecs, e, COMPONENT_VELOCITY);
+        //
+        //     printf("[PH] SPAWN ok -> entity %u at (%.1f, %.1f)\n", e, x, y);
+        // }
+        // break;
+        // }
 
     default:
         printf("[ProtocolHandler] Unknown packet type %d.\n", packet->header.type);

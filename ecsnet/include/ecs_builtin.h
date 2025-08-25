@@ -44,6 +44,9 @@ ECSNET_API typedef struct {
     float y; /**< Y-axis velocity. */
 } velocity_t;
 
+// Forward declaration of the NetworkedEntity component ID (defined in ecs_builtin.c).
+extern component_t COMPONENT_NETWORKED_ENTITY;
+
 // /**
 //  * @brief Registers all built-in ECS components into the given ECS world.
 //  *
