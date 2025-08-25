@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Debug/PongClient.exe"
+			"path" : "MinSizeRel/PongClient.exe"
 		},
 		{
-			"path" : "Debug/PongClient.pdb"
+			"path" : "MinSizeRel/PongClient.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -62,7 +62,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi"
+					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O1 /Ob1 /DNDEBUG -std:c++20 -MD"
 				}
 			],
 			"includes" : 
@@ -95,11 +95,11 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 2,
-			"id" : "ecsnet::@373fc43cd3a4f8505416"
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+			"backtrace" : 2,
+			"id" : "ecsnet::@373fc43cd3a4f8505416"
 		}
 	],
 	"id" : "PongClient::@6890427a1f51a3e7e1df",
@@ -108,11 +108,11 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -MDd -Zi",
+				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O1 /Ob1 /DNDEBUG -MD",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:x64 /debug /INCREMENTAL /subsystem:console",
+				"fragment" : "/machine:x64 /INCREMENTAL:NO /subsystem:console",
 				"role" : "flags"
 			},
 			{
@@ -132,7 +132,7 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "mylib_build\\Debug\\ecsnet.lib",
+				"fragment" : "mylib_build\\MinSizeRel\\ecsnet.lib",
 				"role" : "libraries"
 			},
 			{

@@ -44,3 +44,13 @@ if (MSVC)  # Solo para Visual Studio/Windows
     )
     endforeach()
 endif ()
+
+# ---- Copiar assets automáticamente (ej. Pong-Game.ttf) ----
+set(ASSETS_DIR "${CMAKE_SOURCE_DIR}/assets")
+foreach(target PongServer PongClient)
+    add_custom_command(TARGET ${target} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${ASSETS_DIR}/Pong-Game.ttf"
+            $<TARGET_FILE_DIR:${target}>
+    )
+endforeach()

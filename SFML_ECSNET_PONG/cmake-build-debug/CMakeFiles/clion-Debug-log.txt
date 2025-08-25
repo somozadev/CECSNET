@@ -2,5 +2,5 @@
 -- Selecting Windows SDK version 10.0.22621.0 to target Windows 10.0.26100.
 -- Found SFML 2.5.1 in C:/SFML-2.5.1/lib/cmake/SFML
 -- Configuring done (0.0s)
--- Generating done (0.3s)
+-- Generating done (0.1s)
 -- Build files have been written to: C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug

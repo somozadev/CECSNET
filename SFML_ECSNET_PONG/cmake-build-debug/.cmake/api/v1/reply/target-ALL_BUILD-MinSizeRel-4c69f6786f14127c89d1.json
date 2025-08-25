@@ -5,7 +5,7 @@
 		"commands" : [],
 		"files" : 
 		[
-			"CMakeLists.txt"
+			"lib/ecsnet/CMakeLists.txt"
 		],
 		"nodes" : 
 		[
@@ -17,25 +17,19 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "PongServer::@6890427a1f51a3e7e1df"
-		},
-		{
-			"id" : "ecsnet::@373fc43cd3a4f8505416"
-		},
-		{
 			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "PongClient::@6890427a1f51a3e7e1df"
+			"id" : "ecsnet::@373fc43cd3a4f8505416"
 		}
 	],
-	"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+	"id" : "ALL_BUILD::@373fc43cd3a4f8505416",
 	"isGeneratorProvided" : true,
 	"name" : "ALL_BUILD",
 	"paths" : 
 	{
-		"build" : ".",
-		"source" : "."
+		"build" : "mylib_build",
+		"source" : "lib/ecsnet"
 	},
 	"sources" : [],
 	"type" : "UTILITY"

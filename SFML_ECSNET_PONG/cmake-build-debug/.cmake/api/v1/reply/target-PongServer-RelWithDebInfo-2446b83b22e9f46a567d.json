@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "RelWithDebInfo/PongClient.exe"
+			"path" : "RelWithDebInfo/PongServer.exe"
 		},
 		{
-			"path" : "RelWithDebInfo/PongClient.pdb"
+			"path" : "RelWithDebInfo/PongServer.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -30,13 +30,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 21,
+				"line" : 20,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 26,
+				"line" : 25,
 				"parent" : 0
 			},
 			{
@@ -51,7 +51,7 @@
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 32,
+				"line" : 31,
 				"parent" : 0
 			}
 		]
@@ -95,14 +95,14 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 2,
-			"id" : "ecsnet::@373fc43cd3a4f8505416"
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+			"backtrace" : 2,
+			"id" : "ecsnet::@373fc43cd3a4f8505416"
 		}
 	],
-	"id" : "PongClient::@6890427a1f51a3e7e1df",
+	"id" : "PongServer::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -147,8 +147,8 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "PongClient",
-	"nameOnDisk" : "PongClient.exe",
+	"name" : "PongServer",
+	"nameOnDisk" : "PongServer.exe",
 	"paths" : 
 	{
 		"build" : ".",
@@ -169,7 +169,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/PongClient.cpp",
+			"path" : "src/PongServer.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

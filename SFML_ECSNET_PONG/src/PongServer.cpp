@@ -34,6 +34,7 @@ namespace config {
     constexpr float kPaddleWTwo = 700.0f;
     int kActivePaddlesCount = 0;
     constexpr int kNumBalls = 1;
+    constexpr float kBallIncrementVelocityFactorPerCollision = 1.25f;
     constexpr float kWrapResetY = -5.0f;
     constexpr float kSpawnMarginX = 10.0f;
     constexpr float kMinVelY = -160.0f;
@@ -41,7 +42,7 @@ namespace config {
     constexpr float kMinVelX = -160.0f;
     constexpr float kMaxVelX = 160.0f;
     constexpr float kWrapPadding = 5.0f;
-    constexpr char kBindIp[] = "127.0.0.1";
+    constexpr char kBindIp[] = "0.0.0.0";
     constexpr uint16_t kTcpPort = 51660;
     constexpr uint16_t kUdpPort = 51660;
     constexpr int kFrameMs = 16; // ~60 FPS
@@ -69,6 +70,23 @@ namespace config {
     void deserialize_entity_kind(const uint8_t *in, void *data) {
         entity_kind_t *kind = (entity_kind_t *) data;
         kind->kind = in[0];
+    }
+
+    typedef struct {
+        int left;
+        int right;
+    } score_t;
+
+    component_t COMPONENT_SCORE = (component_t) -1;
+
+    void serialize_score(const void *data, uint8_t *out) {
+        const score_t *score = (const score_t *) data;
+        std::memcpy(out, score, sizeof(score_t));
+    }
+
+    void deserialize_score(const uint8_t *in, void *data) {
+        score_t *score = (score_t *) data;
+        std::memcpy(score, in, sizeof(score_t));
     }
 } // namespace config
 
@@ -134,12 +152,10 @@ public:
         // avoid too low speed in vx
         do {
             vx = distVx(rng_);
-        } while (std::abs(vx) < 60.f);
+        } while (std::abs(vx) < 100.f);
 
         vy = distVy(rng_);
 
-        vx *= 2.f;
-        vy *= 2.f;
         velocity_t vel{vx, vy};
         entity_t ball = ecs_create_entity(&ecs_);
         ecs_add_component(&ecs_, ball, COMPONENT_POSITION, &pos);
@@ -152,15 +168,6 @@ public:
         if (net_) {
             network_cs_assign_network_id(net_, ball, 1);
         }
-
-    }
-
-    void destroyBall(entity_t ball) {
-        if (ecs_has_component(&ecs_, ball, COMPONENT_NETWORKED_ENTITY)) {
-            network_cs_mark_entity_destroy(net_, ball);
-        }
-        ecs_destroy_entity(&ecs_, ball);
-        std::printf("[Server] Ball destroyed after score.\n");
     }
 
 private:
@@ -171,10 +178,11 @@ private:
 
 class BallCollisionSystem {
 public:
-    using ScoreCallback = void(*)(void* user, bool leftSide);
+    using ScoreCallback = void(*)(void *user, bool leftSide);
 
-    BallCollisionSystem(ecs_t& ecs, network_cs_t* net, ScoreCallback cb, void* user)
-        : ecs_(ecs), net_(net), onScoreCb_(cb), user_(user) {}
+    BallCollisionSystem(ecs_t &ecs, network_cs_t *net, ScoreCallback cb, void *user)
+        : ecs_(ecs), net_(net), onScoreCb_(cb), user_(user) {
+    }
 
     void update() {
         for (entity_t e = 0; e < ecs_.entity_capacity; ++e) {
@@ -183,12 +191,12 @@ public:
             if (!ecs_has_component(&ecs_, e, COMPONENT_VELOCITY)) continue;
             if (!ecs_has_component(&ecs_, e, config::COMPONENT_ENTITY_KIND)) continue;
 
-            auto* kind = static_cast<config::entity_kind_t*>(
+            auto *kind = static_cast<config::entity_kind_t *>(
                 ecs_get_component(&ecs_, e, config::COMPONENT_ENTITY_KIND));
             if (kind->kind != config::ENTITY_KIND_BALL) continue;
 
-            auto* pos = static_cast<position_t*>(ecs_get_component(&ecs_, e, COMPONENT_POSITION));
-            auto* vel = static_cast<velocity_t*>(ecs_get_component(&ecs_, e, COMPONENT_VELOCITY));
+            auto *pos = static_cast<position_t *>(ecs_get_component(&ecs_, e, COMPONENT_POSITION));
+            auto *vel = static_cast<velocity_t *>(ecs_get_component(&ecs_, e, COMPONENT_VELOCITY));
 
             // Rebate techo/suelo
             if (pos->y <= 0.f || pos->y >= config::kWindowHeight) {
@@ -213,10 +221,10 @@ public:
     }
 
 private:
-    ecs_t& ecs_;
-    network_cs_t* net_{};
+    ecs_t &ecs_;
+    network_cs_t *net_{};
     ScoreCallback onScoreCb_{};
-    void* user_{};
+    void *user_{};
 
     void destroyBall(entity_t ball) {
         if (net_ && ecs_has_component(&ecs_, ball, COMPONENT_NETWORKED_ENTITY)) {
@@ -226,32 +234,72 @@ private:
         std::printf("[Server] Ball destroyed after score.\n");
     }
 
-    static bool intersects(const position_t& ball, float ballRadius,
-                           const position_t& paddle, float paddleW, float paddleH) {
+    static bool intersects(const position_t &ball, float ballRadius,
+                           const position_t &paddle, float paddleW, float paddleH) {
         return (ball.x + ballRadius >= paddle.x &&
                 ball.x - ballRadius <= paddle.x + paddleW &&
                 ball.y + ballRadius >= paddle.y &&
                 ball.y - ballRadius <= paddle.y + paddleH);
     }
 
-    void checkPaddleCollisions(entity_t ball, position_t* pos, velocity_t* vel) {
-        float ballRadius = 8.f;
+    void checkPaddleCollisions(entity_t ball, position_t *pos, velocity_t *vel) {
+        float ballRadius = 6.f;
         for (entity_t e = 0; e < ecs_.entity_capacity; ++e) {
             if (!ecs_.entities[e].in_use) continue;
             if (!ecs_has_component(&ecs_, e, COMPONENT_POSITION)) continue;
             if (!ecs_has_component(&ecs_, e, config::COMPONENT_ENTITY_KIND)) continue;
 
-            auto* kind = static_cast<config::entity_kind_t*>(
+            auto *kind = static_cast<config::entity_kind_t *>(
                 ecs_get_component(&ecs_, e, config::COMPONENT_ENTITY_KIND));
-            if (kind->kind != config::ENTITY_KIND_PADDLE) continue;
 
-            auto* paddlePos = static_cast<position_t*>(ecs_get_component(&ecs_, e, COMPONENT_POSITION));
-            float paddleW = 10.f;
-            float paddleH = 100.f;
 
-            if (intersects(*pos, ballRadius, *paddlePos, paddleW, paddleH)) {
-                vel->x = -vel->x;
-                ecs_mark_component_dirty(&ecs_, ball, COMPONENT_VELOCITY);
+            // ----- COL W/ PADDLES -----
+            if (kind->kind == config::ENTITY_KIND_PADDLE) {
+                auto *paddlePos = static_cast<position_t *>(
+                    ecs_get_component(&ecs_, e, COMPONENT_POSITION));
+                float paddleW = 10.f;
+                float paddleH = 50.f;
+
+                if (intersects(*pos, ballRadius, *paddlePos, paddleW, paddleH)) {
+                    vel->x = -vel->x * config::kBallIncrementVelocityFactorPerCollision;
+                    ecs_mark_component_dirty(&ecs_, ball, COMPONENT_VELOCITY);
+                }
+            } // ----- COL W/ OTHER BALLS IN CASE WE WANT TO ADD MORE -----
+            else if (kind->kind == config::ENTITY_KIND_BALL) {
+                auto *otherPos = static_cast<position_t *>(
+                    ecs_get_component(&ecs_, e, COMPONENT_POSITION));
+                auto *otherVel = static_cast<velocity_t *>(
+                    ecs_get_component(&ecs_, e, COMPONENT_VELOCITY));
+
+                float dx = pos->x - otherPos->x;
+                float dy = pos->y - otherPos->y;
+                float distSq = dx * dx + dy * dy;
+                float minDist = ballRadius * 2;
+
+                if (distSq <= minDist * minDist) {
+                    // Simplified elastic collision
+                    std::swap(vel->x, otherVel->x);
+                    std::swap(vel->y, otherVel->y);
+
+                    ecs_mark_component_dirty(&ecs_, ball, COMPONENT_VELOCITY);
+                    ecs_mark_component_dirty(&ecs_, e, COMPONENT_VELOCITY);
+
+                    // repositioning to avoid infinite overlaps
+                    float dist = std::sqrt(distSq);
+                    if (dist > 0.0f) {
+                        float overlap = 0.5f * (minDist - dist);
+                        float nx = dx / dist;
+                        float ny = dy / dist;
+
+                        pos->x += nx * overlap;
+                        pos->y += ny * overlap;
+                        otherPos->x -= nx * overlap;
+                        otherPos->y -= ny * overlap;
+
+                        ecs_mark_component_dirty(&ecs_, ball, COMPONENT_POSITION);
+                        ecs_mark_component_dirty(&ecs_, e, COMPONENT_POSITION);
+                    }
+                }
             }
         }
     }
@@ -304,8 +352,8 @@ public:
 
         ecs_add_component(&ecs_, paddle, COMPONENT_POSITION, &pos);
 
-        config::entity_kind_t kindBall{ config::ENTITY_KIND_PADDLE};
-        ecs_add_component(&ecs_, paddle,  config::COMPONENT_ENTITY_KIND, &kindBall);
+        config::entity_kind_t kindBall{config::ENTITY_KIND_PADDLE};
+        ecs_add_component(&ecs_, paddle, config::COMPONENT_ENTITY_KIND, &kindBall);
 
 
         if (net_) {
@@ -350,11 +398,11 @@ public:
         std::printf("[Server] Destroyed paddle of peer %s\n", peer->id);
         if (paddles_.size() < 2) {
             // destroy all balls
-            for (entity_t e = 0; e <ecs_.entity_capacity; ++e) {
+            for (entity_t e = 0; e < ecs_.entity_capacity; ++e) {
                 if (!ecs_.entities[e].in_use) continue;
                 if (!ecs_has_component(&ecs_, e, config::COMPONENT_ENTITY_KIND)) continue;
 
-                auto* kind = (config::entity_kind_t*)ecs_get_component(&ecs_, e, config::COMPONENT_ENTITY_KIND);
+                auto *kind = (config::entity_kind_t *) ecs_get_component(&ecs_, e, config::COMPONENT_ENTITY_KIND);
                 if (kind->kind == config::ENTITY_KIND_BALL) {
                     network_cs_mark_entity_destroy(net_, e);
                     ecs_destroy_entity(&ecs_, e);
@@ -393,6 +441,14 @@ public:
             if (!ecs_has_component(&ecs_, e, COMPONENT_POSITION)) continue;
             auto *pos = static_cast<position_t *>(ecs_get_component(&ecs_, e, COMPONENT_POSITION));
             if (!pos) continue;
+
+            // Skip entities with entity_kind BALL, since they are handled separately.
+            if (ecs_has_component(&ecs_, e, config::COMPONENT_ENTITY_KIND)) {
+                auto *kind = (config::entity_kind_t *) ecs_get_component(&ecs_, e, config::COMPONENT_ENTITY_KIND);
+                if (kind && kind->kind == config::ENTITY_KIND_BALL) {
+                    continue;
+                }
+            }
 
             // Horizontal wrap
             if (pos->x < -config::kWrapPadding) {
@@ -442,7 +498,14 @@ public:
             paddleSpawner_ = std::make_unique<PaddleSpawner>(ecs_, net);
         }
 
-
+        entity_t scoreEntity = ecs_create_entity(&ecs_);
+        config::score_t scoreData{0, 0};
+        ecs_add_component(&ecs_, scoreEntity, config::COMPONENT_SCORE, &scoreData);
+        if (ctx_.arch && ctx_.arch->impl) {
+            auto *net = static_cast<network_cs_t *>(ctx_.arch->impl);
+            network_cs_assign_network_id(net, scoreEntity, 1); // replicar a todos
+        }
+        scoreEntity_ = scoreEntity;
         // After networking is ready, assign a network ID and interest mask
         // to every pre-existing entity so that they replicate to clients.  The
         // default group mask is bit 0 (value 1).  We only assign if the
@@ -460,7 +523,7 @@ public:
         sf::Clock clock;
         WrapSystem wrap(ecs_);
 
-        auto* net = static_cast<network_cs_t*>(ctx_.arch->impl);
+        auto *net = static_cast<network_cs_t *>(ctx_.arch->impl);
         BallCollisionSystem ballCollision(ecs_, net, &GameServer::ScoreThunk, this);
 
         while (true) {
@@ -473,27 +536,34 @@ public:
         }
         // unreachable
     }
+
     void onScore(bool leftSide) {
         if (leftSide) {
             scoreLeft_++;
-            std::printf("[Server] LEFT SCORES -> %d - %d\n", scoreLeft_, scoreRight_);
         } else {
             scoreRight_++;
-            std::printf("[Server] RIGHT SCORES -> %d - %d\n", scoreLeft_, scoreRight_);
         }
+        std::printf("[Server] LEFT SCORES -> %d - %d\n", scoreLeft_, scoreRight_);
+        //update score entity
+        auto *score = (config::score_t *) ecs_get_component(&ecs_, scoreEntity_, config::COMPONENT_SCORE);
+        score->left = scoreLeft_;
+        score->right = scoreRight_;
+        ecs_mark_component_dirty(&ecs_, scoreEntity_, config::COMPONENT_SCORE);
 
-        // create new ball
+
         if (ctx_.arch && ctx_.arch->impl) {
-            auto* net = (network_cs_t*)ctx_.arch->impl;
+            auto *net = (network_cs_t *) ctx_.arch->impl;
             BallSpawner spawner(ecs_, net);
             spawner.spawnBall();
+            std::printf("[Server] Spawning a new ball (total score=%d).\n", scoreLeft_ + scoreRight_);
         }
     }
+
 private:
     static GameServer *s_instance;
 
-    static void ScoreThunk(void* user, bool leftSide) {
-        auto* self = static_cast<GameServer*>(user);
+    static void ScoreThunk(void *user, bool leftSide) {
+        auto *self = static_cast<GameServer *>(user);
         if (self) self->onScore(leftSide);
     }
 
@@ -524,31 +594,7 @@ private:
 
     void HandleInputReceived(peer_t *from, entity_t /*eid*/, uint8_t cmd, const void *extra, uint16_t extra_len) {
         std::printf("[Server] Received input from %s -> cmd=%u\n", from ? from->id : "(null)", cmd);
-
         paddleSpawner_->movePaddle(from, cmd);
-        return;
-        if (cmd == config::kInputSpawnCmd) {
-            if (extra_len < sizeof(float) * 2) return;
-            float x, y;
-            std::memcpy(&x, extra, sizeof(float));
-            std::memcpy(&y, static_cast<const uint8_t *>(extra) + sizeof(float), sizeof(float));
-            position_t pos{x, y};
-            velocity_t vel{0.f, 120.f};
-            entity_t e = ecs_create_entity(&ecs_);
-            ecs_add_component(&ecs_, e, COMPONENT_POSITION, &pos);
-            ecs_add_component(&ecs_, e, COMPONENT_VELOCITY, &vel);
-            ecs_mark_component_dirty(&ecs_, e, COMPONENT_POSITION);
-            ecs_mark_component_dirty(&ecs_, e, COMPONENT_VELOCITY);
-            // If networking is active assign a network ID and default
-            // interest mask (bit 0).  Without this, the new entity would
-            // never be replicated to clients.
-
-            if (ctx_.arch && ctx_.arch->impl) {
-                auto *net = static_cast<network_cs_t *>(ctx_.arch->impl);
-                network_cs_assign_network_id(net, e, 1);
-            }
-            std::printf("[Server] SPAWN from %s -> e=%u (%.1f, %.1f)\n", from ? from->id : "(null)", e, x, y);
-        }
     }
 
     bool initNetwork() {
@@ -574,13 +620,21 @@ private:
 
         config::COMPONENT_ENTITY_KIND = ecs_register_component(&ecs_, desc);
 
+        component_descriptor_t scoreDesc;
+        scoreDesc.name = "Score";
+        scoreDesc.size = sizeof(config::score_t);
+        scoreDesc.serialize = config::serialize_score;
+        scoreDesc.deserialize = config::deserialize_score;
 
+        config::COMPONENT_SCORE = ecs_register_component(&ecs_, scoreDesc);
 
         return ctx_.arch != nullptr;
     }
+
     int scoreLeft_ = 0;
     int scoreRight_ = 0;
     ecs_t ecs_{};
+    entity_t scoreEntity_;
     ServerContext ctx_{};
     NetworkSyncService syncService_;
     std::unique_ptr<PaddleSpawner> paddleSpawner_;
