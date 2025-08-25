@@ -1,0 +1,10 @@
+^C:\USERS\MESOM\DOCUMENTS\GITHUB\CECSNET\SFML_ECSNET_PONG\BUILD\CMAKEFILES\7DB482D5DB43FEB4CC2AAC56E5B85A25\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG -BC:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/build/MiPong.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

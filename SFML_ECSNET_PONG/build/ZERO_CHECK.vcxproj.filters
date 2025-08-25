@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\mesom\Documents\GitHub\CECSNET\SFML_ECSNET_PONG\build\CMakeFiles\7db482d5db43feb4cc2aac56e5b85a25\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{B7EF4A00-A560-395A-941F-9500B3F16206}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

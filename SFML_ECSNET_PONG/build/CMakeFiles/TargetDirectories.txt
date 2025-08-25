@@ -1,0 +1,6 @@
+C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/build/CMakeFiles/PongServer.dir
+C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/build/CMakeFiles/PongClient.dir
+C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/build/mylib_build/CMakeFiles/ecsnet.dir
+C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/build/mylib_build/CMakeFiles/ALL_BUILD.dir

@@ -24,9 +24,9 @@ events:
       The output was:
       0
       Versión de MSBuild 17.9.5+33de0b227 para .NET Framework
-      Compilación iniciada a las 21/08/2025 22:44:30.
+      Compilación iniciada a las 25/08/2025 20:46:47.
       
-      Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdC\\CompilerIdC.vcxproj" en nodo 1 (destinos predeterminados).
+      Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdC\\CompilerIdC.vcxproj" en nodo 1 (destinos predeterminados).
       PrepareForBuild:
         Creando directorio "Debug\\".
         La salida estructurada está habilitada. El formato del diagnóstico del compilador reflejará la jerarquía de errores. Consulte https://aka.ms/cpp/structured-output para obtener más detalles.
@@ -34,12 +34,21 @@ events:
       InitializeBuildStatus:
         Se creará "Debug\\CompilerIdC.tlog\\unsuccessfulbuild" porque se especificó "AlwaysCreate".
         Aplicando tarea Touch a "Debug\\CompilerIdC.tlog\\unsuccessfulbuild".
+      VcpkgTripletSelection:
+        Using triplet "x64-windows" from "C:\\vcpkg\\installed\\x64-windows\\"
+        Using normalized configuration "Release"
       ClCompile:
-        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc143.pdb" /external:W0 /Gd /TC /FC /errorReport:queue CMakeCCompilerId.c
+        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc143.pdb" /external:W0 /Gd /TC /FC /errorReport:queue CMakeCCompilerId.c
         CMakeCCompilerId.c
       Link:
-        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdC.lib" /MACHINE:X64 Debug\\CMakeCCompilerId.obj
-        CompilerIdC.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdC\\CompilerIdC.exe
+        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\lib" /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib "C:\\vcpkg\\installed\\x64-windows\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdC.lib" /MACHINE:X64 Debug\\CMakeCCompilerId.obj
+        CompilerIdC.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdC\\CompilerIdC.exe
+      AppLocalFromInstalled:
+        pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdC\\CompilerIdC.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdC.tlog\\CompilerIdC.write.1u.tlog" "Debug\\vcpkg.applocal.log"
+        "pwsh.exe" no se reconoce como un comando interno o externo,
+        programa o archivo por lotes ejecutable.
+        El comando "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdC\\CompilerIdC.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdC.tlog\\CompilerIdC.write.1u.tlog" "Debug\\vcpkg.applocal.log"" salió con el código 9009.
+        "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdC\\CompilerIdC.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdC.tlog\\CompilerIdC.write.1u.tlog" "Debug\\vcpkg.applocal.log"
       PostBuildEvent:
         for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
         :VCEnd
@@ -47,13 +56,13 @@ events:
       FinalizeBuildStatus:
         Se eliminará el archivo "Debug\\CompilerIdC.tlog\\unsuccessfulbuild".
         Aplicando tarea Touch a "Debug\\CompilerIdC.tlog\\CompilerIdC.lastbuildstate".
-      Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdC\\CompilerIdC.vcxproj" (destinos predeterminados).
+      Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdC\\CompilerIdC.vcxproj" (destinos predeterminados).
       
       Compilación correcta.
           0 Advertencia(s)
           0 Errores
       
-      Tiempo transcurrido 00:00:00.38
+      Tiempo transcurrido 00:00:00.91
       
       
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -61,7 +70,7 @@ events:
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
       
       The C compiler identification is MSVC, found in:
-        C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdC/CompilerIdC.exe
+        C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdC/CompilerIdC.exe
       
   -
     kind: "message-v1"
@@ -79,306 +88,9 @@ events:
       The output was:
       0
       Versión de MSBuild 17.9.5+33de0b227 para .NET Framework
-      Compilación iniciada a las 21/08/2025 22:44:32.
+      Compilación iniciada a las 25/08/2025 20:46:48.
       
-      Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdCXX\\CompilerIdCXX.vcxproj" en nodo 1 (destinos predeterminados).
-      PrepareForBuild:
-        Creando directorio "Debug\\".
-        La salida estructurada está habilitada. El formato del diagnóstico del compilador reflejará la jerarquía de errores. Consulte https://aka.ms/cpp/structured-output para obtener más detalles.
-        Creando directorio "Debug\\CompilerIdCXX.tlog\\".
-      InitializeBuildStatus:
-        Se creará "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild" porque se especificó "AlwaysCreate".
-        Aplicando tarea Touch a "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild".
-      ClCompile:
-        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc143.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
-        CMakeCXXCompilerId.cpp
-      Link:
-        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdCXX.lib" /MACHINE:X64 Debug\\CMakeCXXCompilerId.obj
-        CompilerIdCXX.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdCXX\\CompilerIdCXX.exe
-      PostBuildEvent:
-        for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
-        :VCEnd
-        CMAKE_CXX_COMPILER=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe
-      FinalizeBuildStatus:
-        Se eliminará el archivo "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild".
-        Aplicando tarea Touch a "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.lastbuildstate".
-      Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdCXX\\CompilerIdCXX.vcxproj" (destinos predeterminados).
-      
-      Compilación correcta.
-          0 Advertencia(s)
-          0 Errores
-      
-      Tiempo transcurrido 00:00:00.43
-      
-      
-      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
-      
-      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
-      
-      The CXX compiler identification is MSVC, found in:
-        C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdCXX/CompilerIdCXX.exe
-      
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
-    checks:
-      - "Detecting C compiler ABI info"
-    directories:
-      source: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-hy0gus"
-      binary: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-hy0gus"
-    cmakeVariables:
-      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
-      CMAKE_C_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
-      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
-    buildResult:
-      variable: "CMAKE_C_ABI_COMPILED"
-      cached: true
-      stdout: |
-        Change Dir: 'C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-hy0gus'
-        
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_114c1.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
-        Versión de MSBuild 17.9.5+33de0b227 para .NET Framework
-        Compilación iniciada a las 21/08/2025 22:44:32.
-        
-        Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-hy0gus\\cmTC_114c1.vcxproj" en nodo 1 (destinos predeterminados).
-        PrepareForBuild:
-          Creando directorio "cmTC_114c1.dir\\Debug\\".
-          La salida estructurada está habilitada. El formato del diagnóstico del compilador reflejará la jerarquía de errores. Consulte https://aka.ms/cpp/structured-output para obtener más detalles.
-          Creando directorio "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-hy0gus\\Debug\\".
-          Creando directorio "cmTC_114c1.dir\\Debug\\cmTC_114c1.tlog\\".
-        InitializeBuildStatus:
-          Se creará "cmTC_114c1.dir\\Debug\\cmTC_114c1.tlog\\unsuccessfulbuild" porque se especificó "AlwaysCreate".
-          Aplicando tarea Touch a "cmTC_114c1.dir\\Debug\\cmTC_114c1.tlog\\unsuccessfulbuild".
-        ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_114c1.dir\\Debug\\\\" /Fd"cmTC_114c1.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCCompilerABI.c"
-          Compilador de optimización de C/C++ de Microsoft (R) versión 19.38.33135 para x64
-          (C) Microsoft Corporation. Todos los derechos reservados.
-          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_114c1.dir\\Debug\\\\" /Fd"cmTC_114c1.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCCompilerABI.c"
-          CMakeCCompilerABI.c
-        Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-hy0gus\\Debug\\cmTC_114c1.exe" /INCREMENTAL /ILK:"cmTC_114c1.dir\\Debug\\cmTC_114c1.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-hy0gus/Debug/cmTC_114c1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-hy0gus/Debug/cmTC_114c1.lib" /MACHINE:X64  /machine:x64 cmTC_114c1.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_114c1.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-hy0gus\\Debug\\cmTC_114c1.exe
-        FinalizeBuildStatus:
-          Se eliminará el archivo "cmTC_114c1.dir\\Debug\\cmTC_114c1.tlog\\unsuccessfulbuild".
-          Aplicando tarea Touch a "cmTC_114c1.dir\\Debug\\cmTC_114c1.tlog\\cmTC_114c1.lastbuildstate".
-        Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-hy0gus\\cmTC_114c1.vcxproj" (destinos predeterminados).
-        
-        Compilación correcta.
-            0 Advertencia(s)
-            0 Errores
-        
-        Tiempo transcurrido 00:00:00.48
-        
-      exitCode: 0
-  -
-    kind: "message-v1"
-    backtrace:
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
-    message: |
-      Parsed C implicit link information:
-        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
-        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
-        linker tool for 'C': C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/bin/HostX64/x64/link.exe
-        implicit libs: []
-        implicit objs: []
-        implicit dirs: []
-        implicit fwks: []
-      
-      
-  -
-    kind: "message-v1"
-    backtrace:
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
-    message: |
-      Running the C compiler's linker: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/bin/HostX64/x64/link.exe" "-v"
-      Microsoft (R) Incremental Linker Version 14.38.33135.0
-      Copyright (C) Microsoft Corporation.  All rights reserved.
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
-    checks:
-      - "Detecting CXX compiler ABI info"
-    directories:
-      source: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-eudz0l"
-      binary: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-eudz0l"
-    cmakeVariables:
-      CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
-      CMAKE_CXX_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
-      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
-      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
-    buildResult:
-      variable: "CMAKE_CXX_ABI_COMPILED"
-      cached: true
-      stdout: |
-        Change Dir: 'C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-eudz0l'
-        
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_a0b56.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
-        Versión de MSBuild 17.9.5+33de0b227 para .NET Framework
-        Compilación iniciada a las 21/08/2025 22:44:33.
-        
-        Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-eudz0l\\cmTC_a0b56.vcxproj" en nodo 1 (destinos predeterminados).
-        PrepareForBuild:
-          Creando directorio "cmTC_a0b56.dir\\Debug\\".
-          La salida estructurada está habilitada. El formato del diagnóstico del compilador reflejará la jerarquía de errores. Consulte https://aka.ms/cpp/structured-output para obtener más detalles.
-          Creando directorio "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-eudz0l\\Debug\\".
-          Creando directorio "cmTC_a0b56.dir\\Debug\\cmTC_a0b56.tlog\\".
-        InitializeBuildStatus:
-          Se creará "cmTC_a0b56.dir\\Debug\\cmTC_a0b56.tlog\\unsuccessfulbuild" porque se especificó "AlwaysCreate".
-          Aplicando tarea Touch a "cmTC_a0b56.dir\\Debug\\cmTC_a0b56.tlog\\unsuccessfulbuild".
-        ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a0b56.dir\\Debug\\\\" /Fd"cmTC_a0b56.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp"
-          Compilador de optimización de C/C++ de Microsoft (R) versión 19.38.33135 para x64
-          (C) Microsoft Corporation. Todos los derechos reservados.
-          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a0b56.dir\\Debug\\\\" /Fd"cmTC_a0b56.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp"
-          CMakeCXXCompilerABI.cpp
-        Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-eudz0l\\Debug\\cmTC_a0b56.exe" /INCREMENTAL /ILK:"cmTC_a0b56.dir\\Debug\\cmTC_a0b56.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-eudz0l/Debug/cmTC_a0b56.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-eudz0l/Debug/cmTC_a0b56.lib" /MACHINE:X64  /machine:x64 cmTC_a0b56.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_a0b56.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-eudz0l\\Debug\\cmTC_a0b56.exe
-        FinalizeBuildStatus:
-          Se eliminará el archivo "cmTC_a0b56.dir\\Debug\\cmTC_a0b56.tlog\\unsuccessfulbuild".
-          Aplicando tarea Touch a "cmTC_a0b56.dir\\Debug\\cmTC_a0b56.tlog\\cmTC_a0b56.lastbuildstate".
-        Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-eudz0l\\cmTC_a0b56.vcxproj" (destinos predeterminados).
-        
-        Compilación correcta.
-            0 Advertencia(s)
-            0 Errores
-        
-        Tiempo transcurrido 00:00:00.42
-        
-      exitCode: 0
-  -
-    kind: "message-v1"
-    backtrace:
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
-    message: |
-      Parsed CXX implicit link information:
-        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
-        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
-        linker tool for 'CXX': C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/bin/HostX64/x64/link.exe
-        implicit libs: []
-        implicit objs: []
-        implicit dirs: []
-        implicit fwks: []
-      
-      
-  -
-    kind: "message-v1"
-    backtrace:
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
-    message: |
-      Running the CXX compiler's linker: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/bin/HostX64/x64/link.exe" "-v"
-      Microsoft (R) Incremental Linker Version 14.38.33135.0
-      Copyright (C) Microsoft Corporation.  All rights reserved.
-...
-
----
-events:
-  -
-    kind: "message-v1"
-    backtrace:
-      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineSystem.cmake:205 (message)"
-      - "CMakeLists.txt:2 (project)"
-    message: |
-      The system is: Windows - 10.0.26100 - AMD64
-  -
-    kind: "message-v1"
-    backtrace:
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:2 (project)"
-    message: |
-      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
-      Compiler:  
-      Build flags: /DWIN32;/D_WINDOWS
-      Id flags:  
-      
-      The output was:
-      0
-      Versión de MSBuild 17.9.5+33de0b227 para .NET Framework
-      Compilación iniciada a las 22/08/2025 05:09:59.
-      
-      Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdC\\CompilerIdC.vcxproj" en nodo 1 (destinos predeterminados).
-      PrepareForBuild:
-        Creando directorio "Debug\\".
-        La salida estructurada está habilitada. El formato del diagnóstico del compilador reflejará la jerarquía de errores. Consulte https://aka.ms/cpp/structured-output para obtener más detalles.
-        Creando directorio "Debug\\CompilerIdC.tlog\\".
-      InitializeBuildStatus:
-        Se creará "Debug\\CompilerIdC.tlog\\unsuccessfulbuild" porque se especificó "AlwaysCreate".
-        Aplicando tarea Touch a "Debug\\CompilerIdC.tlog\\unsuccessfulbuild".
-      VcpkgTripletSelection:
-        Using triplet "x64-windows" from "C:\\vcpkg\\installed\\x64-windows\\"
-        Using normalized configuration "Release"
-      ClCompile:
-        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc143.pdb" /external:W0 /Gd /TC /FC /errorReport:queue CMakeCCompilerId.c
-        CMakeCCompilerId.c
-      Link:
-        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\lib" /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib "C:\\vcpkg\\installed\\x64-windows\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdC.lib" /MACHINE:X64 Debug\\CMakeCCompilerId.obj
-        CompilerIdC.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdC\\CompilerIdC.exe
-      AppLocalFromInstalled:
-        pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdC\\CompilerIdC.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdC.tlog\\CompilerIdC.write.1u.tlog" "Debug\\vcpkg.applocal.log"
-        "pwsh.exe" no se reconoce como un comando interno o externo,
-        programa o archivo por lotes ejecutable.
-        El comando "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdC\\CompilerIdC.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdC.tlog\\CompilerIdC.write.1u.tlog" "Debug\\vcpkg.applocal.log"" salió con el código 9009.
-        "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdC\\CompilerIdC.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdC.tlog\\CompilerIdC.write.1u.tlog" "Debug\\vcpkg.applocal.log"
-      PostBuildEvent:
-        for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
-        :VCEnd
-        CMAKE_C_COMPILER=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\Hostx64\\x64\\cl.exe
-      FinalizeBuildStatus:
-        Se eliminará el archivo "Debug\\CompilerIdC.tlog\\unsuccessfulbuild".
-        Aplicando tarea Touch a "Debug\\CompilerIdC.tlog\\CompilerIdC.lastbuildstate".
-      Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdC\\CompilerIdC.vcxproj" (destinos predeterminados).
-      
-      Compilación correcta.
-          0 Advertencia(s)
-          0 Errores
-      
-      Tiempo transcurrido 00:00:00.64
-      
-      
-      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
-      
-      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
-      
-      The C compiler identification is MSVC, found in:
-        C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/3.30.4/CompilerIdC/CompilerIdC.exe
-      
-  -
-    kind: "message-v1"
-    backtrace:
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:2 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-      Compiler:  
-      Build flags: /DWIN32;/D_WINDOWS;/EHsc
-      Id flags:  
-      
-      The output was:
-      0
-      Versión de MSBuild 17.9.5+33de0b227 para .NET Framework
-      Compilación iniciada a las 22/08/2025 05:10:01.
-      
-      Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdCXX\\CompilerIdCXX.vcxproj" en nodo 1 (destinos predeterminados).
+      Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdCXX\\CompilerIdCXX.vcxproj" en nodo 1 (destinos predeterminados).
       PrepareForBuild:
         Creando directorio "Debug\\".
         La salida estructurada está habilitada. El formato del diagnóstico del compilador reflejará la jerarquía de errores. Consulte https://aka.ms/cpp/structured-output para obtener más detalles.
@@ -394,13 +106,13 @@ events:
         CMakeCXXCompilerId.cpp
       Link:
         C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\lib" /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib "C:\\vcpkg\\installed\\x64-windows\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdCXX.lib" /MACHINE:X64 Debug\\CMakeCXXCompilerId.obj
-        CompilerIdCXX.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdCXX\\CompilerIdCXX.exe
+        CompilerIdCXX.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdCXX\\CompilerIdCXX.exe
       AppLocalFromInstalled:
-        pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdCXX\\CompilerIdCXX.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.write.1u.tlog" "Debug\\vcpkg.applocal.log"
+        pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdCXX\\CompilerIdCXX.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.write.1u.tlog" "Debug\\vcpkg.applocal.log"
         "pwsh.exe" no se reconoce como un comando interno o externo,
         programa o archivo por lotes ejecutable.
-        El comando "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdCXX\\CompilerIdCXX.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.write.1u.tlog" "Debug\\vcpkg.applocal.log"" salió con el código 9009.
-        "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdCXX\\CompilerIdCXX.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.write.1u.tlog" "Debug\\vcpkg.applocal.log"
+        El comando "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdCXX\\CompilerIdCXX.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.write.1u.tlog" "Debug\\vcpkg.applocal.log"" salió con el código 9009.
+        "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdCXX\\CompilerIdCXX.exe" "C:\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.write.1u.tlog" "Debug\\vcpkg.applocal.log"
       PostBuildEvent:
         for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
         :VCEnd
@@ -408,13 +120,13 @@ events:
       FinalizeBuildStatus:
         Se eliminará el archivo "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild".
         Aplicando tarea Touch a "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.lastbuildstate".
-      Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\3.30.4\\CompilerIdCXX\\CompilerIdCXX.vcxproj" (destinos predeterminados).
+      Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\3.31.6\\CompilerIdCXX\\CompilerIdCXX.vcxproj" (destinos predeterminados).
       
       Compilación correcta.
           0 Advertencia(s)
           0 Errores
       
-      Tiempo transcurrido 00:00:00.64
+      Tiempo transcurrido 00:00:00.71
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -422,19 +134,19 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
       
       The CXX compiler identification is MSVC, found in:
-        C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/3.30.4/CompilerIdCXX/CompilerIdCXX.exe
+        C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdCXX/CompilerIdCXX.exe
       
   -
     kind: "try_compile-v1"
     backtrace:
       - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
-      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-kqd9r0"
-      binary: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-kqd9r0"
+      source: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-39lyob"
+      binary: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-39lyob"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
       CMAKE_C_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -443,56 +155,56 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-kqd9r0'
+        Change Dir: 'C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-39lyob'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_4a61d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_c00fd.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         Versión de MSBuild 17.9.5+33de0b227 para .NET Framework
-        Compilación iniciada a las 22/08/2025 05:10:02.
+        Compilación iniciada a las 25/08/2025 20:46:49.
         
-        Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-kqd9r0\\cmTC_4a61d.vcxproj" en nodo 1 (destinos predeterminados).
+        Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-39lyob\\cmTC_c00fd.vcxproj" en nodo 1 (destinos predeterminados).
         PrepareForBuild:
-          Creando directorio "cmTC_4a61d.dir\\Debug\\".
+          Creando directorio "cmTC_c00fd.dir\\Debug\\".
           La salida estructurada está habilitada. El formato del diagnóstico del compilador reflejará la jerarquía de errores. Consulte https://aka.ms/cpp/structured-output para obtener más detalles.
-          Creando directorio "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-kqd9r0\\Debug\\".
-          Creando directorio "cmTC_4a61d.dir\\Debug\\cmTC_4a61d.tlog\\".
+          Creando directorio "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-39lyob\\Debug\\".
+          Creando directorio "cmTC_c00fd.dir\\Debug\\cmTC_c00fd.tlog\\".
         InitializeBuildStatus:
-          Se creará "cmTC_4a61d.dir\\Debug\\cmTC_4a61d.tlog\\unsuccessfulbuild" porque se especificó "AlwaysCreate".
-          Aplicando tarea Touch a "cmTC_4a61d.dir\\Debug\\cmTC_4a61d.tlog\\unsuccessfulbuild".
+          Se creará "cmTC_c00fd.dir\\Debug\\cmTC_c00fd.tlog\\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+          Aplicando tarea Touch a "cmTC_c00fd.dir\\Debug\\cmTC_c00fd.tlog\\unsuccessfulbuild".
         VcpkgTripletSelection:
           Using triplet "x64-windows" from "C:\\vcpkg\\installed\\x64-windows\\"
           Using normalized configuration "Debug"
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_4a61d.dir\\Debug\\\\" /Fd"cmTC_4a61d.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCCompilerABI.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_c00fd.dir\\Debug\\\\" /Fd"cmTC_c00fd.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCCompilerABI.c"
           Compilador de optimización de C/C++ de Microsoft (R) versión 19.38.33135 para x64
           (C) Microsoft Corporation. Todos los derechos reservados.
-          cl /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_4a61d.dir\\Debug\\\\" /Fd"cmTC_4a61d.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCCompilerABI.c"
+          cl /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_c00fd.dir\\Debug\\\\" /Fd"cmTC_c00fd.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCCompilerABI.c"
           CMakeCCompilerABI.c
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-kqd9r0\\Debug\\cmTC_4a61d.exe" /INCREMENTAL /ILK:"cmTC_4a61d.dir\\Debug\\cmTC_4a61d.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-kqd9r0/Debug/cmTC_4a61d.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-kqd9r0/Debug/cmTC_4a61d.lib" /MACHINE:X64  /machine:x64 cmTC_4a61d.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_4a61d.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-kqd9r0\\Debug\\cmTC_4a61d.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-39lyob\\Debug\\cmTC_c00fd.exe" /INCREMENTAL /ILK:"cmTC_c00fd.dir\\Debug\\cmTC_c00fd.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-39lyob/Debug/cmTC_c00fd.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-39lyob/Debug/cmTC_c00fd.lib" /MACHINE:X64  /machine:x64 cmTC_c00fd.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_c00fd.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-39lyob\\Debug\\cmTC_c00fd.exe
         AppLocalFromInstalled:
-          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-kqd9r0\\Debug\\cmTC_4a61d.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_4a61d.dir\\Debug\\cmTC_4a61d.tlog\\cmTC_4a61d.write.1u.tlog" "cmTC_4a61d.dir\\Debug\\vcpkg.applocal.log"
+          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-39lyob\\Debug\\cmTC_c00fd.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_c00fd.dir\\Debug\\cmTC_c00fd.tlog\\cmTC_c00fd.write.1u.tlog" "cmTC_c00fd.dir\\Debug\\vcpkg.applocal.log"
           "pwsh.exe" no se reconoce como un comando interno o externo,
           programa o archivo por lotes ejecutable.
-          El comando "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-kqd9r0\\Debug\\cmTC_4a61d.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_4a61d.dir\\Debug\\cmTC_4a61d.tlog\\cmTC_4a61d.write.1u.tlog" "cmTC_4a61d.dir\\Debug\\vcpkg.applocal.log"" salió con el código 9009.
-          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-kqd9r0\\Debug\\cmTC_4a61d.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_4a61d.dir\\Debug\\cmTC_4a61d.tlog\\cmTC_4a61d.write.1u.tlog" "cmTC_4a61d.dir\\Debug\\vcpkg.applocal.log"
+          El comando "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-39lyob\\Debug\\cmTC_c00fd.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_c00fd.dir\\Debug\\cmTC_c00fd.tlog\\cmTC_c00fd.write.1u.tlog" "cmTC_c00fd.dir\\Debug\\vcpkg.applocal.log"" salió con el código 9009.
+          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-39lyob\\Debug\\cmTC_c00fd.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_c00fd.dir\\Debug\\cmTC_c00fd.tlog\\cmTC_c00fd.write.1u.tlog" "cmTC_c00fd.dir\\Debug\\vcpkg.applocal.log"
         FinalizeBuildStatus:
-          Se eliminará el archivo "cmTC_4a61d.dir\\Debug\\cmTC_4a61d.tlog\\unsuccessfulbuild".
-          Aplicando tarea Touch a "cmTC_4a61d.dir\\Debug\\cmTC_4a61d.tlog\\cmTC_4a61d.lastbuildstate".
-        Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-kqd9r0\\cmTC_4a61d.vcxproj" (destinos predeterminados).
+          Se eliminará el archivo "cmTC_c00fd.dir\\Debug\\cmTC_c00fd.tlog\\unsuccessfulbuild".
+          Aplicando tarea Touch a "cmTC_c00fd.dir\\Debug\\cmTC_c00fd.tlog\\cmTC_c00fd.lastbuildstate".
+        Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-39lyob\\cmTC_c00fd.vcxproj" (destinos predeterminados).
         
         Compilación correcta.
             0 Advertencia(s)
             0 Errores
         
-        Tiempo transcurrido 00:00:00.61
+        Tiempo transcurrido 00:00:00.65
         
       exitCode: 0
   -
     kind: "message-v1"
     backtrace:
       - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
-      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     message: |
       Parsed C implicit link information:
@@ -510,7 +222,7 @@ events:
     backtrace:
       - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
       - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
-      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     message: |
       Running the C compiler's linker: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/bin/HostX64/x64/link.exe" "-v"
@@ -520,13 +232,13 @@ events:
     kind: "try_compile-v1"
     backtrace:
       - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
-      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-pp37rj"
-      binary: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-pp37rj"
+      source: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-grz26c"
+      binary: "C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-grz26c"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -536,56 +248,56 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-pp37rj'
+        Change Dir: 'C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-grz26c'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_0f7a8.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_0289d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         Versión de MSBuild 17.9.5+33de0b227 para .NET Framework
-        Compilación iniciada a las 22/08/2025 05:10:03.
+        Compilación iniciada a las 25/08/2025 20:46:50.
         
-        Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-pp37rj\\cmTC_0f7a8.vcxproj" en nodo 1 (destinos predeterminados).
+        Proyecto "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-grz26c\\cmTC_0289d.vcxproj" en nodo 1 (destinos predeterminados).
         PrepareForBuild:
-          Creando directorio "cmTC_0f7a8.dir\\Debug\\".
+          Creando directorio "cmTC_0289d.dir\\Debug\\".
           La salida estructurada está habilitada. El formato del diagnóstico del compilador reflejará la jerarquía de errores. Consulte https://aka.ms/cpp/structured-output para obtener más detalles.
-          Creando directorio "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-pp37rj\\Debug\\".
-          Creando directorio "cmTC_0f7a8.dir\\Debug\\cmTC_0f7a8.tlog\\".
+          Creando directorio "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-grz26c\\Debug\\".
+          Creando directorio "cmTC_0289d.dir\\Debug\\cmTC_0289d.tlog\\".
         InitializeBuildStatus:
-          Se creará "cmTC_0f7a8.dir\\Debug\\cmTC_0f7a8.tlog\\unsuccessfulbuild" porque se especificó "AlwaysCreate".
-          Aplicando tarea Touch a "cmTC_0f7a8.dir\\Debug\\cmTC_0f7a8.tlog\\unsuccessfulbuild".
+          Se creará "cmTC_0289d.dir\\Debug\\cmTC_0289d.tlog\\unsuccessfulbuild" porque se especificó "AlwaysCreate".
+          Aplicando tarea Touch a "cmTC_0289d.dir\\Debug\\cmTC_0289d.tlog\\unsuccessfulbuild".
         VcpkgTripletSelection:
           Using triplet "x64-windows" from "C:\\vcpkg\\installed\\x64-windows\\"
           Using normalized configuration "Debug"
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0f7a8.dir\\Debug\\\\" /Fd"cmTC_0f7a8.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0289d.dir\\Debug\\\\" /Fd"cmTC_0289d.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp"
           Compilador de optimización de C/C++ de Microsoft (R) versión 19.38.33135 para x64
           (C) Microsoft Corporation. Todos los derechos reservados.
-          cl /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0f7a8.dir\\Debug\\\\" /Fd"cmTC_0f7a8.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0289d.dir\\Debug\\\\" /Fd"cmTC_0289d.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\JetBrains\\CLion 2025.1.3\\bin\\cmake\\win\\x64\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp"
           CMakeCXXCompilerABI.cpp
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-pp37rj\\Debug\\cmTC_0f7a8.exe" /INCREMENTAL /ILK:"cmTC_0f7a8.dir\\Debug\\cmTC_0f7a8.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-pp37rj/Debug/cmTC_0f7a8.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-pp37rj/Debug/cmTC_0f7a8.lib" /MACHINE:X64  /machine:x64 cmTC_0f7a8.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_0f7a8.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-pp37rj\\Debug\\cmTC_0f7a8.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-grz26c\\Debug\\cmTC_0289d.exe" /INCREMENTAL /ILK:"cmTC_0289d.dir\\Debug\\cmTC_0289d.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-grz26c/Debug/cmTC_0289d.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_RAINDROPS/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-grz26c/Debug/cmTC_0289d.lib" /MACHINE:X64  /machine:x64 cmTC_0289d.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_0289d.vcxproj -> C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-grz26c\\Debug\\cmTC_0289d.exe
         AppLocalFromInstalled:
-          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-pp37rj\\Debug\\cmTC_0f7a8.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_0f7a8.dir\\Debug\\cmTC_0f7a8.tlog\\cmTC_0f7a8.write.1u.tlog" "cmTC_0f7a8.dir\\Debug\\vcpkg.applocal.log"
+          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-grz26c\\Debug\\cmTC_0289d.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_0289d.dir\\Debug\\cmTC_0289d.tlog\\cmTC_0289d.write.1u.tlog" "cmTC_0289d.dir\\Debug\\vcpkg.applocal.log"
           "pwsh.exe" no se reconoce como un comando interno o externo,
           programa o archivo por lotes ejecutable.
-          El comando "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-pp37rj\\Debug\\cmTC_0f7a8.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_0f7a8.dir\\Debug\\cmTC_0f7a8.tlog\\cmTC_0f7a8.write.1u.tlog" "cmTC_0f7a8.dir\\Debug\\vcpkg.applocal.log"" salió con el código 9009.
-          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-pp37rj\\Debug\\cmTC_0f7a8.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_0f7a8.dir\\Debug\\cmTC_0f7a8.tlog\\cmTC_0f7a8.write.1u.tlog" "cmTC_0f7a8.dir\\Debug\\vcpkg.applocal.log"
+          El comando "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-grz26c\\Debug\\cmTC_0289d.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_0289d.dir\\Debug\\cmTC_0289d.tlog\\cmTC_0289d.write.1u.tlog" "cmTC_0289d.dir\\Debug\\vcpkg.applocal.log"" salió con el código 9009.
+          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-grz26c\\Debug\\cmTC_0289d.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_0289d.dir\\Debug\\cmTC_0289d.tlog\\cmTC_0289d.write.1u.tlog" "cmTC_0289d.dir\\Debug\\vcpkg.applocal.log"
         FinalizeBuildStatus:
-          Se eliminará el archivo "cmTC_0f7a8.dir\\Debug\\cmTC_0f7a8.tlog\\unsuccessfulbuild".
-          Aplicando tarea Touch a "cmTC_0f7a8.dir\\Debug\\cmTC_0f7a8.tlog\\cmTC_0f7a8.lastbuildstate".
-        Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_PONG\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-pp37rj\\cmTC_0f7a8.vcxproj" (destinos predeterminados).
+          Se eliminará el archivo "cmTC_0289d.dir\\Debug\\cmTC_0289d.tlog\\unsuccessfulbuild".
+          Aplicando tarea Touch a "cmTC_0289d.dir\\Debug\\cmTC_0289d.tlog\\cmTC_0289d.lastbuildstate".
+        Compilación del proyecto terminada "C:\\Users\\mesom\\Documents\\GitHub\\CECSNET\\SFML_ECSNET_RAINDROPS\\cmake-build-debug\\CMakeFiles\\CMakeScratch\\TryCompile-grz26c\\cmTC_0289d.vcxproj" (destinos predeterminados).
         
         Compilación correcta.
             0 Advertencia(s)
             0 Errores
         
-        Tiempo transcurrido 00:00:00.62
+        Tiempo transcurrido 00:00:00.80
         
       exitCode: 0
   -
     kind: "message-v1"
     backtrace:
       - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
-      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     message: |
       Parsed CXX implicit link information:
@@ -603,7 +315,7 @@ events:
     backtrace:
       - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
       - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
-      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "C:/Program Files/JetBrains/CLion 2025.1.3/bin/cmake/win/x64/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     message: |
       Running the CXX compiler's linker: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/bin/HostX64/x64/link.exe" "-v"

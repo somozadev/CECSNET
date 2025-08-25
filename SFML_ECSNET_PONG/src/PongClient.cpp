@@ -24,8 +24,9 @@
 
 namespace config {
 constexpr unsigned kHandlerPoolSize    = 64;
-constexpr float    kDropWidth          = 3.0f;
-constexpr float    kDropHeight         = 14.0f;
+constexpr float    kPaddleWidth          = 10.0f;
+constexpr float    kPaddleHeight         = 30.0f;
+constexpr float    kBallRadius         = 3.0f;
 constexpr unsigned kWindowWidth        = 800;
 constexpr unsigned kWindowHeight       = 600;
 constexpr char     kWindowTitle[]      = "Pong ECSNet Client";
@@ -35,9 +36,32 @@ constexpr uint16_t kUdpPort            = 51660;
 constexpr unsigned kSpawnRateLimitMs   = 30;   // anti‑spam
 constexpr unsigned kSleepMs            = 16;   // ~60 fps
 // Input flags (bitfield)
-constexpr std::uint8_t kInputUp    = 0x01;
-constexpr std::uint8_t kInputDown  = 0x02;
+constexpr std::uint8_t kInputUp    = INPUT_UP;
+constexpr std::uint8_t kInputDown  = INPUT_DOWN;
 constexpr std::uint8_t kInputSpawn = 0x80;
+
+
+enum entity_kind_e : uint8_t {
+    ENTITY_KIND_BALL = 0,
+    ENTITY_KIND_PADDLE = 1
+};
+
+typedef struct {
+    uint8_t kind;
+} entity_kind_t;
+
+component_t COMPONENT_ENTITY_KIND = (component_t) -1;
+
+void serialize_entity_kind(const void *data, uint8_t *out) {
+    const entity_kind_t *kind = (const entity_kind_t *) data;
+    out[0] = kind->kind;
+}
+
+void deserialize_entity_kind(const uint8_t *in, void *data) {
+    entity_kind_t *kind = (entity_kind_t *) data;
+    kind->kind = in[0];
+}
+
 } // namespace config
 
 // --------------------------- Networking Services ----------------------------
@@ -82,9 +106,11 @@ class ClientApp {
 public:
     ClientApp()
         : window_(sf::VideoMode(config::kWindowWidth, config::kWindowHeight), config::kWindowTitle),
-          dropShape_(sf::Vector2f(config::kDropWidth, config::kDropHeight)) {
+          paddleShape_(sf::Vector2f(config::kPaddleWidth, config::kPaddleHeight)),
+        ballShape_(config::kBallRadius){
         window_.setVerticalSyncEnabled(true);
-        dropShape_.setFillColor(sf::Color(0, 220, 255));
+        paddleShape_.setFillColor(sf::Color(0, 220, 255));
+        ballShape_.setFillColor(sf::Color(255, 255, 255));
     }
 
     int run() {
@@ -236,7 +262,30 @@ private:
             if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                 handleSpawnAtClick(event.mouseButton.x, event.mouseButton.y);
             }
+            if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Down)) {
+                handleMovePaddle(event.key.code);
+                return;
+            }
         }
+    }
+    void handleMovePaddle(sf::Keyboard::Key key) {
+        if (!serverPeerId_) {
+            std::printf("[Client] No server peer id yet; cannot send SPAWN.\n");
+            return;
+                  }
+        protocol_handler_t* h = handlerPool_.alloc();
+
+        if (key == sf::Keyboard::W || key == sf::Keyboard::Up) {
+        protocol_handler_pack_client_input(h, 0, config::kInputUp, nullptr, 0);
+
+        }
+        else {
+        protocol_handler_pack_client_input(h, 0, config::kInputDown, nullptr, 0);
+        }
+        NetSender sender(netArch_);
+        sender.sendToPeer(serverPeerId_, h);
+        std::printf("[Client] Paddle MOVED.\n");
+
     }
 
     void handleSpawnAtClick(int mouseX, int mouseY) {
@@ -265,8 +314,21 @@ private:
             if (!ecs_has_component(&ecs_, e, COMPONENT_POSITION)) continue;
             auto* pos = static_cast<position_t*>(ecs_get_component(&ecs_, e, COMPONENT_POSITION));
             if (!pos) continue;
-            dropShape_.setPosition(pos->x, pos->y);
-            window_.draw(dropShape_);
+            if (ecs_has_component(&ecs_, e, config::COMPONENT_ENTITY_KIND)) {
+                auto* kind = (config::entity_kind_t*)ecs_get_component(&ecs_, e, config::COMPONENT_ENTITY_KIND);
+                if (kind->kind == config::ENTITY_KIND_BALL) {
+                    // renderizar bola
+
+                    ballShape_.setPosition(pos->x, pos->y);
+                    window_.draw(ballShape_);
+
+                } else if (kind->kind == config::ENTITY_KIND_PADDLE) {
+                    // renderizar pala
+                    paddleShape_.setPosition(pos->x, pos->y);
+                    window_.draw(paddleShape_);
+                }
+            }
+
         }
         window_.display();
     }
@@ -284,6 +346,15 @@ private:
         cfg.user_data          = this;
         cfg.ecs_sync_hz        = 60.0f;
         network_architecture_init(&netArch_, &cfg, &ecs_);
+
+        component_descriptor_t desc;
+        desc.name = "EntityKind";
+        desc.size = sizeof(config::entity_kind_t);
+        desc.serialize = config::serialize_entity_kind;
+        desc.deserialize = config::deserialize_entity_kind;
+
+        config::COMPONENT_ENTITY_KIND = ecs_register_component(&ecs_, desc);
+
         return netArch_ != nullptr;
     }
 
@@ -300,7 +371,8 @@ private:
     const char* serverPeerId_{nullptr};
     HandlerPool handlerPool_{};
     sf::RenderWindow window_;
-    sf::RectangleShape dropShape_;
+    sf::RectangleShape paddleShape_;
+    sf::CircleShape ballShape_;
     sf::Clock spawnRateClock_;
 };
 

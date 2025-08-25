@@ -338,13 +338,19 @@ flush:
  * peers.  The soft_limit parameter bounds the approximate maximum
  * size of each datagram.
  */
-static void send_dirty_chunked_rr_single(ecs_t* ecs,
-                                         connection_manager_t* cm,
+static void send_dirty_chunked_rr_single(network_cs_t* cs,
                                          const char* peer_id,
                                          size_t soft_limit,
                                          entity_t rr_base)
 {
-    if (!ecs || !cm || !peer_id) return;
+    if (!cs || !peer_id) return;
+    ecs_t* ecs = cs->ecs;
+    connection_manager_t* cm = &cs->connection_manager;
+    if (!ecs || !cm) return;
+    // Clamp soft_limit so it never exceeds the packet buffer.  Falling back
+    // to MAX_PACKET_SIZE - 64 leaves headroom for headers and avoids
+    // buffer overflows that would otherwise prevent any data from being
+    // transmitted.
     if (soft_limit == 0 || soft_limit > MAX_PACKET_SIZE) {
         const size_t margin = 64;
         soft_limit = (MAX_PACKET_SIZE > margin ? MAX_PACKET_SIZE - margin : MAX_PACKET_SIZE);
@@ -360,6 +366,81 @@ static void send_dirty_chunked_rr_single(ecs_t* ecs,
     size_t pos  = base_sz;
     uint16_t ents = 0;
 
+    // ---------------------------------------------------------------------
+    // First, serialise any pending destruction events.  Each entry in
+    // cs->pending_destroy_ids represents a network_id that was recently
+    // destroyed on the server.  We send these ahead of normal dirty
+    // components.  A zero comp_count signals to the client that it
+    // should delete its local entity and remove it from the network map.
+    for (size_t di = 0; di < cs->pending_destroy_count; ++di) {
+        uint32_t net_id = cs->pending_destroy_ids[di];
+        // Each deletion record consists of a network_id (4 bytes) and a
+        // comp_count byte (1 byte).  If writing this would exceed the
+        // soft_limit, flush the current packet first.
+        if (pos + sizeof(uint32_t) + 1 > soft_limit) {
+            if (ents > 0) {
+                memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+                packet_header_t* hdr = (packet_header_t*)buf;
+                hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+                hdr->size = (uint16_t)pos;
+                send_multi_to_peer(cm, peer_id, buf, pos);
+            }
+            pos  = base_sz;
+            ents = 0;
+        }
+        // Write network_id
+        size_t ent_pos = pos;
+        pos = wr_mem(buf, cap, pos, &net_id, sizeof(uint32_t));
+        if (pos == (size_t)-1) {
+            // Buffer overflow; flush and retry
+            pos = ent_pos;
+            if (ents > 0) {
+                memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+                packet_header_t* hdr = (packet_header_t*)buf;
+                hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+                hdr->size = (uint16_t)pos;
+                send_multi_to_peer(cm, peer_id, buf, pos);
+            }
+            pos  = base_sz;
+            ents = 0;
+            // retry this deletion on next iteration
+            di--;
+            continue;
+        }
+        // Write comp_count = 0
+        if (pos + 1 > cap) {
+            // Can't write comp_count; flush and retry
+            pos = ent_pos;
+            if (ents > 0) {
+                memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+                packet_header_t* hdr = (packet_header_t*)buf;
+                hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+                hdr->size = (uint16_t)pos;
+                send_multi_to_peer(cm, peer_id, buf, pos);
+            }
+            pos  = base_sz;
+            ents = 0;
+            di--;
+            continue;
+        }
+        buf[pos++] = 0;
+        ents++;
+        // If there is not enough space for another entry and minimal component,
+        // flush now to avoid overflow in subsequent writes.
+        if (pos + sizeof(uint32_t) + 1 + 8 > soft_limit) {
+            if (ents > 0) {
+                memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+                packet_header_t* hdr = (packet_header_t*)buf;
+                hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+                hdr->size = (uint16_t)pos;
+                send_multi_to_peer(cm, peer_id, buf, pos);
+            }
+            pos  = base_sz;
+            ents = 0;
+        }
+    }
+
+    // ---------------------------------------------------------------------
     // Build ordered list: prioritised entities first, then the rest in round‑robin order.
     entity_t order[MAX_ENTITIES];
     bool added[MAX_ENTITIES] = { false };
@@ -378,47 +459,22 @@ static void send_dirty_chunked_rr_single(ecs_t* ecs,
         }
     }
 
+    // Iterate ordered list and serialise dirty components
     for (size_t idx = 0; idx < order_count; ++idx) {
         entity_t e = order[idx];
+        // Skip entities without a NetworkedEntity component
         if (!ecs_has_component(ecs, e, COMPONENT_NETWORKED_ENTITY)) continue;
         networked_entity_t* ne = ecs_get_component(ecs, e, COMPONENT_NETWORKED_ENTITY);
         if (!ne) continue;
+        // Filter by interest mask
         if ((ne->interest_groups & mask) == 0) continue;
 
         size_t ent_pos = pos;
         uint32_t net_id = ne->network_id;
         pos = wr_mem(buf, cap, pos, &net_id, sizeof(uint32_t));
-        if (pos == (size_t)-1) goto flush_single;
-        size_t cc_pos = pos;
-        if (pos + 1 > cap) goto flush_single;
-        buf[pos++] = 0;
-        uint8_t comp_count = 0;
-
-        for (component_t c = 0; c < ecs->registered_component_count; ++c) {
-            if (c == COMPONENT_NETWORKED_ENTITY) continue;
-            if (!ecs_has_component(ecs, e, c)) continue;
-            if (!ecs_is_component_dirty(ecs, e, c)) continue;
-            const void* comp_data = ecs_get_component(ecs, e, c);
-            size_t comp_size = ecs->components[c].descriptor.size;
-            if (pos + sizeof(component_t) + comp_size > soft_limit) {
-                if (comp_count == 0) { pos = ent_pos; goto flush_single; }
-                buf[cc_pos] = comp_count;
-                ents++;
-                goto flush_single;
-            }
-            pos = wr_mem(buf, cap, pos, &c, sizeof(component_t));
-            pos = wr_mem(buf, cap, pos, comp_data, comp_size);
-            if (pos == (size_t)-1) { pos = ent_pos; goto flush_single; }
-            comp_count++;
-        }
-        if (comp_count == 0) {
+        if (pos == (size_t)-1) {
+            // Buffer overflow; flush and retry this entity
             pos = ent_pos;
-            continue;
-        }
-        buf[cc_pos] = comp_count;
-        ents++;
-        if (pos + sizeof(uint32_t) + 1 + 8 > soft_limit) {
-flush_single:
             if (ents > 0) {
                 memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
                 packet_header_t* hdr = (packet_header_t*)buf;
@@ -429,8 +485,107 @@ flush_single:
             pos  = base_sz;
             ents = 0;
             idx--;
+            continue;
         }
+        size_t cc_pos = pos;
+        if (pos + 1 > cap) {
+            // Not enough space to write comp_count; flush
+            pos = ent_pos;
+            if (ents > 0) {
+                memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+                packet_header_t* hdr = (packet_header_t*)buf;
+                hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+                hdr->size = (uint16_t)pos;
+                send_multi_to_peer(cm, peer_id, buf, pos);
+            }
+            pos  = base_sz;
+            ents = 0;
+            idx--;
+            continue;
+        }
+        buf[pos++] = 0; // placeholder for comp_count
+        uint8_t comp_count = 0;
+
+        for (component_t c = 0; c < ecs->registered_component_count; ++c) {
+            if (c == COMPONENT_NETWORKED_ENTITY) continue;
+            if (!ecs_has_component(ecs, e, c)) continue;
+            if (!ecs_is_component_dirty(ecs, e, c)) continue;
+            const void* comp_data = ecs_get_component(ecs, e, c);
+            size_t comp_size = ecs->components[c].descriptor.size;
+            if (pos + sizeof(component_t) + comp_size > soft_limit) {
+                // If nothing has been written yet, flush and retry this entity later
+                if (comp_count == 0) {
+                    pos = ent_pos;
+                    // flush current packet
+                    if (ents > 0) {
+                        memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+                        packet_header_t* hdr = (packet_header_t*)buf;
+                        hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+                        hdr->size = (uint16_t)pos;
+                        send_multi_to_peer(cm, peer_id, buf, pos);
+                    }
+                    pos  = base_sz;
+                    ents = 0;
+                    idx--;
+                    goto continue_outer_loop;
+                }
+                // Otherwise, finish this entity and flush
+                buf[cc_pos] = comp_count;
+                ents++;
+                if (ents > 0) {
+                    memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+                    packet_header_t* hdr = (packet_header_t*)buf;
+                    hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+                    hdr->size = (uint16_t)pos;
+                    send_multi_to_peer(cm, peer_id, buf, pos);
+                }
+                pos  = base_sz;
+                ents = 0;
+                idx--;
+                goto continue_outer_loop;
+            }
+            // Write component id and data
+            pos = wr_mem(buf, cap, pos, &c, sizeof(component_t));
+            pos = wr_mem(buf, cap, pos, comp_data, comp_size);
+            if (pos == (size_t)-1) {
+                // Buffer overflow; flush and retry
+                pos = ent_pos;
+                if (ents > 0) {
+                    memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+                    packet_header_t* hdr = (packet_header_t*)buf;
+                    hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+                    hdr->size = (uint16_t)pos;
+                    send_multi_to_peer(cm, peer_id, buf, pos);
+                }
+                pos  = base_sz;
+                ents = 0;
+                idx--;
+                goto continue_outer_loop;
+            }
+            comp_count++;
+        }
+        // If no components were written, skip this entity
+        if (comp_count == 0) {
+            pos = ent_pos;
+            continue;
+        }
+        buf[cc_pos] = comp_count;
+        ents++;
+        // Flush if not enough space for another entity header and minimal component
+        if (pos + sizeof(uint32_t) + 1 + 8 > soft_limit) {
+            if (ents > 0) {
+                memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
+                packet_header_t* hdr = (packet_header_t*)buf;
+                hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
+                hdr->size = (uint16_t)pos;
+                send_multi_to_peer(cm, peer_id, buf, pos);
+            }
+            pos  = base_sz;
+            ents = 0;
+        }
+        continue_outer_loop: ;
     }
+    // Send any remaining entities in buffer (including deletions) at end
     if (ents > 0) {
         memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
         packet_header_t* hdr = (packet_header_t*)buf;
@@ -509,7 +664,21 @@ void on_packet_received_cs(void *user_data, peer_t *peer, const void *data, int 
             ptr += sizeof(uint32_t);
             if (end - ptr < (ptrdiff_t)sizeof(uint8_t)) { break; }
             uint8_t comp_count = *ptr++;
-            // Look up or create the local entity for this network_id
+            // Look up or create the local entity for this network_id.
+            // If comp_count == 0, this indicates the entity was destroyed on the server.
+            if (comp_count == 0) {
+                // If a mapping exists, destroy the local entity and remove the mapping
+                entity_t local_e = network_map_lookup(&cs->network_map, net_id);
+                if (local_e != (entity_t)-1) {
+                    // Remove all ECS components and free the entity
+                    ecs_destroy_entity(cs->ecs, local_e);
+                    // Remove from the network map so the ID can be reused by the server
+                    network_map_remove(&cs->network_map, net_id);
+                }
+                // No component payload follows for a delete event
+                continue;
+            }
+
             entity_t local_e = network_map_lookup(&cs->network_map, net_id);
             if (local_e == (entity_t)-1) {
                 // Create a new local entity and attach a NetworkedEntity component
@@ -674,6 +843,14 @@ network_cs_t *network_cs_init(const network_architecture_config_t *config, ecs_t
     network_map_init(&cs_arch->network_map);
     cs_arch->next_network_id = 1;
 
+    // Initialise the pending destroy queue.  When server‑side entities are
+    // destroyed their network IDs will be appended here.  Clients do not
+    // use this queue.  We allocate an initial small capacity and
+    // expand as needed in network_cs_mark_destroy().
+    cs_arch->pending_destroy_ids = NULL;
+    cs_arch->pending_destroy_count = 0;
+    cs_arch->pending_destroy_capacity = 0;
+
     // TCP
     net_socket_t tcp_listen = net_socket_create(SOCKET_TYPE_TCP);
     if (config->is_server) {
@@ -723,7 +900,7 @@ void network_cs_update(network_cs_t *cs, float dt) {
                 // Pass zero as soft_limit so that send_dirty_chunked_rr_single uses
                 // its internal clamp.  Specifying a value larger than the
                 // packet buffer would otherwise cause the send to fail.
-                send_dirty_chunked_rr_single(cs->ecs, &cs->connection_manager, p->id, 0, rr_base);
+                send_dirty_chunked_rr_single(cs, p->id, 0, rr_base);
             }
             // Clear dirty flags on all components after sending to all peers
             ecs_t* ecs = cs->ecs;
@@ -737,6 +914,13 @@ void network_cs_update(network_cs_t *cs, float dt) {
                     }
                 }
             }
+            // Clear the pending destruction list now that deletion events have
+            // been sent to all peers.  If the list is not cleared here,
+            // clients would receive duplicate delete messages on subsequent
+            // ticks.
+            if (cs->pending_destroy_count > 0) {
+                cs->pending_destroy_count = 0;
+            }
             // Advance the round‑robin starting index for the next tick
             rr_base = (rr_base + 1) % MAX_ENTITIES;
         }
@@ -749,6 +933,56 @@ void network_cs_destroy(network_cs_t *cs) {
     connection_manager_destroy(&cs->connection_manager);
     // Destroy the network ID map (client side) and free storage
     network_map_destroy(&cs->network_map);
+
+    // Free pending destroy queue
+    if (cs->pending_destroy_ids) {
+        free(cs->pending_destroy_ids);
+        cs->pending_destroy_ids = NULL;
+        cs->pending_destroy_count = 0;
+        cs->pending_destroy_capacity = 0;
+    }
     // Finally free the network architecture struct
     free(cs);
+}
+
+// Append a network_id to the pending destroy queue.  Internal helper.
+static void pending_destroy_append(network_cs_t* cs, uint32_t network_id) {
+    if (!cs) return;
+    // Only the server queues destroy events
+    if (!cs->config.is_server) return;
+    // Avoid duplicate entries: check if already present
+    for (size_t i = 0; i < cs->pending_destroy_count; ++i) {
+        if (cs->pending_destroy_ids[i] == network_id) {
+            return;
+        }
+    }
+    if (cs->pending_destroy_count >= cs->pending_destroy_capacity) {
+        size_t new_cap = cs->pending_destroy_capacity == 0 ? 16 : cs->pending_destroy_capacity * 2;
+        uint32_t* new_ids = (uint32_t*)realloc(cs->pending_destroy_ids, new_cap * sizeof(uint32_t));
+        if (!new_ids) {
+            // Allocation failed; drop the destroy event
+            return;
+        }
+        cs->pending_destroy_ids = new_ids;
+        cs->pending_destroy_capacity = new_cap;
+    }
+    cs->pending_destroy_ids[cs->pending_destroy_count++] = network_id;
+}
+
+void network_cs_mark_network_id_destroy(network_cs_t* cs, uint32_t network_id) {
+    if (!cs) return;
+    // Only queue destroys on the server
+    if (!cs->config.is_server) return;
+    pending_destroy_append(cs, network_id);
+}
+
+void network_cs_mark_entity_destroy(network_cs_t* cs, entity_t entity) {
+    if (!cs) return;
+    // Only the server queues destroy events
+    if (!cs->config.is_server) return;
+    if (!cs->ecs) return;
+    if (!ecs_has_component(cs->ecs, entity, COMPONENT_NETWORKED_ENTITY)) return;
+    networked_entity_t* ne = ecs_get_component(cs->ecs, entity, COMPONENT_NETWORKED_ENTITY);
+    if (!ne) return;
+    pending_destroy_append(cs, ne->network_id);
 }

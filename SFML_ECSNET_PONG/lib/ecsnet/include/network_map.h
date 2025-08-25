@@ -67,3 +67,17 @@ static inline void network_map_insert(network_map_t *map, uint32_t network_id, e
     map->pairs[map->count].local_id = local_id;
     map->count++;
 }
+
+// Remove a mapping for a given network_id.  Returns 1 if removed, 0 if not found.
+static inline int network_map_remove(network_map_t *map, uint32_t network_id) {
+    if (!map || !map->pairs) return 0;
+    for (size_t i = 0; i < map->count; ++i) {
+        if (map->pairs[i].network_id == network_id) {
+            // Move the last element into this position and shrink the count
+            map->pairs[i] = map->pairs[map->count - 1];
+            map->count--;
+            return 1;
+        }
+    }
+    return 0;
+}

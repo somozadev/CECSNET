@@ -37,6 +37,21 @@ ECSNET_API typedef struct network_cs_t {
      * the session.  Clients leave this at zero.
      */
     uint32_t next_network_id;
+
+    /**
+     * @brief Pending destroy list for server‑side entity removal.
+     *
+     * When an entity with a NetworkedEntity component is destroyed on the
+     * server, its network_id should be queued here via
+     * network_cs_mark_entity_destroy().  During the next network tick the
+     * queued IDs will be sent to all clients as part of the delta
+     * snapshot with a zero component count, signalling clients to
+     * destroy their corresponding local entity and remove the mapping.
+     * After transmitting to all peers the list is cleared.
+     */
+    uint32_t *pending_destroy_ids;
+    size_t pending_destroy_count;
+    size_t pending_destroy_capacity;
 } network_cs_t;
 
 /**
@@ -125,6 +140,33 @@ void network_cs_update(network_cs_t* network_cs, float dt);
  * @param network_cs A pointer to the network_cs_t instance to destroy.
  */
 void network_cs_destroy(network_cs_t* network_cs);
+
+/**
+ * @brief Queue a destruction event for a networked entity.
+ *
+ * When a replicated entity is removed on the server (e.g. when a
+ * player disconnects and their paddle entity is destroyed), the
+ * server should call this helper before calling ecs_destroy_entity().
+ * It records the entity's network_id so that the next network tick
+ * will transmit a delete message to all clients.  After sending the
+ * message the server clears the queue.  Has no effect on clients.
+ *
+ * @param cs The network_cs_t instance (must be server).
+ * @param entity The local ECS entity being destroyed.
+ */
+void network_cs_mark_entity_destroy(network_cs_t* cs, entity_t entity);
+
+/**
+ * @brief Queue a destruction event for an arbitrary network ID.
+ *
+ * This helper inserts a raw network_id into the pending destroy
+ * queue.  It can be used if the caller already has the network_id
+ * instead of the local entity.  Has no effect on clients.
+ *
+ * @param cs The network_cs_t instance (must be server).
+ * @param network_id The network_id to enqueue for destruction.
+ */
+void network_cs_mark_network_id_destroy(network_cs_t* cs, uint32_t network_id);
 
 #ifdef __cplusplus
 }
