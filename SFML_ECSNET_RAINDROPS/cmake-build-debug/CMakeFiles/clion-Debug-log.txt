@@ -1,0 +1,6 @@
+"C:\Program Files\JetBrains\CLion 2025.1.3\bin\cmake\win\x64\bin\cmake.exe" -G "Visual Studio 17 2022" -S C:\Users\mesom\Documents\GitHub\CECSNET\SFML_ECSNET_PONG -B C:\Users\mesom\Documents\GitHub\CECSNET\SFML_ECSNET_PONG\cmake-build-debug
+-- Selecting Windows SDK version 10.0.22621.0 to target Windows 10.0.26100.
+-- Found SFML 2.5.1 in C:/SFML-2.5.1/lib/cmake/SFML
+-- Configuring done (0.0s)
+-- Generating done (0.3s)
+-- Build files have been written to: C:/Users/mesom/Documents/GitHub/CECSNET/SFML_ECSNET_PONG/cmake-build-debug
