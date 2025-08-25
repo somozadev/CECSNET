@@ -24,7 +24,6 @@ typedef enum
 
 /**
  * @brief Represents a network socket.
- *
  * This struct encapsulates the socket's file descriptor, type, and address
  * information.
  */
@@ -105,7 +104,16 @@ int net_socket_receive_from(net_socket_t* socket, void* buffer, int max_len, str
  */
 int net_socket_bind(net_socket_t* socket, const char* ip, uint16_t port);
 
-
+/**
+ * @brief Retrieves the local port number to which the socket is bound.
+ * This function returns the port assigned to the socket, either the one
+ * explicitly specified when calling net_socket_bind(), or the ephemeral
+ * port automatically assigned by the OS when binding to port 0.
+ *
+ * @param s A pointer to the net_socket_t instance.
+ * @return The local port number in host byte order.
+ *         Returns 0 if the socket is not bound or on error.
+ */
 uint16_t net_socket_get_local_port(const net_socket_t* s);
 /**
  * @brief Sets the socket in listening mode (only for TCP sockets).
@@ -124,7 +132,6 @@ int net_socket_close(net_socket_t* socket);
 
 /**
  * @brief Initializes underlying socket subsystem.
- *
  * On Windows platforms, this function calls WSAStartup() to initialize the
  * Winsock library. On POSIX systems it does nothing.  Call this once
  * before creating any sockets.
@@ -133,7 +140,6 @@ void net_socket_init(void);
 
 /**
  * @brief Performs any necessary cleanup of the socket subsystem.
- *
  * On Windows platforms, this function calls WSACleanup() to tear down
  * Winsock. On POSIX systems it does nothing.  Call this once when
  * shutting down networking.

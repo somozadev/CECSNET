@@ -243,15 +243,3 @@ connection_manager_t* network_architecture_get_connection_manager(network_archit
             return NULL;
     }
 }
-
-void network_architecture_set_callbacks(network_architecture_t* architecture,
-                                       void (*on_connect)(void*, peer_t*),
-                                       void (*on_disconnect)(void*, peer_t*),
-                                       void (*on_receive)(void*, peer_t*, const void*, int)) {
-    connection_manager_t* cm = network_architecture_get_connection_manager(architecture);
-    if (cm) {
-        cm->on_connect = on_connect;
-        cm->on_disconnect = on_disconnect;
-        cm->on_receive = on_receive;
-    }
-}

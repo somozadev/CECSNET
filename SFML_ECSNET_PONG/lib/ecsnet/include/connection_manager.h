@@ -13,7 +13,8 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif // Cierra el bloque extern "C"
+#endif
+
 
 /**
  * @brief Defines the number of network protocols being used (TCP and UDP).
@@ -23,15 +24,17 @@ extern "C" {
 #define MAX_PACKET_SIZE 1024
 #endif
 /**
+ * @brief Defines the maximum number of peers that can be managed simultaneously.
+ */
+#define MAX_PEERS 32
+
+/**
  * @brief Forward declaration of the protocol_handler_t, network_cs_t and connection_manager_t structures.
  */
 typedef struct protocol_handler_t protocol_handler_t;
 typedef struct network_cs_t network_cs_t;
 typedef struct connection_manager_t connection_manager_t;
-/**
- * @brief Defines the maximum number of peers that can be managed simultaneously.
- */
-#define MAX_PEERS 32
+
 
 /**
  * @brief Represents a connected network peer.
@@ -56,7 +59,7 @@ ECSNET_API typedef struct peer_t {
      */
     interest_mask_t interest_mask;
 
-    // ---- TCP reassembly (framing) ----
+    //  TCP reassembly (used for framing)
     uint8_t tcp_rx_buf[MAX_PACKET_SIZE * 2];
     int     tcp_rx_len;
 } peer_t;
@@ -66,7 +69,7 @@ ECSNET_API typedef struct peer_t {
  * @brief Manages all active network connections (peers) for a client or server.
  *
  * This structure holds an array of all connected peers, manages the listen sockets,
- * and stores pointers to callback functions for network events.
+ * and stores pointers to peer related callback functions for network events.
  */
 ECSNET_API typedef struct connection_manager_t {
     peer_t peers[MAX_PEERS];                /**< An array of all managed peers. */

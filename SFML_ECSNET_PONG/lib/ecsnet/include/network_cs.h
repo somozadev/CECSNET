@@ -11,7 +11,6 @@ extern "C" {
 #endif
 /**
  * @brief Represents the client-server network architecture implementation.
- *
  * This struct contains the core components for a client-server setup,
  * including the connection manager, protocol handler, and a pointer
  * to the ECS instance.
@@ -56,15 +55,13 @@ ECSNET_API typedef struct network_cs_t {
 
 /**
  * @brief Assigns a globally unique network ID to a newly created entity and
- *        attaches a NetworkedEntity component to it.  Only valid on the
- *        server.  Clients should never call this.
- *
+ * attaches a NetworkedEntity component to it.  Only valid on the
+ * server.  Clients should never call this.
  * This helper assigns the next available network ID from the
  * network_cs_t instance, increments the counter, and registers a
  * NetworkedEntity component with the specified interest groups on
  * the given entity.  It should be invoked immediately after
  * creating any entity that should be replicated to clients.
- *
  * @param cs Pointer to the network_cs_t instance (must be server).
  * @param e  The ECS entity to which to attach the NetworkedEntity component.
  * @param interest_groups Bitmask of groups this entity belongs to.
@@ -79,12 +76,10 @@ static inline void network_cs_assign_network_id(network_cs_t* cs, entity_t e, in
 
 /**
  * @brief Sets the interest mask for a connected peer.
- *
  * This helper simply wraps connection_manager_set_peer_interest() and
  * is provided for convenience at the architecture layer.  Only the
  * server side should call this to customise what entities each
  * client receives.  On the client this has no effect.
- *
  * @param cs    Pointer to the network_cs_t instance.
  * @param peer_id Identifier of the peer whose interest mask will be updated.
  * @param mask  New bitmask of interest groups.
@@ -143,14 +138,12 @@ void network_cs_destroy(network_cs_t* network_cs);
 
 /**
  * @brief Queue a destruction event for a networked entity.
- *
  * When a replicated entity is removed on the server (e.g. when a
  * player disconnects and their paddle entity is destroyed), the
  * server should call this helper before calling ecs_destroy_entity().
  * It records the entity's network_id so that the next network tick
  * will transmit a delete message to all clients.  After sending the
  * message the server clears the queue.  Has no effect on clients.
- *
  * @param cs The network_cs_t instance (must be server).
  * @param entity The local ECS entity being destroyed.
  */
@@ -158,11 +151,9 @@ void network_cs_mark_entity_destroy(network_cs_t* cs, entity_t entity);
 
 /**
  * @brief Queue a destruction event for an arbitrary network ID.
- *
  * This helper inserts a raw network_id into the pending destroy
  * queue.  It can be used if the caller already has the network_id
  * instead of the local entity.  Has no effect on clients.
- *
  * @param cs The network_cs_t instance (must be server).
  * @param network_id The network_id to enqueue for destruction.
  */

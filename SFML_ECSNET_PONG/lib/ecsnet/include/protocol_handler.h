@@ -10,7 +10,6 @@ extern "C" {
 #endif
 /**
  * @brief The maximum size of a network packet.
- *
  * This constant defines the maximum allowed size for a single network packet,
  * including the header and payload.
  */
@@ -21,7 +20,6 @@ extern "C" {
 
 /**
  * @brief Enumeration of all available packet types.
- *
  * This defines the type of message being sent, which dictates how the payload
  * should be interpreted by the receiver.
  */
@@ -36,7 +34,6 @@ typedef enum {
 
 /**
  * @brief The header of a network packet.
- *
  * Contains metadata about the packet, such as its size and type.
  * Note on padding: The size is 2 bytes and the enum type is 4 bytes,
  * which results in 2 bytes of padding to align the struct to an 8-byte boundary.
@@ -48,7 +45,6 @@ ECSNET_API typedef struct {
 
 /**
  * @brief A full network packet structure.
- *
  * This struct combines the header and the data payload, providing a complete
  * packet representation for sending and receiving.
  */
@@ -60,7 +56,6 @@ ECSNET_API typedef struct {
 
 /**
  * @brief The protocol handler structure.
- *
  * Manages the state for incoming and outgoing network packets, providing
  * functionality for packing, unpacking, and processing network data.
  */
@@ -91,6 +86,18 @@ void protocol_handler_pack_entity_update(protocol_handler_t *handler, entity_t e
  * @param udp_port The UDP port of the client.
  */
 void protocol_handler_pack_client_register(protocol_handler_t *handler, uint16_t udp_port);
+
+/**
+ * @brief Unpacks a client registration packet (PACKET_TYPE_CLIENT_REGISTER).
+ * This function validates and extracts the UDP port from a received
+ * client registration packet.
+ * Expected payload layout:
+ * - [uint16_t udp_port]
+ * @param pkt       Pointer to the received network packet.
+ * @param out_port  Output pointer to store the extracted UDP port.
+ * @return true if the packet was valid and unpacked successfully,
+ *         false otherwise (e.g. wrong type, invalid size).
+ */
 bool protocol_handler_unpack_client_register(const network_packet_t* pkt, uint16_t* out_port);
 
 /**
@@ -101,7 +108,6 @@ void protocol_handler_pack_server_ack(protocol_handler_t *handler);
 /**
  * @brief Pack a client input packet (PACKET_TYPE_CLIENT_INPUT).
  *        Layout: [entity_t][uint8_t cmd][extra...].
- *
  * @param handler   Initialized protocol handler to write into.
  * @param entity_id Target entity id (use 0 if not applicable).
  * @param input_cmd Command code (e.g., INPUT_UP/DOWN/SPAWN).
@@ -110,6 +116,24 @@ void protocol_handler_pack_server_ack(protocol_handler_t *handler);
  */
 void protocol_handler_pack_client_input(protocol_handler_t* handler, entity_t entity_id, uint8_t input_cmd, const void* extra, uint16_t extra_len);
 
+
+/**
+ * @brief Unpacks a client input packet (PACKET_TYPE_CLIENT_INPUT).
+ * This function validates and extracts the input command data from a
+ * received client input packet. The packet payload is interpreted as:
+ * Layout:
+ * - [entity_t]   : Target entity ID (4 bytes on 32-bit, 8 bytes on 64-bit).
+ * - [uint8_t]    : Input command (e.g., INPUT_UP, INPUT_DOWN, INPUT_SPAWN).
+ * - [extra...]   : Optional extra data depending on the command.
+ * @param pkt           Pointer to the received network packet.
+ * @param out_eid       Output pointer for the target entity ID.
+ * @param out_cmd       Output pointer for the input command code.
+ * @param out_extra     Output pointer to the beginning of the extra data
+ *                      inside the packet (not a copy; pointer into pkt->data).
+ * @param out_extra_len Output pointer for the size of the extra data in bytes.
+ * @return true if the packet was valid and unpacked successfully,
+ *         false otherwise (e.g. wrong type, truncated payload).
+ */
 bool protocol_handler_unpack_client_input(const network_packet_t* pkt, entity_t* out_eid, uint8_t* out_cmd, const void** out_extra, uint16_t* out_extra_len);
 
 /**

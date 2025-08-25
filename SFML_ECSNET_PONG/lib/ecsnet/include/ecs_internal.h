@@ -7,7 +7,6 @@ extern "C" {
 #endif
 /**
  * @brief Metadata for an entity.
- *
  * This structure holds internal bookkeeping information for an entity,
  * such as whether it is currently active (in use) in the ECS world.
  */
@@ -17,7 +16,6 @@ typedef struct {
 
 /**
  * @brief Storage container for a single component type.
- *
  * Each registered component type gets its own storage structure.
  * It contains:
  * - The descriptor describing the component type (size, name, serialization functions).
@@ -35,7 +33,6 @@ struct component_storage_t {
 
 /**
  * @brief Internal structure representing the ECS world state.
- *
  * This holds:
  * - All entity metadata.
  * - Component storage for every registered component type.
@@ -58,10 +55,8 @@ struct ecs_t {
 
 /**
  * @brief Executes all registered ECS systems.
- *
  * This function iterates through the ECS world's registered system pool
  * and calls each system with the ECS state and the provided delta time.
- *
  * @param ecs Pointer to the ECS world state.
  * @param dt  Delta time in seconds since the last update.
  */
