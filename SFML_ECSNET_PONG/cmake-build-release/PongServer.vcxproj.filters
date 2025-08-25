@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\mesom\Documents\GitHub\CECSNET\SFML_ECSNET_PONG\src\PongServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\mesom\Documents\GitHub\CECSNET\SFML_ECSNET_PONG\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{C709F64C-0CCD-35DF-8813-4FC0E72FB734}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
