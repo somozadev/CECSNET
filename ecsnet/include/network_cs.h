@@ -15,7 +15,7 @@ extern "C" {
  * including the connection manager, protocol handler, and a pointer
  * to the ECS instance.
  */
-ECSNET_API typedef struct network_cs_t {
+typedef struct network_cs_t {
     ecs_t* ecs;                                 /**< A pointer to the ECS instance. */
     network_architecture_config_t config;      /**< Configuration for this network instance. */
     connection_manager_t connection_manager;    /**< The connection manager instance. */
@@ -98,21 +98,21 @@ static inline void network_cs_set_peer_interest(network_cs_t* cs, const char* pe
  * @param data A pointer to the received data buffer.
  * @param len The length of the received data.
  */
-ECSNET_API void on_packet_received_cs(void* user_data, peer_t* peer, const void* data, int len);
+void on_packet_received_cs(void* user_data, peer_t* peer, const void* data, int len);
 
 /**
  * @brief Callback function triggered when a new peer connects.
  * @param user_data A generic pointer to the network_cs_t instance.
  * @param peer A pointer to the newly connected peer.
  */
-ECSNET_API void on_peer_connected_cs(void* user_data, peer_t* peer);
+void on_peer_connected_cs(void* user_data, peer_t* peer);
 
 /**
  * @brief Callback function triggered when a peer disconnects.
  * @param user_data A generic pointer to the network_cs_t instance.
  * @param peer A pointer to the disconnected peer.
  */
-ECSNET_API void on_peer_disconnected_cs(void* user_data, peer_t* peer);
+void on_peer_disconnected_cs(void* user_data, peer_t* peer);
 
 /**
  * @brief Initializes the client-server network architecture.
@@ -120,7 +120,7 @@ ECSNET_API void on_peer_disconnected_cs(void* user_data, peer_t* peer);
  * @param ecs A pointer to the ECS instance.
  * @return A pointer to the newly created network_cs_t instance, or NULL on failure.
  */
-network_cs_t* network_cs_init(const network_architecture_config_t* config, ecs_t* ecs);
+ECSNET_API network_cs_t* network_cs_init(const network_architecture_config_t* config, ecs_t* ecs);
 
 /**
  * @brief Updates the client-server network architecture.
@@ -128,13 +128,13 @@ network_cs_t* network_cs_init(const network_architecture_config_t* config, ecs_t
  * @param network_cs A pointer to the network_cs_t instance.
  * @param dt delta time.
  */
-void network_cs_update(network_cs_t* network_cs, float dt);
+ECSNET_API void network_cs_update(network_cs_t* network_cs, float dt);
 
 /**
  * @brief Shuts down and frees all resources used by the client-server network architecture.
  * @param network_cs A pointer to the network_cs_t instance to destroy.
  */
-void network_cs_destroy(network_cs_t* network_cs);
+ECSNET_API void network_cs_destroy(network_cs_t* network_cs);
 
 /**
  * @brief Queue a destruction event for a networked entity.
@@ -147,7 +147,7 @@ void network_cs_destroy(network_cs_t* network_cs);
  * @param cs The network_cs_t instance (must be server).
  * @param entity The local ECS entity being destroyed.
  */
-void network_cs_mark_entity_destroy(network_cs_t* cs, entity_t entity);
+ECSNET_API void network_cs_mark_entity_destroy(network_cs_t* cs, entity_t entity);
 
 /**
  * @brief Queue a destruction event for an arbitrary network ID.
@@ -157,7 +157,7 @@ void network_cs_mark_entity_destroy(network_cs_t* cs, entity_t entity);
  * @param cs The network_cs_t instance (must be server).
  * @param network_id The network_id to enqueue for destruction.
  */
-void network_cs_mark_network_id_destroy(network_cs_t* cs, uint32_t network_id);
+ECSNET_API void network_cs_mark_network_id_destroy(network_cs_t* cs, uint32_t network_id);
 
 #ifdef __cplusplus
 }

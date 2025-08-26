@@ -10,7 +10,7 @@ extern "C" {
  * @brief Forward declaration of the ECS world structure.
  * The full definition is provided in ecs.h.
  */
-ECSNET_API typedef struct ecs_t ecs_t;
+typedef struct ecs_t ecs_t;
 
 /**
  * @brief Unique identifier for an entity.
@@ -73,7 +73,7 @@ typedef void (*deserialize_func_t)(const uint8_t *buffer_in, void *data_out);
  * Contains metadata and function pointers required for managing
  * a specific component type within the ECS.
  */
-ECSNET_API typedef struct component_descriptor_t component_descriptor_t;
+typedef struct component_descriptor_t component_descriptor_t;
 typedef struct component_descriptor_t {
     size_t size;                       /**< Size of the component in bytes. */
     const char *name;                   /**< Human-readable component name. */
@@ -86,7 +86,7 @@ typedef struct component_descriptor_t {
  *
  * The full definition is provided in ecs_internal.h.
  */
-ECSNET_API typedef struct component_storage_t component_storage_t;
+typedef struct component_storage_t component_storage_t;
 
 #ifdef __cplusplus
 }

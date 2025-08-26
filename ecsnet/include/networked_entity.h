@@ -37,7 +37,7 @@ typedef struct {
  * @brief Global component ID for NetworkedEntity.
  * Defined in `ecs_builtin.c`. Used by the ECS to identify this component type.
  */
-extern component_t COMPONENT_NETWORKED_ENTITY;
+ECSNET_API extern component_t COMPONENT_NETWORKED_ENTITY;
 
 /**
  * @brief Serializes a NetworkedEntity into an 8-byte buffer.

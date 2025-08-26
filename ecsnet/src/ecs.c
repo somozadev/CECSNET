@@ -79,9 +79,25 @@ static void ecs_expand_component_array(ecs_t *ecs, size_t new_capacity) {
     ecs->components = new_components;
     ecs->component_capacity = new_capacity;
 }
+ECSNET_API ecs_t* ecs_create(void) {
+    ecs_t* ecs = calloc(1, sizeof(ecs_t));
+    ecs_init(ecs);
+    return ecs;
+}
+
+ECSNET_API void ecs_destroy(ecs_t* ecs) {
+    if (!ecs) return;
+    // libera entities, components, signatures…
+    free(ecs->entities);
+    free(ecs->signatures);
+    free(ecs->components);
+    free(ecs->systems);
+    free(ecs);
+}
+
 // Initializes ECS core structures and registers built-in components/systems.
 // Returns void; if allocation fails, prints error & ECS sits as partially initialized.
-void ecs_init(ecs_t* ecs)
+ECSNET_API void ecs_init(ecs_t* ecs)
 {
     if (!ecs) return;
 
@@ -110,14 +126,14 @@ void ecs_init(ecs_t* ecs)
 }
 
 // Execute all registered systems with the given delta time.
-void ecs_update(ecs_t* ecs, float dt) {
+ECSNET_API void ecs_update(ecs_t* ecs, float dt) {
     ecs_run_systems(ecs, dt);
 }
 
 #pragma region ENTITIES
 
 // Creates a new entity, returns its ID. Expands entity capacity if necessary (recursively).
-entity_t ecs_create_entity(ecs_t* ecs)
+ECSNET_API entity_t ecs_create_entity(ecs_t* ecs)
 {
     if (!ecs) return (entity_t)-1;
     // Search for the first unused entity slot.
@@ -139,7 +155,7 @@ entity_t ecs_create_entity(ecs_t* ecs)
 }
 
 // Tries to create a new entity with the given ID. Returns the entity ID if successful, or -1 if the ID is already in use.
-entity_t ecs_try_create_entity_by_id(ecs_t* ecs, entity_t id)
+ECSNET_API entity_t ecs_try_create_entity_by_id(ecs_t* ecs, entity_t id)
 {
     if (!ecs) return (entity_t)-1;
     // Ensure the entity array is large enough.
@@ -157,7 +173,7 @@ entity_t ecs_try_create_entity_by_id(ecs_t* ecs, entity_t id)
     return (entity_t)-1;
 }
 // Destroys the entity with the given ID.
-void ecs_destroy_entity(ecs_t* ecs, entity_t entity)
+ECSNET_API void ecs_destroy_entity(ecs_t* ecs, entity_t entity)
 {
     if (!ecs || entity >= ecs->entity_capacity || !ecs->entities[entity].in_use)
         return;
@@ -180,7 +196,7 @@ void ecs_destroy_entity(ecs_t* ecs, entity_t entity)
 //- out_size: returns the used size.
 // - max_buffer_size: max out size allowed.
 // Returns false if buffer isn't sufficient or the entity is invalid.
-bool ecs_serialize_entity(ecs_t* ecs, entity_t entity, uint8_t* out_buffer, size_t* out_size, size_t max_buffer_size) {
+ECSNET_API bool ecs_serialize_entity(ecs_t* ecs, entity_t entity, uint8_t* out_buffer, size_t* out_size, size_t max_buffer_size) {
     if (!ecs || entity >= ecs->entity_capacity || !ecs->entities[entity].in_use) {
         *out_size = 0;
         return false;
@@ -232,7 +248,7 @@ bool ecs_serialize_entity(ecs_t* ecs, entity_t entity, uint8_t* out_buffer, size
 // Creates a new entity from serialized data.
 // Reads component count, IDs and data.
 // Returns entity ID or -1 error (invalid ID, corrupted data or malloc fail).
-entity_t ecs_deserialize_entity(ecs_t* ecs, const uint8_t* in_buffer) {
+ECSNET_API entity_t ecs_deserialize_entity(ecs_t* ecs, const uint8_t* in_buffer) {
     if (!in_buffer) return (entity_t)-1;
 
     const uint8_t* buffer_ptr = in_buffer;
@@ -281,7 +297,7 @@ entity_t ecs_deserialize_entity(ecs_t* ecs, const uint8_t* in_buffer) {
 #pragma region COMPONENTS
 // Registers a new component type, allocating storage for all entities.
 // Returns the new component ID, or -1 on allocation failure.
-component_t ecs_register_component(ecs_t* ecs, component_descriptor_t descriptor)
+ECSNET_API component_t ecs_register_component(ecs_t* ecs, component_descriptor_t descriptor)
 {
     if (!ecs) return (component_t)-1;
     // Expand component array if needed
@@ -310,7 +326,7 @@ component_t ecs_register_component(ecs_t* ecs, component_descriptor_t descriptor
 // Expands entity/component arrays if needed.
 // Updates signature bits.
 // Returns true on success, false on invalid params.
-bool ecs_add_component(ecs_t* ecs, entity_t entity, component_t component, void *data)
+ECSNET_API bool ecs_add_component(ecs_t* ecs, entity_t entity, component_t component, void *data)
 {
     if (!ecs || component >= ecs->registered_component_count) return false;
     // Ensure entity capacity
@@ -334,7 +350,7 @@ bool ecs_add_component(ecs_t* ecs, entity_t entity, component_t component, void 
     return true;
 }
 // Returns pointer to component data of entity, or NULL si no existe/invalid.
-void* ecs_get_component(ecs_t* ecs, entity_t entity, component_t component) {
+ECSNET_API void* ecs_get_component(ecs_t* ecs, entity_t entity, component_t component) {
     if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return NULL;
     component_storage_t* storage = &ecs->components[component];
@@ -342,20 +358,20 @@ void* ecs_get_component(ecs_t* ecs, entity_t entity, component_t component) {
     return (uint8_t*)storage->data + storage->descriptor.size * entity;
 }
 // Returns the registered name of a component, or NULL if the id is invalid.
-const char* ecs_get_component_name(ecs_t* ecs, component_t component) {
+ECSNET_API const char* ecs_get_component_name(ecs_t* ecs, component_t component) {
     if (component >= ecs->registered_component_count) {
         return NULL;
     }
     return ecs->components[component].descriptor.name;
 }
 // Checks if entity currently owns given component (via signature bit).
-bool ecs_has_component(ecs_t* ecs, entity_t entity, component_t component) {
+ECSNET_API bool ecs_has_component(ecs_t* ecs, entity_t entity, component_t component) {
     if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return false;
     return (ecs->signatures[entity] & (1ULL << component)) != 0;
 }
 // Returns true if component of entity is marked as dirty (modified).
-bool ecs_is_component_dirty(ecs_t* ecs, entity_t entity, component_t component) {
+ECSNET_API bool ecs_is_component_dirty(ecs_t* ecs, entity_t entity, component_t component) {
     if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return false;
     component_storage_t *storage = &ecs->components[component];
@@ -364,7 +380,7 @@ bool ecs_is_component_dirty(ecs_t* ecs, entity_t entity, component_t component) 
 }
 // Removes component from entity (sets used=false, dirty=true, clears signature bit).
 // Returns false if invalid params.
-bool ecs_remove_component(ecs_t* ecs, entity_t entity, component_t component) {
+ECSNET_API bool ecs_remove_component(ecs_t* ecs, entity_t entity, component_t component) {
     if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return false;
     component_storage_t *storage = &ecs->components[component];
@@ -378,7 +394,7 @@ bool ecs_remove_component(ecs_t* ecs, entity_t entity, component_t component) {
 static void (*ecs_dirty_hook)(entity_t) = NULL;
 
  // Marks a component as dirty (modified). Invokes the global ecs_dirty_hook callback if it's set.
-void ecs_mark_component_dirty(ecs_t* ecs, entity_t entity, component_t component) {
+ECSNET_API void ecs_mark_component_dirty(ecs_t* ecs, entity_t entity, component_t component) {
     if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return;
     component_storage_t *storage = &ecs->components[component];
@@ -393,7 +409,7 @@ void ecs_set_dirty_hook(void (*hook)(entity_t)) {
 
 // Fills out_dirty_components[] with all dirty components of an entity.
 // Returns count of dirty components found.
-int ecs_get_dirty_components(ecs_t* ecs, entity_t entity, dirty_component_t* out_dirty_components) {
+ECSNET_API int ecs_get_dirty_components(ecs_t* ecs, entity_t entity, dirty_component_t* out_dirty_components) {
     if (!ecs || entity >= ecs->entity_capacity || !ecs->entities[entity].in_use)
         return 0;
     int dirty_count = 0;
@@ -408,7 +424,7 @@ int ecs_get_dirty_components(ecs_t* ecs, entity_t entity, dirty_component_t* out
     return dirty_count;
 }
 // Resets dirty flag for a component of an entity.
-void ecs_clear_component_dirty(ecs_t* ecs, entity_t entity, component_t component) {
+ECSNET_API void ecs_clear_component_dirty(ecs_t* ecs, entity_t entity, component_t component) {
     if (!ecs || component >= ecs->registered_component_count || entity >= ecs->entity_capacity)
         return;
     component_storage_t *storage = &ecs->components[component];
@@ -419,7 +435,7 @@ void ecs_clear_component_dirty(ecs_t* ecs, entity_t entity, component_t componen
 #pragma region SYSTEMS
 // Registers a system (function pointer). Max = MAX_SYSTEMS.
 // Systems run each update with ecs + delta time.
-void ecs_register_system(ecs_t* ecs, system_func_t func)
+ECSNET_API void ecs_register_system(ecs_t* ecs, system_func_t func)
 {
     if(ecs->system_count < MAX_SYSTEMS)
         ecs->systems[ecs->system_count++] = func;

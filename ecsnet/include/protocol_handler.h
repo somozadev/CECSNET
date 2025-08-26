@@ -38,7 +38,7 @@ typedef enum {
  * Note on padding: The size is 2 bytes and the enum type is 4 bytes,
  * which results in 2 bytes of padding to align the struct to an 8-byte boundary.
  */
-ECSNET_API typedef struct {
+typedef struct {
     uint16_t size; /**< The total size of the packet in bytes. */
     packet_type_t type; /**< The type of the packet. */
 } packet_header_t;
@@ -48,7 +48,7 @@ ECSNET_API typedef struct {
  * This struct combines the header and the data payload, providing a complete
  * packet representation for sending and receiving.
  */
-ECSNET_API typedef struct {
+typedef struct {
     packet_header_t header; /**< The packet header. */
     uint8_t data[MAX_PACKET_SIZE - sizeof(packet_header_t)]; /**< The packet payload. */
 } network_packet_t;
@@ -59,7 +59,7 @@ ECSNET_API typedef struct {
  * Manages the state for incoming and outgoing network packets, providing
  * functionality for packing, unpacking, and processing network data.
  */
-ECSNET_API typedef struct protocol_handler_t {
+typedef struct protocol_handler_t {
     network_packet_t out_packet; /**< The buffer for the outgoing packet. */
     network_packet_t in_packet; /**< The buffer for the incoming packet. */
 } protocol_handler_t;
@@ -68,7 +68,7 @@ ECSNET_API typedef struct protocol_handler_t {
  * @brief Initializes the protocol handler.
  * @param handler A pointer to the protocol_handler_t instance to initialize.
  */
-void protocol_handler_init(protocol_handler_t *handler);
+ECSNET_API void protocol_handler_init(protocol_handler_t *handler);
 
 /**
  * @brief Packs an entity update into the outgoing packet.
@@ -77,7 +77,7 @@ void protocol_handler_init(protocol_handler_t *handler);
  * @param data A pointer to the serialized entity data.
  * @param data_len The length of the serialized data.
  */
-void protocol_handler_pack_entity_update(protocol_handler_t *handler, entity_t entity_id, const uint8_t *data,
+ECSNET_API void protocol_handler_pack_entity_update(protocol_handler_t *handler, entity_t entity_id, const uint8_t *data,
                                          uint16_t data_len);
 
 /**
@@ -114,7 +114,7 @@ void protocol_handler_pack_server_ack(protocol_handler_t *handler);
  * @param extra     Optional command-specific bytes (may be NULL).
  * @param extra_len Size of @p extra in bytes (0 ok; oversize is truncated).
  */
-void protocol_handler_pack_client_input(protocol_handler_t* handler, entity_t entity_id, uint8_t input_cmd, const void* extra, uint16_t extra_len);
+ECSNET_API void protocol_handler_pack_client_input(protocol_handler_t* handler, entity_t entity_id, uint8_t input_cmd, const void* extra, uint16_t extra_len);
 
 
 /**
@@ -134,7 +134,7 @@ void protocol_handler_pack_client_input(protocol_handler_t* handler, entity_t en
  * @return true if the packet was valid and unpacked successfully,
  *         false otherwise (e.g. wrong type, truncated payload).
  */
-bool protocol_handler_unpack_client_input(const network_packet_t* pkt, entity_t* out_eid, uint8_t* out_cmd, const void** out_extra, uint16_t* out_extra_len);
+ECSNET_API bool protocol_handler_unpack_client_input(const network_packet_t* pkt, entity_t* out_eid, uint8_t* out_cmd, const void** out_extra, uint16_t* out_extra_len);
 
 /**
  * @brief Processes received network data.
@@ -151,7 +151,7 @@ void protocol_handler_process_received_data(protocol_handler_t *handler, ecs_t* 
  * @param peer_id The ID of the peer to send the packet to.
  * @param handler A pointer to the protocol_handler_t instance.
  */
-void protocol_handler_send_packet(connection_manager_t *cm, const char *peer_id, protocol_handler_t *handler);
+ECSNET_API void protocol_handler_send_packet(connection_manager_t *cm, const char *peer_id, protocol_handler_t *handler);
 
 
 #ifdef __cplusplus

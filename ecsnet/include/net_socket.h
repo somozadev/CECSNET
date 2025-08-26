@@ -1,6 +1,8 @@
 #pragma once
 #include <stdint.h>
 #include <stdbool.h>
+
+#include "config.h"
 #ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -136,7 +138,7 @@ int net_socket_close(net_socket_t* socket);
  * Winsock library. On POSIX systems it does nothing.  Call this once
  * before creating any sockets.
  */
-void net_socket_init(void);
+ECSNET_API void net_socket_init(void);
 
 /**
  * @brief Performs any necessary cleanup of the socket subsystem.
@@ -144,7 +146,7 @@ void net_socket_init(void);
  * Winsock. On POSIX systems it does nothing.  Call this once when
  * shutting down networking.
  */
-void net_socket_cleanup(void);
+ECSNET_API void net_socket_cleanup(void);
 
 #ifdef __cplusplus
 }

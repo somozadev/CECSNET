@@ -42,7 +42,7 @@ typedef struct connection_manager_t connection_manager_t;
  * This struct contains all the necessary information to identify and communicate
  * with a single remote peer, including its addresses and sockets.
  */
-ECSNET_API typedef struct peer_t {
+typedef struct peer_t {
     char id[64];                            /**< The unique identifier for the peer (e.g., "IP:PORT"). */
     struct sockaddr_in addr_tcp;            /**< The TCP address of the peer. */
     struct sockaddr_in addr_udp;            /**< The UDP address of the peer. */
@@ -71,7 +71,7 @@ ECSNET_API typedef struct peer_t {
  * This structure holds an array of all connected peers, manages the listen sockets,
  * and stores pointers to peer related callback functions for network events.
  */
-ECSNET_API typedef struct connection_manager_t {
+typedef struct connection_manager_t {
     peer_t peers[MAX_PEERS];                /**< An array of all managed peers. */
     int peer_count;                         /**< The current number of active peers. */
     net_socket_t listen_sockets[PROTOCOL_COUNT]; /**< Sockets for listening on both TCP and UDP. */
@@ -166,6 +166,12 @@ net_socket_t* connection_manager_get_listen_socket(connection_manager_t* connect
 
 uint16_t connection_manager_get_udp_local_port(connection_manager_t* connection_manager);
 
+/**
+ * @brief Sets (or updates) the remote UDP port of a peer identified by peer_id. This enables sending UDP packets to that peer.
+ * @param connection_manager A pointer to the connection_manager_t instance.
+ * @param peer_id The peer.
+ * @param remote_udp_port The udp port to set.
+ */
 int connection_manager_set_peer_udp_remote_port_by_id(connection_manager_t* connection_manager, const char* peer_id, uint16_t remote_udp_port);
 
 /**

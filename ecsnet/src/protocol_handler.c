@@ -10,7 +10,7 @@
  * Clears all fields to zero, preparing it for use.
  * @param handler Pointer to the protocol handler to initialize.
  */
-void protocol_handler_init(protocol_handler_t *handler) {
+ECSNET_API void protocol_handler_init(protocol_handler_t *handler) {
     if (!handler) return;
     // Clear the entire handler structure to a known zero state.
     memset(handler, 0, sizeof(protocol_handler_t));
@@ -24,7 +24,7 @@ void protocol_handler_init(protocol_handler_t *handler) {
  * @param data      Serialized component payload.
  * @param data_len  Length of the payload.
  */
-void protocol_handler_pack_entity_update(protocol_handler_t *handler, entity_t entity_id, const uint8_t *data,
+ECSNET_API void protocol_handler_pack_entity_update(protocol_handler_t *handler, entity_t entity_id, const uint8_t *data,
                                          uint16_t data_len) {
     if (!handler || data_len > sizeof(handler->out_packet.data)) return;
 
@@ -89,7 +89,7 @@ void protocol_handler_pack_server_ack(protocol_handler_t *handler) {
  * @param extra      Optional extra payload.
  * @param extra_len  Length of extra payload.
  */
-void protocol_handler_pack_client_input(protocol_handler_t *handler, entity_t entity_id, uint8_t input_cmd,
+ECSNET_API void protocol_handler_pack_client_input(protocol_handler_t *handler, entity_t entity_id, uint8_t input_cmd,
                                         const void *extra, uint16_t extra_len) {
     if (!handler) return;
     if (extra_len > sizeof(handler->out_packet.data)) extra_len = (uint16_t) sizeof(handler->out_packet.data);
@@ -243,6 +243,6 @@ void protocol_handler_process_received_data(protocol_handler_t *handler,ecs_t *e
  *
  * Delegates to the connection manager for transport.
  */
-void protocol_handler_send_packet(connection_manager_t *cm, const char *peer_id, protocol_handler_t *handler) {
+ECSNET_API void protocol_handler_send_packet(connection_manager_t *cm, const char *peer_id, protocol_handler_t *handler) {
     connection_manager_send_to_peer(cm, peer_id, &handler->out_packet, handler->out_packet.header.size);
 }

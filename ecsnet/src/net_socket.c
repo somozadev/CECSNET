@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <stdio.h>
 // Initialize the socket subsystem. On Windows this invokes WSAStartup().
-void net_socket_init(void) {
+ECSNET_API void net_socket_init(void) {
 #ifdef _WIN32
     WSADATA wsa_data;
     int result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
@@ -14,7 +14,7 @@ void net_socket_init(void) {
 }
 
 // Clean up the socket subsystem. On Windows this invokes WSACleanup().
-void net_socket_cleanup(void) {
+ECSNET_API void net_socket_cleanup(void) {
 #ifdef _WIN32
     WSACleanup();
 #endif

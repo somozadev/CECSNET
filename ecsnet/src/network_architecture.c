@@ -8,7 +8,7 @@
 // #include "network_ls.h"
 
 
-void network_architecture_init(network_architecture_t **architecture, const network_architecture_config_t *config,
+ECSNET_API void network_architecture_init(network_architecture_t **architecture, const network_architecture_config_t *config,
                                ecs_t *ecs) {
     if (!architecture || !config || !ecs) return;
 
@@ -55,7 +55,7 @@ void network_architecture_init(network_architecture_t **architecture, const netw
 }
 // Update loop: delegates to the underlying implementation.
 // dt = delta time in seconds.
-void network_architecture_update(network_architecture_t *architecture, float dt) {
+ECSNET_API void network_architecture_update(network_architecture_t *architecture, float dt) {
     if (!architecture || !architecture->impl) {
         return;
     }
@@ -73,7 +73,7 @@ void network_architecture_update(network_architecture_t *architecture, float dt)
 }
 // Cleans up the architecture and its underlying implementation.
 // Frees allocated memory. Safe to call with NULL.
-void network_architecture_destroy(network_architecture_t *architecture) {
+ECSNET_API void network_architecture_destroy(network_architecture_t *architecture) {
     if (!architecture) {
         return;
     }
@@ -90,7 +90,7 @@ void network_architecture_destroy(network_architecture_t *architecture) {
 }
 // Attempts to connect this architecture (client) to a remote server.
 // Returns true if connection attempt was successfully initiated.
-bool network_architecture_connect_to_server(network_architecture_t* architecture, const char* ip_address, uint16_t port) {
+ECSNET_API bool network_architecture_connect_to_server(network_architecture_t* architecture, const char* ip_address, uint16_t port) {
     connection_manager_t* cm = network_architecture_get_connection_manager(architecture);
     if (cm) {
         return connection_manager_connect_to_server(cm, ip_address, port) == 0;
@@ -99,7 +99,7 @@ bool network_architecture_connect_to_server(network_architecture_t* architecture
 }
 // Sends raw data to a specific peer by ID.
 // Returns true on success, false if peer not found or send failed.
-bool network_architecture_send_to_peer(network_architecture_t *architecture, uint32_t peer_id, const void *data,
+ECSNET_API bool network_architecture_send_to_peer(network_architecture_t *architecture, uint32_t peer_id, const void *data,
                                        int len) {
     if (!architecture || !architecture->impl || !data || len <= 0) {
         return false;
@@ -135,7 +135,7 @@ bool network_architecture_send_to_peer(network_architecture_t *architecture, uin
 // Sends an ECS entity update to a peer.
 // Packs data via protocol handler before sending.
 // Returns true if successfully queued for send, false otherwise.
-bool network_architecture_send_entity_update(network_architecture_t *architecture, uint32_t peer_id, entity_t entity_id,
+ECSNET_API bool network_architecture_send_entity_update(network_architecture_t *architecture, uint32_t peer_id, entity_t entity_id,
                                              const void *component_data, int data_len) {
     if (!architecture || !architecture->impl || !component_data || data_len <= 0) {
         return false;
@@ -173,7 +173,7 @@ bool network_architecture_send_entity_update(network_architecture_t *architectur
 }
 // Broadcasts a message to all connected peers.
 // Returns true if all peers received successfully, false if at least one failed.
-bool network_architecture_broadcast(network_architecture_t *architecture, const void *data, int len) {
+ECSNET_API bool network_architecture_broadcast(network_architecture_t *architecture, const void *data, int len) {
     if (!architecture || !architecture->impl || !data || len <= 0) {
         return false;
     }
@@ -198,7 +198,7 @@ bool network_architecture_broadcast(network_architecture_t *architecture, const 
     }
 }
 // Returns the number of connected peers, or 0 if architecture is invalid.
-int network_architecture_get_peer_count(network_architecture_t* architecture) {
+ECSNET_API int network_architecture_get_peer_count(network_architecture_t* architecture) {
     connection_manager_t* cm = network_architecture_get_connection_manager(architecture);
     if (cm) {
         return cm->peer_count;
@@ -206,7 +206,7 @@ int network_architecture_get_peer_count(network_architecture_t* architecture) {
     return 0;
 }
 // Finds a peer object by numeric ID. Returns NULL if not found.
-peer_t *network_architecture_get_peer(network_architecture_t *architecture, uint32_t peer_id) {
+ECSNET_API peer_t *network_architecture_get_peer(network_architecture_t *architecture, uint32_t peer_id) {
     if (!architecture || !architecture->impl) {
         return NULL;
     }
@@ -231,7 +231,7 @@ peer_t *network_architecture_get_peer(network_architecture_t *architecture, uint
 }
 // Retrieves the underlying connection_manager for this architecture.
 // Used to access low-level socket operations. Returns NULL if invalid.
-connection_manager_t* network_architecture_get_connection_manager(network_architecture_t* architecture) {
+ECSNET_API connection_manager_t* network_architecture_get_connection_manager(network_architecture_t* architecture) {
     if (!architecture || !architecture->impl) {
         return NULL;
     }

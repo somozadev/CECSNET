@@ -797,7 +797,7 @@ void on_peer_connected_cs(void *user_data, peer_t *peer) {
 }
 
 
-void on_peer_disconnected_cs(void *user_data, peer_t *peer) {
+ void on_peer_disconnected_cs(void *user_data, peer_t *peer) {
     network_cs_t *cs = (network_cs_t *) user_data;
     if (cs) {
         printf("[network_cs] Peer %s disconnected.\n", peer->id);
@@ -819,7 +819,7 @@ void on_client_input_cs(void* user_data, peer_t* from, entity_t entity_id, uint8
 
 // ---------- init / update / destroy ----------
 
-network_cs_t *network_cs_init(const network_architecture_config_t *config, ecs_t *ecs) {
+ECSNET_API network_cs_t *network_cs_init(const network_architecture_config_t *config, ecs_t *ecs) {
     network_cs_t *cs_arch = (network_cs_t*)malloc(sizeof(network_cs_t));
     if (!cs_arch) return NULL;
     if (config->is_server) {
@@ -878,7 +878,7 @@ network_cs_t *network_cs_init(const network_architecture_config_t *config, ecs_t
 
     return cs_arch;
 }
-void network_cs_update(network_cs_t *cs, float dt) {
+ECSNET_API void network_cs_update(network_cs_t *cs, float dt) {
     if (!cs) return;
 
     // Always update connection manager I/O
@@ -932,7 +932,7 @@ void network_cs_update(network_cs_t *cs, float dt) {
     }
 }
 
-void network_cs_destroy(network_cs_t *cs) {
+ECSNET_API void network_cs_destroy(network_cs_t *cs) {
     if (!cs) return;
     // Release connection resources
     connection_manager_destroy(&cs->connection_manager);
@@ -974,14 +974,14 @@ static void pending_destroy_append(network_cs_t* cs, uint32_t network_id) {
     cs->pending_destroy_ids[cs->pending_destroy_count++] = network_id;
 }
 
-void network_cs_mark_network_id_destroy(network_cs_t* cs, uint32_t network_id) {
+ECSNET_API void network_cs_mark_network_id_destroy(network_cs_t* cs, uint32_t network_id) {
     if (!cs) return;
     // Only queue destroys on the server
     if (!cs->config.is_server) return;
     pending_destroy_append(cs, network_id);
 }
 
-void network_cs_mark_entity_destroy(network_cs_t* cs, entity_t entity) {
+ECSNET_API void network_cs_mark_entity_destroy(network_cs_t* cs, entity_t entity) {
     if (!cs) return;
     // Only the server queues destroy events
     if (!cs->config.is_server) return;

@@ -11,7 +11,7 @@ extern "C" {
 /**
  * @brief Component data structure for entity position.
  */
-ECSNET_API typedef struct {
+typedef struct {
     float x; /**< X-axis position. */
     float y; /**< Y-axis position. */
 } position_t;
@@ -19,7 +19,7 @@ ECSNET_API typedef struct {
 /**
  * @brief Component data structure for entity rotation (quaternion format).
  */
-ECSNET_API typedef struct {
+typedef struct {
     float x; /**< X-axis rotation component. */
     float y; /**< Y-axis rotation component. */
     float z; /**< Z-axis rotation component. */
@@ -30,7 +30,7 @@ ECSNET_API typedef struct {
  * @brief Component data structure for entity transformation.
  * Combines position and rotation into a single component.
  */
-ECSNET_API typedef struct {
+typedef struct {
     position_t position; /**< Position component. */
     rotation_t rotation; /**< Rotation component. */
 } transform_t;
@@ -38,13 +38,13 @@ ECSNET_API typedef struct {
 /**
  * @brief Component data structure for entity velocity.
  */
-ECSNET_API typedef struct {
+typedef struct {
     float x; /**< X-axis velocity. */
     float y; /**< Y-axis velocity. */
 } velocity_t;
 
 // Forward declaration of the NetworkedEntity component ID (defined in ecs_builtin.c).
-extern component_t COMPONENT_NETWORKED_ENTITY;
+ECSNET_API extern component_t COMPONENT_NETWORKED_ENTITY;
 
 /**
  * @brief ECS system responsible for applying velocity to position over time.

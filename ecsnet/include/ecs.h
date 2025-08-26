@@ -21,6 +21,15 @@ typedef struct {
 } dirty_component_t;
 
 /**
+ * @brief Creates an ecs_t pointer.
+ */
+ECSNET_API ecs_t* ecs_create();
+/**
+ * @brief Destroys an ecs_t pointer.
+ * @param ecs The pointer to the ECS instance to destroy.
+ */
+ECSNET_API void ecs_destroy(ecs_t* ecs);
+/**
  * @brief Initializes the ECS engine, setting up the default built-in components.
  * @param ecs A pointer to the ECS instance to initialize.
  */
@@ -56,7 +65,7 @@ ECSNET_API void ecs_destroy_entity(ecs_t *ecs, entity_t entity);
  * @param max_out_size The maximum size of the output buffer.
  * @return True if serialization was successful, false otherwise.
  */
-bool ecs_serialize_entity(ecs_t *ecs, entity_t entity, uint8_t *out_buffer, size_t *out_size, size_t max_out_size);
+ECSNET_API bool ecs_serialize_entity(ecs_t *ecs, entity_t entity, uint8_t *out_buffer, size_t *out_size, size_t max_out_size);
 
 /**
  * @brief Deserializes an entity with its components from a given buffer.
@@ -64,7 +73,7 @@ bool ecs_serialize_entity(ecs_t *ecs, entity_t entity, uint8_t *out_buffer, size
  * @param in_buffer The input buffer containing the serialized entity data.
  * @return The ID of the deserialized entity.
  */
-entity_t ecs_deserialize_entity(ecs_t *ecs, const uint8_t *in_buffer);
+ECSNET_API entity_t ecs_deserialize_entity(ecs_t *ecs, const uint8_t *in_buffer);
 
 /**
  * @brief Adds a given component to a given entity.
@@ -91,7 +100,7 @@ ECSNET_API void *ecs_get_component(ecs_t *ecs, entity_t entity, component_t comp
  * @param component The ID of the component.
  * @return The name of the component, or NULL if it doesn't exist.
  */
-const char *ecs_get_component_name(ecs_t *ecs, component_t component);
+ECSNET_API const char *ecs_get_component_name(ecs_t *ecs, component_t component);
 
 /**
  * @brief Checks if an entity has a given component.
@@ -127,7 +136,7 @@ ECSNET_API bool ecs_remove_component(ecs_t *ecs, entity_t entity, component_t co
  * @param entity The ID of the entity.
  * @param component The ID of the component to mark as dirty.
  */
-void ecs_mark_component_dirty(ecs_t *ecs, entity_t entity, component_t component);
+ECSNET_API void ecs_mark_component_dirty(ecs_t *ecs, entity_t entity, component_t component);
     /**
      * @brief Exposed hook callback to invoke after an entity was marked as dirty.
      * Used to configure the prioritized_entities to optimise ecs sync over the network.
@@ -141,7 +150,7 @@ void ecs_set_dirty_hook(void (*hook)(entity_t));
  * @param out_dirty_components An array to be filled with information about dirty components.
  * @return The number of dirty components found.
  */
-int ecs_get_dirty_components(ecs_t *ecs, entity_t entity, dirty_component_t *out_dirty_components);
+ECSNET_API int ecs_get_dirty_components(ecs_t *ecs, entity_t entity, dirty_component_t *out_dirty_components);
 
 /**
  * @brief Resets the dirty flag for a component.
@@ -149,7 +158,7 @@ int ecs_get_dirty_components(ecs_t *ecs, entity_t entity, dirty_component_t *out
  * @param entity The ID of the entity.
  * @param component The ID of the component to clear the dirty flag for.
  */
-void ecs_clear_component_dirty(ecs_t *ecs, entity_t entity, component_t component);
+ECSNET_API void ecs_clear_component_dirty(ecs_t *ecs, entity_t entity, component_t component);
 
 /**
  * @brief Registers a new component with the ECS engine.

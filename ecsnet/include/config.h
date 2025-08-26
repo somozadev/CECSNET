@@ -13,16 +13,24 @@
 /**
  * @brief Definition for the ECSNET_API macro, which determines the visibility of the ECSNET library.
  */
-#define ECSNET_API
-// #if defined(_WIN32)
-//   #if defined(ECSNET_EXPORTS)
-//     #define ECSNET_API __declspec(dllexport)
-//   #else
-//     #define ECSNET_API __declspec(dllimport)
-//   #endif
-// #else
-//   #define ECSNET_API
-// #endif
+// #define ECSNET_API
+
+#if defined(_WIN32)
+  #if defined(ECSNET_STATIC)
+    // Estamos compilando/consumiendo la versión estática → no export/import
+    #define ECSNET_API
+  #elif defined(ECSNET_EXPORTS)
+    // Estamos construyendo la DLL → exportamos símbolos
+    #define ECSNET_API __declspec(dllexport)
+  #else
+    // Estamos consumiendo la DLL → importamos símbolos
+    #define ECSNET_API __declspec(dllimport)
+  #endif
+#else
+  // En Linux/macOS normalmente no hace falta, pero si quieres podrías usar __attribute__((visibility("default")))
+  #define ECSNET_API
+#endif
+
 /* ========================= ECS CONFIGURATION ========================= */
 
 /**

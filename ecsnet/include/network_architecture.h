@@ -7,13 +7,13 @@
 extern "C" {
 #endif
 // Forward declarations
-ECSNET_API typedef struct peer_t peer_t;
+typedef peer_t peer_t;
 typedef void (*on_receive_func_t)(const struct sockaddr_in *sender_addr, const void *data, int len);
 
 /**
  * @brief Available network architecture types.
  */
-ECSNET_API typedef enum {
+typedef enum {
     ARCH_CLIENT_SERVER,     /**< A client-server architecture. */
     ARCH_P2P,               /**< A peer-to-peer architecture. */
 } network_architecture_type_t;
@@ -21,7 +21,7 @@ ECSNET_API typedef enum {
 /**
  * @brief Structure for configuring the network architecture.
  */
-ECSNET_API typedef struct  {
+typedef struct  {
     network_architecture_type_t type;   /**< The type of network architecture to use. */
     const char *ip_address;             /**< The IP address to bind to or connect to. */
     uint16_t port;                      /**< The main port for communication. */
@@ -44,7 +44,7 @@ ECSNET_API typedef struct  {
  * This struct serves as a wrapper that holds a pointer to the specific
  * implementation (e.g., Client-Server, P2P) and a reference to the ECS.
  */
-ECSNET_API typedef struct network_architecture_t {
+typedef struct network_architecture_t {
     network_architecture_type_t type;
     network_architecture_config_t config;
     void *impl; // A pointer to the specific network implementation (e.g., network_cs_t).
@@ -100,7 +100,7 @@ ECSNET_API bool network_architecture_send_to_peer(network_architecture_t* archit
  * @param data_len The length of the component data.
  * @return true if entity update was sent successfully, false otherwise.
  */
-bool network_architecture_send_entity_update(network_architecture_t* architecture, uint32_t peer_id, entity_t entity_id, const void* component_data, int data_len);
+ECSNET_API bool network_architecture_send_entity_update(network_architecture_t* architecture, uint32_t peer_id, entity_t entity_id, const void* component_data, int data_len);
 
 /**
  * @brief Broadcasts data to all connected peers.
