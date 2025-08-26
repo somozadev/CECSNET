@@ -5,35 +5,33 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Ruta a SFML
+# SFML path
 set(SFML_DIR "C:/SFML-2.5.1/lib/cmake/SFML")
 find_package(SFML 2.5.1 COMPONENTS graphics window system REQUIRED)
 
-# Añadir la librería estática ecsnet
+# Add the static ecsnet library
 add_subdirectory(lib/ecsnet ${CMAKE_BINARY_DIR}/mylib_build)
 
-# Ejecutable principal
-#add_executable(MiPong src/main.cpp
+# Main executables
+#add_executable(Pong
 #        src/PongServer.cpp
 #        src/PongServer.h)
 
 add_executable(PongServer src/PongServer.cpp ${SOURCES_COMMON})
 add_executable(PongClient src/PongClient.cpp ${SOURCES_COMMON})
 
-# Enlazar con SFML y ecsnet
-#target_link_libraries(MiPong PRIVATE sfml-graphics sfml-window sfml-system ecsnet)
+# Link with SFML and ecsnet
 target_link_libraries(PongServer PRIVATE sfml-graphics sfml-window sfml-system ecsnet)
 target_link_libraries(PongClient PRIVATE sfml-graphics sfml-window sfml-system ecsnet)
 
 
-# Incluir headers de ecsnet
-#target_include_directories(MiPong PRIVATE lib/ecsnet/include)
+# Include ecsnet headers
 target_include_directories(PongServer PRIVATE lib/ecsnet/include)
 target_include_directories(PongClient PRIVATE lib/ecsnet/include)
 
-# ---- Copiar DLLs de SFML automáticamente ----
-if (MSVC)  # Solo para Visual Studio/Windows
-    set(SFML_DLL_DIR "C:/SFML-2.5.1/bin")  # Ruta donde están las DLLs de SFML
+# ---- Copy SFML DLLs automatically ----
+if (MSVC)  # Only for Visual Studio/Windows
+    set(SFML_DLL_DIR "C:/SFML-2.5.1/bin")  #Local SFML DLLs path
     foreach(target PongServer PongClient)
         add_custom_command(TARGET ${target} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -45,7 +43,7 @@ if (MSVC)  # Solo para Visual Studio/Windows
     endforeach()
 endif ()
 
-# ---- Copiar assets automáticamente (ej. Pong-Game.ttf) ----
+# ---- Copy assets automaticaly (i.e. Pong-Game.ttf) ----
 set(ASSETS_DIR "${CMAKE_SOURCE_DIR}/assets")
 foreach(target PongServer PongClient)
     add_custom_command(TARGET ${target} POST_BUILD

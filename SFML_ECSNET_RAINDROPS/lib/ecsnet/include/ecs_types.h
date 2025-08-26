@@ -8,7 +8,6 @@ extern "C" {
 #endif
 /**
  * @brief Forward declaration of the ECS world structure.
- *
  * The full definition is provided in ecs.h.
  */
 ECSNET_API typedef struct ecs_t ecs_t;

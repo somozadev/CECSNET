@@ -13,16 +13,6 @@
 /**
  * @brief Definition for the ECSNET_API macro, which determines the visibility of the ECSNET library.
  */
-// #if defined(_WIN32) || defined(_WIN64)
-//   #ifdef BUILD_DLL
-//     #define ECSNET_API __declspec(dllexport)
-//   #else
-//     #define ECSNET_API __declspec(dllimport)
-//   #endif
-// #else
-//   #define ECSNET_API __attribute__((visibility("default")))
-// #endif
-//
 #define ECSNET_API
 // #if defined(_WIN32)
 //   #if defined(ECSNET_EXPORTS)
@@ -76,36 +66,6 @@
  */
 #define MAX_SYSTEMS 64
 
-/* ========================= NETWORKING CONFIGURATION ========================= */
 
-/**
- * @brief Size (in bytes) of the buffer used for network communication.
- */
-#define NETWORK_BUFFER_SIZE 4096
 
-/**
- * @brief Default socket type for network connections.
- * @details 1 = TCP, 2 = UDP
- */
-#define DEFAULT_SOCKET_TYPE 1
-
-/**
- * @brief Timeout for network operations in milliseconds.
- */
-#define NETWORK_TIMEOUT_MS 3000
-
-/* ========================= PLATFORM CONFIGURATION ========================= */
-
-/**
- * @brief Name of the target platform as a string.
- *
- * This is determined at compile time.
- * - "Windows" for _WIN32
- * - "Unix" for all other platforms
- */
-#ifdef _WIN32
-#define PLATFORM_NAME "Windows"
-#else
-#define PLATFORM_NAME "Unix"
-#endif
-
+/* ========================= NET CONFIGURATION ========================= */

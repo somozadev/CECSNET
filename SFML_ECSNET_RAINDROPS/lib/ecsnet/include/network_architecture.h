@@ -16,7 +16,6 @@ typedef void (*on_receive_func_t)(const struct sockaddr_in *sender_addr, const v
 ECSNET_API typedef enum {
     ARCH_CLIENT_SERVER,     /**< A client-server architecture. */
     ARCH_P2P,               /**< A peer-to-peer architecture. */
-    ARCH_LISTEN_SERVER      /**< A dedicated listen server architecture. */
 } network_architecture_type_t;
 
 /**
@@ -40,25 +39,17 @@ ECSNET_API typedef struct  {
     void* user_data;                    /**< User data passed to callbacks */
 } network_architecture_config_t;
 
-    /**
-     * @brief Represents the opaque network architecture structure.
-     *
-     * This struct serves as a wrapper that holds a pointer to the specific
-     * implementation (e.g., Client-Server, P2P) and a reference to the ECS.
-     */
-    ECSNET_API typedef struct network_architecture_t {
-        network_architecture_type_t type;
-        network_architecture_config_t config;
-        // A pointer to the specific network implementation (e.g., network_cs_t).
-        void *impl;
-        // A pointer to the ECS instance.
-        ecs_t *ecs;
-    } network_architecture_t;
 /**
- * @brief Opaque type for the network architecture.
- * This hides the internal implementation details from the user.
+ * @brief Represents the opaque network architecture structure.
+ * This struct serves as a wrapper that holds a pointer to the specific
+ * implementation (e.g., Client-Server, P2P) and a reference to the ECS.
  */
-// ECSNET_API typedef struct network_architecture_t network_architecture_t;
+ECSNET_API typedef struct network_architecture_t {
+    network_architecture_type_t type;
+    network_architecture_config_t config;
+    void *impl; // A pointer to the specific network implementation (e.g., network_cs_t).
+    ecs_t *ecs; // A pointer to the ECS instance.
+} network_architecture_t;
 
 /**
  * @brief Initializes the network architecture based on the configuration.
@@ -141,19 +132,6 @@ ECSNET_API peer_t* network_architecture_get_peer(network_architecture_t* archite
  * @return A pointer to the connection manager, or NULL if invalid.
  */
 ECSNET_API connection_manager_t* network_architecture_get_connection_manager(network_architecture_t* architecture);
-
-/**
- * @brief Sets callback functions for network events.
- * @param architecture A pointer to the network_architecture_t instance.
- * @param on_connect Callback for when a peer connects.
- * @param on_disconnect Callback for when a peer disconnects.
- * @param on_receive Callback for when data is received.
- */
-ECSNET_API void network_architecture_set_callbacks(network_architecture_t* architecture,
-                                       void (*on_connect)(void*, peer_t*),
-                                       void (*on_disconnect)(void*, peer_t*),
-                                       void (*on_receive)(void*, peer_t*, const void*, int));
-
 
 #ifdef __cplusplus
 }

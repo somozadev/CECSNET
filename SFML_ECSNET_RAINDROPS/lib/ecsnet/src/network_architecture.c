@@ -16,7 +16,7 @@ void network_architecture_init(network_architecture_t **architecture, const netw
     *architecture = (network_architecture_t *) malloc(sizeof(network_architecture_t));
     if (!*architecture) return;
 
-    // Store the configuration and ECS pointer.
+    // Store the configuration and ECS reference.
     (*architecture)->config = *config;
     (*architecture)->type = config->type;
     (*architecture)->ecs = ecs;
@@ -25,9 +25,10 @@ void network_architecture_init(network_architecture_t **architecture, const netw
     // Initialize the specific network implementation based on the configured type.
     switch (config->type) {
         case ARCH_CLIENT_SERVER:
-            // Call the initialization function for the Client-Server module.
+            // Initialize Client-Server backend.
             network_cs_t *cs_impl = network_cs_init(config, ecs);
             (*architecture)->impl = cs_impl;
+            // Forward user-provided callbacks into the CS implementation.
             if (cs_impl) {
                 cs_impl->config.on_peer_connected    = config->on_peer_connected;
                 cs_impl->config.on_peer_disconnected = config->on_peer_disconnected;
@@ -35,6 +36,7 @@ void network_architecture_init(network_architecture_t **architecture, const netw
                 cs_impl->config.on_client_input   = config->on_client_input;
                 cs_impl->config.user_data            = config->user_data;
             }
+            // If this node is a client, immediately attempt to connect to server.
             if (!config->is_server)
             connection_manager_connect_to_server(&cs_impl->connection_manager, config->ip_address, config->tcp_port);
             break;
@@ -46,12 +48,13 @@ void network_architecture_init(network_architecture_t **architecture, const netw
         //     (*architecture)->impl = network_ls_init(config, ecs);
         //     break;
         default:
-            // Handle unrecognized or unsupported architecture types.
+            // Unsupported or unimplemented architecture type.
             fprintf(stderr, "Error: Architecture type not recognised.\n");
             break;
     }
 }
-
+// Update loop: delegates to the underlying implementation.
+// dt = delta time in seconds.
 void network_architecture_update(network_architecture_t *architecture, float dt) {
     if (!architecture || !architecture->impl) {
         return;
@@ -65,18 +68,16 @@ void network_architecture_update(network_architecture_t *architecture, float dt)
             // case ARCH_P2P:
             //     network_p2p_update((network_p2p_t*)architecture->impl);
             //     break;
-            // case ARCH_LISTEN_SERVER:
-            //     network_ls_update((network_ls_t*)architecture->impl);
-            //     break;
+
     }
 }
-
+// Cleans up the architecture and its underlying implementation.
+// Frees allocated memory. Safe to call with NULL.
 void network_architecture_destroy(network_architecture_t *architecture) {
     if (!architecture) {
         return;
     }
-    // Delegate the destruction call to the specific implementation
-    // before freeing the main architecture struct.
+    // Delegate the destruction call to the specific implementation before freeing the main architecture struct.
     switch (architecture->type) {
         case ARCH_CLIENT_SERVER:
             network_cs_destroy((network_cs_t *) architecture->impl);
@@ -84,13 +85,11 @@ void network_architecture_destroy(network_architecture_t *architecture) {
             // case ARCH_P2P:
             //     network_p2p_destroy((network_p2p_t*)architecture->impl);
             //     break;
-            // case ARCH_LISTEN_SERVER:
-            //     network_ls_destroy((network_ls_t*)architecture->impl);
-            //     break;
     }
     free(architecture);
 }
-
+// Attempts to connect this architecture (client) to a remote server.
+// Returns true if connection attempt was successfully initiated.
 bool network_architecture_connect_to_server(network_architecture_t* architecture, const char* ip_address, uint16_t port) {
     connection_manager_t* cm = network_architecture_get_connection_manager(architecture);
     if (cm) {
@@ -98,7 +97,8 @@ bool network_architecture_connect_to_server(network_architecture_t* architecture
     }
     return false;
 }
-
+// Sends raw data to a specific peer by ID.
+// Returns true on success, false if peer not found or send failed.
 bool network_architecture_send_to_peer(network_architecture_t *architecture, uint32_t peer_id, const void *data,
                                        int len) {
     if (!architecture || !architecture->impl || !data || len <= 0) {
@@ -114,6 +114,7 @@ bool network_architecture_send_to_peer(network_architecture_t *architecture, uin
             char peer_id_str[32];
             snprintf(peer_id_str, sizeof(peer_id_str), "%u", peer_id);
 
+            // Linear search: locate peer by matching ID string.
             for (int i = 0; i < cs_impl->connection_manager.peer_count; i++) {
                 if (strcmp(cs_impl->connection_manager.peers[i].id, peer_id_str) == 0) {
                     target_peer = &cs_impl->connection_manager.peers[i];
@@ -124,19 +125,16 @@ bool network_architecture_send_to_peer(network_architecture_t *architecture, uin
             if (!target_peer) {
                 return false; // Peer not found
             }
-
-            return connection_manager_send_to_peer(&cs_impl->connection_manager, peer_id_str, data, len);
-            // Pack the raw data using protocol handler
-            // protocol_handler_pack_raw_data(&cs_impl->protocol_handler, data, len);
-
-            // Send the packet
-            // return protocol_handler_send_packet(&cs_impl->connection_manager, peer_id, &cs_impl->protocol_handler);
+            int result = connection_manager_send_to_peer(&cs_impl->connection_manager, peer_id_str, data, len);
+            return result >= 0;
         }
         default:
             return false;
     }
 }
-
+// Sends an ECS entity update to a peer.
+// Packs data via protocol handler before sending.
+// Returns true if successfully queued for send, false otherwise.
 bool network_architecture_send_entity_update(network_architecture_t *architecture, uint32_t peer_id, entity_t entity_id,
                                              const void *component_data, int data_len) {
     if (!architecture || !architecture->impl || !component_data || data_len <= 0) {
@@ -173,7 +171,8 @@ bool network_architecture_send_entity_update(network_architecture_t *architectur
             return false;
     }
 }
-
+// Broadcasts a message to all connected peers.
+// Returns true if all peers received successfully, false if at least one failed.
 bool network_architecture_broadcast(network_architecture_t *architecture, const void *data, int len) {
     if (!architecture || !architecture->impl || !data || len <= 0) {
         return false;
@@ -187,7 +186,7 @@ bool network_architecture_broadcast(network_architecture_t *architecture, const 
             // Send to all connected peers
             for (int i = 0; i < cs_impl->connection_manager.peer_count; i++) {
                 const char *peer_id = cs_impl->connection_manager.peers[i].id;
-                if (!connection_manager_send_to_peer(&cs_impl->connection_manager, peer_id, data, len)) {
+                if (connection_manager_send_to_peer(&cs_impl->connection_manager, peer_id, data, len) < 0) {
                     all_sent = false;
                 }
             }
@@ -198,7 +197,7 @@ bool network_architecture_broadcast(network_architecture_t *architecture, const 
             return false;
     }
 }
-
+// Returns the number of connected peers, or 0 if architecture is invalid.
 int network_architecture_get_peer_count(network_architecture_t* architecture) {
     connection_manager_t* cm = network_architecture_get_connection_manager(architecture);
     if (cm) {
@@ -206,7 +205,7 @@ int network_architecture_get_peer_count(network_architecture_t* architecture) {
     }
     return 0;
 }
-
+// Finds a peer object by numeric ID. Returns NULL if not found.
 peer_t *network_architecture_get_peer(network_architecture_t *architecture, uint32_t peer_id) {
     if (!architecture || !architecture->impl) {
         return NULL;
@@ -230,7 +229,8 @@ peer_t *network_architecture_get_peer(network_architecture_t *architecture, uint
             return NULL;
     }
 }
-
+// Retrieves the underlying connection_manager for this architecture.
+// Used to access low-level socket operations. Returns NULL if invalid.
 connection_manager_t* network_architecture_get_connection_manager(network_architecture_t* architecture) {
     if (!architecture || !architecture->impl) {
         return NULL;
@@ -241,17 +241,5 @@ connection_manager_t* network_architecture_get_connection_manager(network_archit
             return &((network_cs_t*)architecture->impl)->connection_manager;
         default:
             return NULL;
-    }
-}
-
-void network_architecture_set_callbacks(network_architecture_t* architecture,
-                                       void (*on_connect)(void*, peer_t*),
-                                       void (*on_disconnect)(void*, peer_t*),
-                                       void (*on_receive)(void*, peer_t*, const void*, int)) {
-    connection_manager_t* cm = network_architecture_get_connection_manager(architecture);
-    if (cm) {
-        cm->on_connect = on_connect;
-        cm->on_disconnect = on_disconnect;
-        cm->on_receive = on_receive;
     }
 }

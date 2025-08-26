@@ -334,12 +334,12 @@ private:
             if (ecs_has_component(&ecs_, e, config::COMPONENT_ENTITY_KIND)) {
                 auto *kind = (config::entity_kind_t *) ecs_get_component(&ecs_, e, config::COMPONENT_ENTITY_KIND);
                 if (kind->kind == config::ENTITY_KIND_BALL) {
-                    // renderizar bola
+                    // render ball
 
                     ballShape_.setPosition(pos->x, pos->y);
                     window_.draw(ballShape_);
                 } else if (kind->kind == config::ENTITY_KIND_PADDLE) {
-                    // renderizar pala
+                    // render paddle
                     paddleShape_.setPosition(pos->x, pos->y);
                     window_.draw(paddleShape_);
                 }

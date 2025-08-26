@@ -13,7 +13,8 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif // Cierra el bloque extern "C"
+#endif
+
 
 /**
  * @brief Defines the number of network protocols being used (TCP and UDP).
@@ -23,15 +24,17 @@ extern "C" {
 #define MAX_PACKET_SIZE 1024
 #endif
 /**
+ * @brief Defines the maximum number of peers that can be managed simultaneously.
+ */
+#define MAX_PEERS 32
+
+/**
  * @brief Forward declaration of the protocol_handler_t, network_cs_t and connection_manager_t structures.
  */
 typedef struct protocol_handler_t protocol_handler_t;
 typedef struct network_cs_t network_cs_t;
 typedef struct connection_manager_t connection_manager_t;
-/**
- * @brief Defines the maximum number of peers that can be managed simultaneously.
- */
-#define MAX_PEERS 32
+
 
 /**
  * @brief Represents a connected network peer.
@@ -56,7 +59,7 @@ ECSNET_API typedef struct peer_t {
      */
     interest_mask_t interest_mask;
 
-    // ---- TCP reassembly (framing) ----
+    //  TCP reassembly (used for framing)
     uint8_t tcp_rx_buf[MAX_PACKET_SIZE * 2];
     int     tcp_rx_len;
 } peer_t;
@@ -66,7 +69,7 @@ ECSNET_API typedef struct peer_t {
  * @brief Manages all active network connections (peers) for a client or server.
  *
  * This structure holds an array of all connected peers, manages the listen sockets,
- * and stores pointers to callback functions for network events.
+ * and stores pointers to peer related callback functions for network events.
  */
 ECSNET_API typedef struct connection_manager_t {
     peer_t peers[MAX_PEERS];                /**< An array of all managed peers. */
@@ -114,13 +117,13 @@ int connection_manager_send_to_peer(connection_manager_t* connection_manager, co
 
 /**
  * @brief Sends data to a specific peer by ID via UDP.
- * @param cm A pointer to the connection_manager_t instance.
+ * @param connection_manager A pointer to the connection_manager_t instance.
  * @param peer_id The ID of the peer to send the data to.
  * @param data A pointer to the data buffer.
  * @param len The length of the data to send.
  * @return The number of bytes sent, or a negative value on failure.
  */
-int connection_manager_send_to_peer_udp(connection_manager_t* cm, const char* peer_id, const void* data, int len);
+int connection_manager_send_to_peer_udp(connection_manager_t* connection_manager, const char* peer_id, const void* data, int len);
 
 /**
  * @brief Sends data to all connected peers.
@@ -155,15 +158,15 @@ void connection_manager_destroy(connection_manager_t* connection_manager);
 
 /**
  * @brief Retrieves a listen socket of a specific type.
- * @param cm A pointer to the connection_manager_t instance.
+ * @param connection_manager A pointer to the connection_manager_t instance.
  * @param type The type of socket to retrieve (TCP or UDP).
  * @return A pointer to the net_socket_t instance, or NULL if not found.
  */
-net_socket_t* connection_manager_get_listen_socket(connection_manager_t* cm, socket_type_t type);
+net_socket_t* connection_manager_get_listen_socket(connection_manager_t* connection_manager, socket_type_t type);
 
-uint16_t connection_manager_get_udp_local_port(connection_manager_t* cm);
+uint16_t connection_manager_get_udp_local_port(connection_manager_t* connection_manager);
 
-int connection_manager_set_peer_udp_remote_port_by_id(connection_manager_t* cm, const char* peer_id, uint16_t remote_udp_port);
+int connection_manager_set_peer_udp_remote_port_by_id(connection_manager_t* connection_manager, const char* peer_id, uint16_t remote_udp_port);
 
 /**
  * @brief Finds a peer by its network address.
@@ -179,11 +182,11 @@ peer_t* find_peer_by_addr(connection_manager_t* connection_manager, const struct
  *
  * Searches the connection manager's peer list for a peer with the given ID.
  *
- * @param cm Pointer to the connection manager instance.
+ * @param connection_manager Pointer to the connection manager instance.
  * @param peer_id Null‑terminated string identifying the peer (e.g. "IP:port").
  * @return Pointer to the peer if found; NULL otherwise.
  */
-peer_t* connection_manager_get_peer(connection_manager_t* cm, const char* peer_id);
+peer_t* connection_manager_get_peer(connection_manager_t* connection_manager, const char* peer_id);
 
 /**
  * @brief Sets the interest mask for a specific peer.
@@ -191,11 +194,11 @@ peer_t* connection_manager_get_peer(connection_manager_t* cm, const char* peer_i
  * Adjusts which entity groups the peer will receive updates for.  The
  * server uses this bitmask to filter outgoing replication traffic.
  *
- * @param cm Pointer to the connection manager instance.
+ * @param connection_manager Pointer to the connection manager instance.
  * @param peer_id ID of the peer to update.
  * @param mask New interest bitmask.  Each bit corresponds to a group.
  */
-void connection_manager_set_peer_interest(connection_manager_t* cm, const char* peer_id, interest_mask_t mask);
+void connection_manager_set_peer_interest(connection_manager_t* connection_manager, const char* peer_id, interest_mask_t mask);
 
 #ifdef __cplusplus
 }

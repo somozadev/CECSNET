@@ -198,21 +198,21 @@ public:
             auto *pos = static_cast<position_t *>(ecs_get_component(&ecs_, e, COMPONENT_POSITION));
             auto *vel = static_cast<velocity_t *>(ecs_get_component(&ecs_, e, COMPONENT_VELOCITY));
 
-            // Rebate techo/suelo
+            // Floor / roof bounce
             if (pos->y <= 0.f || pos->y >= config::kWindowHeight) {
                 vel->y = -vel->y;
                 ecs_mark_component_dirty(&ecs_, e, COMPONENT_VELOCITY);
             }
 
-            // Colisión con palas
+            // Paddle collision
             checkPaddleCollisions(e, pos, vel);
 
-            // Gol izquierda → anota derecha
+            // Left goal → right scores
             if (pos->x < 0.f) {
                 if (onScoreCb_) onScoreCb_(user_, /*leftSide=*/false);
                 destroyBall(e);
             }
-            // Gol derecha → anota izquierda
+            // Right goal → left scores
             else if (pos->x > config::kWindowWidth) {
                 if (onScoreCb_) onScoreCb_(user_, /*leftSide=*/true);
                 destroyBall(e);
@@ -315,19 +315,19 @@ public:
         if (!peer) return;
         std::string peerId(peer->id);
 
-        // Si ya tiene paddle asignado, no creamos otro
+        // Don't create a paddle if peer already has one
         if (paddles_.find(peerId) != paddles_.end()) {
             std::printf("[Server] Peer %s already has an assigned paddle.\n", peer->id);
             return;
         }
 
-        // Revisar si hay un slot libre (máximo 2)
+        // Check for free slots (2 max)
         if (paddles_.size() >= 2) {
             std::printf("[Server] Too many active paddles! Cannot spawn another for %s\n", peer->id);
             return;
         }
 
-        // Determinar lado libre
+        // Determine free side
         bool leftTaken = false;
         bool rightTaken = false;
 
@@ -387,7 +387,7 @@ public:
         // Notify the network that this entity is about to be destroyed so
         // clients can remove their replicated copy.  We call this before
         // destroying the entity in the ECS so that the NetworkedEntity
-        // component is still present and we can obtain the network_id.
+        // component is still present, and we can obtain the network_id.
         if (net_) {
             network_cs_mark_entity_destroy(net_, paddle);
         }
@@ -461,10 +461,10 @@ public:
 
             // Vertical wrap
             if (pos->y > config::kWindowHeight + config::kWrapPadding) {
-                pos->y = config::kWrapResetY; // vuelve desde abajo hacia arriba
+                pos->y = config::kWrapResetY; // Returns from bottom to top
                 ecs_mark_component_dirty(&ecs_, e, COMPONENT_POSITION);
             } else if (pos->y < config::kWrapResetY - config::kWrapPadding) {
-                pos->y = config::kWindowHeight; // vuelve desde arriba hacia abajo
+                pos->y = config::kWindowHeight; // Returns from top to bottom
                 ecs_mark_component_dirty(&ecs_, e, COMPONENT_POSITION);
             }
         }
@@ -503,7 +503,7 @@ public:
         ecs_add_component(&ecs_, scoreEntity, config::COMPONENT_SCORE, &scoreData);
         if (ctx_.arch && ctx_.arch->impl) {
             auto *net = static_cast<network_cs_t *>(ctx_.arch->impl);
-            network_cs_assign_network_id(net, scoreEntity, 1); // replicar a todos
+            network_cs_assign_network_id(net, scoreEntity, 1); // Replicate to everyone
         }
         scoreEntity_ = scoreEntity;
         // After networking is ready, assign a network ID and interest mask
