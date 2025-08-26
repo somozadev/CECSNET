@@ -12,6 +12,7 @@
  * @brief Macro to write a float value into a byte buffer.
  *
  * This performs a binary copy of a float into a memory location at the specified offset.
+ * @Note Doesn't convert endianness. Assumes same IEEE754 representation between emitter and receptor.
  */
 #define WRITE_FLOAT(out, offset, value) memcpy((out) + (offset), &(value), sizeof(float))
 
@@ -19,10 +20,11 @@
  * @brief Macro to read a float value from a byte buffer.
  *
  * This performs a binary copy of a float from a memory location at the specified offset.
+ * @Note Doesn't convert endianness. Assumes same IEEE754 representation between emitter and receptor.
  */
 #define READ_FLOAT(var, in, offset) memcpy(&(var), (in) + (offset), sizeof(float))
 
-// Global component identifiers, initialized to an invalid value (-1).
+// Global component identifiers, initialized to an invalid value (-1). Initialized in ecs_register_builtin_components().
 ECSNET_API component_t COMPONENT_POSITION = (component_t)-1;
 ECSNET_API component_t COMPONENT_ROTATION = (component_t)-1;
 ECSNET_API component_t COMPONENT_TRANSFORM = (component_t)-1;
@@ -41,7 +43,7 @@ void ecs_register_builtin_systems(ecs_t* ecs)
 }
 
 /**
- * @brief System function that applies velocity to position over time.
+ * @brief System function that applies velocity to position over time. Complexity O(n).
  *
  * Iterates over all entities, checks if they have both Position and Velocity components,
  * and updates their position based on their velocity and the delta time.

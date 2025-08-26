@@ -4,13 +4,26 @@
 #include <stdio.h>
 
 #include "ecs_internal.h"
-
+/**
+ * @brief Initialize a protocol handler structure.
+ *
+ * Clears all fields to zero, preparing it for use.
+ * @param handler Pointer to the protocol handler to initialize.
+ */
 void protocol_handler_init(protocol_handler_t *handler) {
     if (!handler) return;
     // Clear the entire handler structure to a known zero state.
     memset(handler, 0, sizeof(protocol_handler_t));
 }
-
+/**
+ * @brief Pack an ENTITY_UPDATE packet for a given entity.
+ *
+ * Format: [entity_t][component data...]
+ * @param handler   Protocol handler to fill.
+ * @param entity_id Entity being updated.
+ * @param data      Serialized component payload.
+ * @param data_len  Length of the payload.
+ */
 void protocol_handler_pack_entity_update(protocol_handler_t *handler, entity_t entity_id, const uint8_t *data,
                                          uint16_t data_len) {
     if (!handler || data_len > sizeof(handler->out_packet.data)) return;
@@ -25,7 +38,12 @@ void protocol_handler_pack_entity_update(protocol_handler_t *handler, entity_t e
     // Copy the serialized component data immediately after the entity ID.
     memcpy(handler->out_packet.data + sizeof(entity_t), data, data_len);
 }
-
+/**
+ * @brief Pack a CLIENT_REGISTER packet containing the client's UDP port.
+ *
+ * Sent by the client to the server after TCP connect, to advertise
+ * which UDP port it listens on.
+ */
 void protocol_handler_pack_client_register(protocol_handler_t *handler, uint16_t udp_port) {
     if (!handler) return;
 
@@ -36,13 +54,24 @@ void protocol_handler_pack_client_register(protocol_handler_t *handler, uint16_t
     // Copy the UDP port into the data payload.
     memcpy(handler->out_packet.data, &udp_port, sizeof(uint16_t));
 }
+/**
+ * @brief Parse a CLIENT_REGISTER packet.
+ * @param pkt      The received packet.
+ * @param out_port Output pointer for UDP port.
+ * @return true if unpacked successfully, false otherwise.
+ */
 bool protocol_handler_unpack_client_register(const network_packet_t* pkt, uint16_t* out_port) {
     if (!pkt || pkt->header.type != PACKET_TYPE_CLIENT_REGISTER) return false;
     if (pkt->header.size < sizeof(packet_header_t) + sizeof(uint16_t)) return false;
     memcpy(out_port, pkt->data, sizeof(uint16_t));
     return true;
 }
-
+/**
+ * @brief Pack a SERVER_ACK packet.
+ *
+ * This packet contains only the header (no payload) and is sent by
+ * the server to confirm a successful connection.
+ */
 void protocol_handler_pack_server_ack(protocol_handler_t *handler) {
     if (!handler) return;
 
@@ -50,7 +79,16 @@ void protocol_handler_pack_server_ack(protocol_handler_t *handler) {
     // The total size is just the header size, as there is no payload.
     handler->out_packet.header.size = sizeof(packet_header_t);
 }
-
+/**
+ * @brief Pack a CLIENT_INPUT packet.
+ *
+ * Format: [entity_t][uint8_t cmd][optional payload...]
+ * @param handler    Protocol handler to fill.
+ * @param entity_id  The entity issuing the command.
+ * @param input_cmd  Command identifier.
+ * @param extra      Optional extra payload.
+ * @param extra_len  Length of extra payload.
+ */
 void protocol_handler_pack_client_input(protocol_handler_t *handler, entity_t entity_id, uint8_t input_cmd,
                                         const void *extra, uint16_t extra_len) {
     if (!handler) return;
@@ -73,7 +111,19 @@ void protocol_handler_pack_client_input(protocol_handler_t *handler, entity_t en
     handler->out_packet.header.type = PACKET_TYPE_CLIENT_INPUT;
     handler->out_packet.header.size = (uint16_t) (sizeof(packet_header_t) + (p - handler->out_packet.data));
 }
-
+/**
+ * @brief Process incoming network packet data.
+ *
+ * Handles ENTITY_UPDATE, MULTI_ENTITY_UPDATE, SERVER_ACK, CLIENT_REGISTER,
+ * and forwards unknown packets.
+ * Updates ECS state accordingly (create, update, or dirty components).
+ *
+ * @param handler Protocol handler context.
+ * @param ecs     ECS world instance.
+ * @param peer    Peer that sent the packet.
+ * @param data    Raw packet data.
+ * @param len     Packet length.
+ */
 void protocol_handler_process_received_data(protocol_handler_t *handler,ecs_t *ecs,peer_t *peer,const void *data,int len)
 {
     if (!handler || !ecs || !data || len < (int)sizeof(packet_header_t)) return;
@@ -87,20 +137,20 @@ void protocol_handler_process_received_data(protocol_handler_t *handler,ecs_t *e
 
     switch (packet->header.type) {
 
-    // ========= SNAPSHOT/DELTA: una entidad por paquete =========
+    // ========= SNAPSHOT/DELTA: One entity per packet =========
     case PACKET_TYPE_ENTITY_UPDATE: {
         if (end - cur < (ptrdiff_t)sizeof(entity_t)) break;
         entity_t eid; memcpy(&eid, cur, sizeof(eid)); cur += sizeof(eid);
 
-        // Asegura existencia de la entidad en el cliente
+        // Assures entity exists in client side
         ecs_try_create_entity_by_id(ecs, eid);
 
-        // Stream de [component_t][blob]
+        // Stream of [component_t][blob]
         while (end - cur >= (ptrdiff_t)sizeof(component_t)) {
             component_t cid;
             memcpy(&cid, cur, sizeof(cid)); cur += sizeof(cid);
 
-            // Blindaje de índice de componente
+            // Validate component index
             if (cid < 0 || cid >= ecs->registered_component_count) {
                 printf("[PH] Skip invalid component id %d\n", (int)cid);
                 break;
@@ -113,14 +163,14 @@ void protocol_handler_process_received_data(protocol_handler_t *handler,ecs_t *e
             }
 
             if (!ecs_has_component(ecs, eid, cid)) {
-                // No existía -> créalo con los datos recibidos
+                // Did not exist -> create with received data
                 ecs_add_component(ecs, eid, cid, (void*)cur);
             } else {
-                // Ya existía -> sobreescribe datos
+                // Already exists -> overwrite data
                 void* dst = ecs_get_component(ecs, eid, cid);
                 if (dst) memcpy(dst, cur, comp_size);
             }
-            // (Opcional) marcar dirty local si tu render depende de ello
+            // Optionally mark dirty if local rendering depends on it
             ecs_mark_component_dirty(ecs, eid, cid);
 
             cur += comp_size;
@@ -128,7 +178,7 @@ void protocol_handler_process_received_data(protocol_handler_t *handler,ecs_t *e
         break;
     }
 
-    // ========= SNAPSHOT/DELTA: paquete con muchas entidades =========
+    // ========= SNAPSHOT/DELTA: Packets with a lot of entities =========
     case PACKET_TYPE_MULTI_ENTITY_UPDATE: {
         if (end - cur < (ptrdiff_t)sizeof(uint16_t)) break;
         uint16_t entity_count; memcpy(&entity_count, cur, sizeof(entity_count));
@@ -182,51 +232,17 @@ void protocol_handler_process_received_data(protocol_handler_t *handler,ecs_t *e
     }
     break;
     }
-        // case PACKET_TYPE_CLIENT_INPUT: {
-        //
-        // const uint8_t* p = packet->data;
-        // const uint8_t* end = ((const uint8_t*)packet) + packet->header.size;
-        //
-        // if (end - p < (ptrdiff_t)(sizeof(entity_t) + sizeof(uint8_t))) {
-        //     printf("[PH] CLIENT_INPUT too small\n");
-        //     break;
-        // }
-        // entity_t eid; uint8_t cmd;
-        // memcpy(&eid, p, sizeof(entity_t)); p += sizeof(entity_t);
-        // memcpy(&cmd,  p, sizeof(uint8_t));  p += sizeof(uint8_t);
-        //
-        // size_t payload_size = end - p;
-        // const uint8_t *payload = p;
-        // if (handler->arch && handler->arch->config.on_client_input)
-        //     handler->arch->config.on_client_input(handler->arch->config.user_data,peer,eid,cmd,payload,payload_size);
-        // else {
-        //     printf("[PH] CLIENT_INPUT (cmd=%u) received but no handler set\n", cmd);
-        // }break;
-        //
-        // if (cmd == INPUT_SPAWN) {
-        //     if (end - p < (ptrdiff_t)(sizeof(float)*2)) { printf("[PH] SPAWN missing xy\n"); break; }
-        //     float x,y; memcpy(&x,p,sizeof(float)); p+=sizeof(float); memcpy(&y,p,sizeof(float)); p+=sizeof(float);
-        //
-        //     position_t pos = { x, y };
-        //     velocity_t vel = { 0.f, 120.f };
-        //     entity_t e = ecs_create_entity(ecs);
-        //     ecs_add_component(ecs, e, COMPONENT_POSITION, &pos);
-        //     ecs_add_component(ecs, e, COMPONENT_VELOCITY, &vel);
-        //     ecs_mark_component_dirty(ecs, e, COMPONENT_POSITION);
-        //     ecs_mark_component_dirty(ecs, e, COMPONENT_VELOCITY);
-        //
-        //     printf("[PH] SPAWN ok -> entity %u at (%.1f, %.1f)\n", e, x, y);
-        // }
-        // break;
-        // }
 
     default:
         printf("[ProtocolHandler] Unknown packet type %d.\n", packet->header.type);
         break;
     }
 }
-
+/**
+ * @brief Send the prepared out_packet to a specific peer.
+ *
+ * Delegates to the connection manager for transport.
+ */
 void protocol_handler_send_packet(connection_manager_t *cm, const char *peer_id, protocol_handler_t *handler) {
-    // Delegate the actual sending to the connection manager.
     connection_manager_send_to_peer(cm, peer_id, &handler->out_packet, handler->out_packet.header.size);
 }

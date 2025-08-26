@@ -16,7 +16,6 @@ typedef void (*on_receive_func_t)(const struct sockaddr_in *sender_addr, const v
 ECSNET_API typedef enum {
     ARCH_CLIENT_SERVER,     /**< A client-server architecture. */
     ARCH_P2P,               /**< A peer-to-peer architecture. */
-    ARCH_LISTEN_SERVER      /**< A dedicated listen server architecture. */
 } network_architecture_type_t;
 
 /**

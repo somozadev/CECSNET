@@ -14,7 +14,7 @@
 /*
  * Track which entities have recently been marked dirty.  When any
  * component on an entity is modified on the server, ecsnet_dirty_hook
- * sets the corresponding flag here.  During replication we always
+ * sets the corresponding flag here.  During replication, we always
  * process these entities first to reduce perceived lag for players.
  *
  * Note that we do not clear these flags inside the send functions
@@ -31,30 +31,33 @@ static void ecsnet_dirty_hook(entity_t e) {
 }
 
 
-// ---------- helpers de escritura ----------
+// Safe memcpy helper.
+// Writes `n` bytes from `p` into dst at offset `pos`.
+// Returns new position, or (size_t)-1 if out of capacity.
 static size_t wr_mem(uint8_t* dst, size_t cap, size_t pos, const void* p, size_t n) {
     if (pos + n > cap) return (size_t)-1;
     memcpy(dst + pos, p, n);
     return pos + n;
 }
-// Encapsula MULTI_ENTITY_UPDATE y envía (UDP si listo, fallback TCP)
+// Helper: wrap buffer into a MULTI_ENTITY_UPDATE packet and send to peer.
+// Prefers UDP, falls back to TCP.
+// Returns number of bytes sent, or <0 on failure.
 static int send_multi_to_peer(connection_manager_t* cm, const char* peer_id, uint8_t* buf, size_t size) {
     if (size > MAX_PACKET_SIZE) return -1;
     packet_header_t* hdr = (packet_header_t*)buf;
     hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
     hdr->size = (uint16_t)size;
 
-    // Primero UDP si está listo; si falla, TCP
+    // First UDP if it's ready, otherwise TCP
     int s = connection_manager_send_to_peer_udp(cm, peer_id, buf, (int)size);
     if (s < 0) s = connection_manager_send_to_peer(cm, peer_id, buf, (int)size);
     return s;
 }
 
-// ---------- snapshot completo por UDP, troceado ----------
 /*
  * Send a full snapshot of all networked entities to a single peer.  The
  * payload is chunked into multiple packets that respect a user‑defined
- * soft limit (typically around 1.2 kB).  Each entity is identified by
+ * soft limit (typically around 1.2THSPkB).  Each entity is identified by
  * its 32‑bit network_id rather than its local entity index.  Only
  * entities whose NetworkedEntity component intersects the peer's
  * interest_mask are included.  The NetworkedEntity component itself
@@ -180,7 +183,9 @@ static void sd_flush_if_needed(connection_manager_t* cm,
     // reset
     *pos  = sizeof(packet_header_t) + sizeof(uint16_t);
     *ents = 0;
-}static void send_dirty_chunked_rr(ecs_t* ecs, connection_manager_t* cm,
+}
+
+static void send_dirty_chunked_rr(ecs_t* ecs, connection_manager_t* cm,
                                   const char* peer_id, size_t soft_limit) {
     static entity_t rr = 0;
     if (!ecs || !cm) return;
@@ -201,24 +206,26 @@ static void sd_flush_if_needed(connection_manager_t* cm,
     size_t pos  = base_sz;
     uint16_t ents = 0;
 
-    /* Construir lista ordenada de entidades: primero las que se han marcado como
-       dirty recientemente (prioritized_entities[e] == true), luego las demás en
-       el orden round‑robin habitual.  El array 'added' evita duplicados. */
+    /* Build an ordered entity list:
+       - first: entities flagged in prioritized_entities (recently dirtied)
+       - then: all others, in round-robin order for fairness.
+       The 'added' array prevents duplicates.
+    */
     entity_t order[MAX_ENTITIES];
     bool added[MAX_ENTITIES] = { false };
     size_t order_count = 0;
-    // Añadir entidades priorizadas
+    // Add prioritized entities first
     for (entity_t e = 0; e < MAX_ENTITIES; ++e) {
         if (prioritized_entities[e]) {
             order[order_count++] = e;
             added[e] = true;
-            /* Limpiar la marca de prioridad: sólo queremos priorizar la primera
-               vez que una entidad queda sucia; las siguientes veces vuelve al
-               ciclo normal. */
+            /* Clear the priority flag: We only want to prioritize the first
+            time an entity becomes dirty; subsequent times it returns to the
+            normal cycle. */
             prioritized_entities[e] = false;
         }
     }
-    // Añadir el resto en orden round‑robin
+    // Add the rest in round-robin order
     for (entity_t step = 0; step < MAX_ENTITIES; ++step) {
         entity_t e = (rr + step) % MAX_ENTITIES;
         if (!added[e]) {
@@ -227,13 +234,13 @@ static void sd_flush_if_needed(connection_manager_t* cm,
         }
     }
 
-    /* Recorremos la lista ordenada y empaquetamos los componentes sucios.  Si
-       al intentar escribir una entidad no cabe ni un componente, se hace flush
-       del paquete actual y se reproc esa misma entidad en el siguiente. */
+    /* We traverse the sorted list and pack the dirty components. If
+       when trying to write an entity, not even one component fits, we flush
+       the current package and reproduce that same entity in the next one. */
     for (size_t idx = 0; idx < order_count; ++idx) {
         entity_t e = order[idx];
 
-        // Reservar cabecera de entidad
+        // Reserver entitiy's header
         size_t ent_pos = pos;
         pos = wr_mem(buf, cap, pos, &e, sizeof(entity_t));
         if (pos == (size_t)-1) goto flush;
@@ -249,11 +256,9 @@ static void sd_flush_if_needed(connection_manager_t* cm,
             const void* comp_data = ecs_get_component(ecs, e, c);
             size_t comp_size      = ecs->components[c].descriptor.size;
 
-            /* Si añadir este componente supera el soft_limit, decide: si no se ha
-               escrito ninguno aún para esta entidad, deja 'pos' en ent_pos y
-               envía el paquete actual para empezar uno nuevo (reprocesará
-               nuevamente esta entidad).  Si ya se han escrito algunos
-               componentes, cierra la entidad, envía el paquete, y reproc. */
+            /*If adding this component exceeds the soft_limit, decide: if none have been written yet for this entity, leave 'pos' in ent_pos and
+            send the current packet to start a new one (it will reprocess this entity again). If some components have already been written, close
+            the entity, send the packet, and reprocess. */
             if (pos + sizeof(component_t) + comp_size > soft_limit) {
                 if (comp_count == 0) { pos = ent_pos; goto flush; }
                 buf[cc_pos] = comp_count;
@@ -266,51 +271,51 @@ static void sd_flush_if_needed(connection_manager_t* cm,
             if (pos == (size_t)-1) { pos = ent_pos; goto flush; }
 
             comp_count++;
-            /* Limpiamos el flag dirty ahora que se ha escrito este componente.
-               Nota: si más tarde hay que reproc. la entidad porque el paquete
-               se llenó, los componentes restantes seguirán sucios y por tanto
-               se volverán a enviar. */
+            /* We clear the dirty flag now that this component has been written.
+            Note: If the entity needs to be reprocessed later because the package
+            became full, the remaining components will still be dirty and will therefore
+            be resent. */
             ecs_clear_component_dirty(ecs, e, c);
         }
 
         if (comp_count == 0) {
-            // no se escribió nada de esta entidad
+            // Nothing written from this entity.
             pos = ent_pos;
             continue;
         }
 
-        // Escribir el número de componentes en la cabecera de entidad
+        // Write the amount of components in the entity's header.
         buf[cc_pos] = comp_count;
         ents++;
 
-        /* Si no queda espacio para al menos otra entidad y un componente, envia
-           ahora y empieza un paquete nuevo. */
+        /*If there's no room for at least one more entity and one component, submit
+        now and start a new package.*/
         if (pos + sizeof(entity_t) + 1 + 8 > soft_limit) {
 flush:
             if (ents > 0) {
-                // Rellenar count e inicializar cabecera
+                // Fill up count and initialize header.
                 memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
                 packet_header_t* hdr = (packet_header_t*)buf;
                 hdr->type = PACKET_TYPE_MULTI_ENTITY_UPDATE;
                 hdr->size = (uint16_t)pos;
 
                 if (peer_id) {
-                    // Envío unicast (UDP preferente, TCP fallback)
+                    // Unicast sent (UDP preferred, TCP fallback).
                     send_multi_to_peer(cm, peer_id, buf, pos);
                 } else {
-                    // Broadcast: siempre inicializa hdr antes de enviar
+                    // Broadcast: Always initialize hdr before sending.
                     connection_manager_broadcast(cm, buf, (int)pos);
                 }
             }
-            // Reiniciar buffer y contadores para nuevo paquete
+            // Restart buffer and counters for a new packet.
             pos  = base_sz;
             ents = 0;
-            // Decrementa idx para reprocesar la misma entidad si saltamos por flush
+            // Decrement idx to reprocess the same entity if we skipped due flush.
             idx--;
         }
     }
 
-    // Enviar cualquier entidad restante en el buffer al final
+    // Send any remaining entity in the buffer at the end.
     if (ents > 0) {
         memcpy(buf + hdr_sz, &ents, sizeof(uint16_t));
         packet_header_t* hdr = (packet_header_t*)buf;
@@ -324,7 +329,7 @@ flush:
         }
     }
 
-    // Avanzar el round‑robin para la próxima llamada
+    // Step round‑robin for next call.
     rr = (rr + 1) % MAX_ENTITIES;
 }
 
@@ -596,7 +601,7 @@ static void send_dirty_chunked_rr_single(network_cs_t* cs,
 }
 
 
-// ---------- callbacks de connection_manager ----------
+// ---------- connection_manager callbacks ----------
 void on_packet_received_cs(void *user_data, peer_t *peer, const void *data, int len) {
     network_cs_t *cs = (network_cs_t *) user_data;
     if (!cs || !peer || !data || len < (int)sizeof(packet_header_t)) return;
@@ -636,16 +641,16 @@ void on_packet_received_cs(void *user_data, peer_t *peer, const void *data, int 
                     }
                 }
             }
-            // snapshot inicial por UDP (troceado).  Passing 0 uses the default
+            // initial snapshot over UDP (hashed). Passing 0 uses the default
             // soft limit (clamped to the buffer size) to avoid overrunning the
             // packet buffer.
             send_full_state_chunked(cs->ecs, &cs->connection_manager, peer->id, 0);
         }
-        return; // <- no lo reenvíes a PH ni a la app
+        return; // Don't resend to PH nor the app.
     }
 
-    // Si somos un cliente y recibimos un snapshot/delta de múltiples entidades,
-    // debemos interpretar los datos usando network_id en lugar de entity_t.
+    // If we are a client and receive a snapshot/delta of multiple entities,
+    // we must interpret the data using network_id instead of entity_t.
     if (!cs->connection_manager.is_server && pkt->header.type == PACKET_TYPE_MULTI_ENTITY_UPDATE) {
         // Parse the multi-entity update packet.  Layout:
         // [uint16_t entity_count][for each entity: uint32_t network_id][uint8_t comp_count][comp pairs...]
@@ -741,7 +746,7 @@ void on_packet_received_cs(void *user_data, peer_t *peer, const void *data, int 
         }
         return;
     }
-    // resto de paquetes → defer to protocol handler and user callback
+    // Remaining packets: Defer to protocol handler and user callback
     protocol_handler_process_received_data(&cs->protocol_handler, cs->ecs, peer, data, len);
     if (cs->config.on_packet_received)
         cs->config.on_packet_received(cs->config.user_data, peer, data, len);
@@ -754,7 +759,7 @@ void on_peer_connected_cs(void *user_data, peer_t *peer) {
     printf("[network_cs] Peer %s connected.\n", peer->id);
 
     if (cs->config.is_server) {
-        // SERVER -> manda ACK por TCP (el cliente responderá con CLIENT_REGISTER)
+        // Server  sends ACK via TCP (client will answer with CLIENT_REGISTER)
 
         peer->interest_mask = (interest_mask_t)0xFFFFFFFF;
 
@@ -768,7 +773,7 @@ void on_peer_connected_cs(void *user_data, peer_t *peer) {
     }
 
     // ===== CLIENT =====
-    // 1) Prepara el mapeo UDP hacia el servidor (misma IP TCP, puerto UDP del server del config)
+    // 1) Prepare the UDP mapping to the server (same TCP IP, UDP port of the config server)
     peer->addr_udp = peer->addr_tcp;
     peer->addr_udp.sin_port = htons(cs->config.udp_port);
 
@@ -779,7 +784,7 @@ void on_peer_connected_cs(void *user_data, peer_t *peer) {
         peer->udp_ready = 1;
     }
 
-    // 2) Envía CLIENT_REGISTER por TCP con tu puerto UDP local efímero
+    // 2) Send CLIENT_REGISTER over TCP with your local ephemeral UDP port
     uint16_t local_udp = connection_manager_get_udp_local_port(&cs->connection_manager);
     protocol_handler_pack_client_register(&cs->protocol_handler, local_udp);
     connection_manager_send_to_peer(&cs->connection_manager, peer->id,
@@ -824,7 +829,7 @@ network_cs_t *network_cs_init(const network_architecture_config_t *config, ecs_t
     }
     cs_arch->ecs = ecs;
     cs_arch->config = *config;
-    cs_arch->sync_acc = 0.f; // si tu struct lo tiene; si no, ignora
+    cs_arch->sync_acc = 0.f;
 
     connection_manager_init(&cs_arch->connection_manager);
     cs_arch->connection_manager.is_server   = config->is_server;
@@ -866,7 +871,7 @@ network_cs_t *network_cs_init(const network_architecture_config_t *config, ecs_t
     if (config->is_server) {
         net_socket_bind(&udp_listen, config->ip_address, config->udp_port);
     } else {
-        // puerto efímero
+        // Temp port
         net_socket_bind(&udp_listen, config->ip_address, 0);
     }
     connection_manager_add_listen_socket(&cs_arch->connection_manager, udp_listen, SOCKET_TYPE_UDP);
