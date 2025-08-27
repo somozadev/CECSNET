@@ -22,7 +22,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y build-essential cmake
 
       - name: Configure with CMake
-        run: cmake -S ecsnet -B ecsnet/build -DCMAKE_BUILD_TYPE=Debug
+        run: cmake -S ecsnet -B ecsnet/build-ci/ -DCMAKE_BUILD_TYPE=Debug
 
       - name: Build
-        run: cmake --build ecsnet/build --config Debug --parallel
+        run: cmake --build ecsnet/build-ci/ --config Debug --parallel
