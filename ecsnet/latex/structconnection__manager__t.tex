@@ -1,0 +1,97 @@
+\doxysection{connection\+\_\+manager\+\_\+t Struct Reference}
+\hypertarget{structconnection__manager__t}{}\label{structconnection__manager__t}\index{connection\_manager\_t@{connection\_manager\_t}}
+
+
+Manages all active network connections (peers) for a client or server.  
+
+
+
+
+{\ttfamily \#include $<$connection\+\_\+manager.\+h$>$}
+
+
+
+Collaboration diagram for connection\+\_\+manager\+\_\+t\+:
+% FIG 0
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} \mbox{\hyperlink{structconnection__manager__t_a3301a3f4452d9718fdbb15b2f68ea006}{peers}} \mbox{[}MAX\+\_\+\+PEERS\mbox{]}
+\item 
+int \mbox{\hyperlink{structconnection__manager__t_ae8f779662bb801cee7719d1b1914acf3}{peer\+\_\+count}}
+\item 
+\mbox{\hyperlink{structnet__socket__t}{net\+\_\+socket\+\_\+t}} \mbox{\hyperlink{structconnection__manager__t_a1dd941bba7445cec6e20b9c3838d3c0e}{listen\+\_\+sockets}} \mbox{[}PROTOCOL\+\_\+\+COUNT\mbox{]}
+\item 
+bool \mbox{\hyperlink{structconnection__manager__t_a2914a23cdcac9a3679de608ddddb2098}{is\+\_\+server}}
+\item 
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structconnection__manager__t_af0574f823127f3481c6ce1b85f61af4a}{user\+\_\+data}}
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structconnection__manager__t_af9ca88acdf0b86f148d3dd2c3ef1575b}{on\+\_\+receive}} )(void \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} \texorpdfstring{$\ast$}{*}, const void \texorpdfstring{$\ast$}{*}, int)
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structconnection__manager__t_a04e76b244146a26b2f4d59bdf0ebb0cb}{on\+\_\+connect}} )(void \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} \texorpdfstring{$\ast$}{*})
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structconnection__manager__t_a4c6930d1992818f4a1b48d9218ec325a}{on\+\_\+disconnect}} )(void \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} \texorpdfstring{$\ast$}{*})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manages all active network connections (peers) for a client or server. 
+
+This structure holds an array of all connected peers, manages the listen sockets, and stores pointers to peer related callback functions for network events. 
+
+\label{doc-variable-members}
+\Hypertarget{structconnection__manager__t_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structconnection__manager__t_a2914a23cdcac9a3679de608ddddb2098}\index{connection\_manager\_t@{connection\_manager\_t}!is\_server@{is\_server}}
+\index{is\_server@{is\_server}!connection\_manager\_t@{connection\_manager\_t}}
+\doxysubsubsection{\texorpdfstring{is\_server}{is\_server}}
+{\footnotesize\ttfamily \label{structconnection__manager__t_a2914a23cdcac9a3679de608ddddb2098} 
+bool connection\+\_\+manager\+\_\+t\+::is\+\_\+server}
+
+A flag indicating if this instance is a server. \Hypertarget{structconnection__manager__t_a1dd941bba7445cec6e20b9c3838d3c0e}\index{connection\_manager\_t@{connection\_manager\_t}!listen\_sockets@{listen\_sockets}}
+\index{listen\_sockets@{listen\_sockets}!connection\_manager\_t@{connection\_manager\_t}}
+\doxysubsubsection{\texorpdfstring{listen\_sockets}{listen\_sockets}}
+{\footnotesize\ttfamily \label{structconnection__manager__t_a1dd941bba7445cec6e20b9c3838d3c0e} 
+\mbox{\hyperlink{structnet__socket__t}{net\+\_\+socket\+\_\+t}} connection\+\_\+manager\+\_\+t\+::listen\+\_\+sockets\mbox{[}PROTOCOL\+\_\+\+COUNT\mbox{]}}
+
+Sockets for listening on both TCP and UDP. \Hypertarget{structconnection__manager__t_a04e76b244146a26b2f4d59bdf0ebb0cb}\index{connection\_manager\_t@{connection\_manager\_t}!on\_connect@{on\_connect}}
+\index{on\_connect@{on\_connect}!connection\_manager\_t@{connection\_manager\_t}}
+\doxysubsubsection{\texorpdfstring{on\_connect}{on\_connect}}
+{\footnotesize\ttfamily \label{structconnection__manager__t_a04e76b244146a26b2f4d59bdf0ebb0cb} 
+void(\texorpdfstring{$\ast$}{*} connection\+\_\+manager\+\_\+t\+::on\+\_\+connect) (void \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} \texorpdfstring{$\ast$}{*})}
+
+The callback for when a new peer connects. \Hypertarget{structconnection__manager__t_a4c6930d1992818f4a1b48d9218ec325a}\index{connection\_manager\_t@{connection\_manager\_t}!on\_disconnect@{on\_disconnect}}
+\index{on\_disconnect@{on\_disconnect}!connection\_manager\_t@{connection\_manager\_t}}
+\doxysubsubsection{\texorpdfstring{on\_disconnect}{on\_disconnect}}
+{\footnotesize\ttfamily \label{structconnection__manager__t_a4c6930d1992818f4a1b48d9218ec325a} 
+void(\texorpdfstring{$\ast$}{*} connection\+\_\+manager\+\_\+t\+::on\+\_\+disconnect) (void \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} \texorpdfstring{$\ast$}{*})}
+
+The callback for when a peer disconnects. \Hypertarget{structconnection__manager__t_af9ca88acdf0b86f148d3dd2c3ef1575b}\index{connection\_manager\_t@{connection\_manager\_t}!on\_receive@{on\_receive}}
+\index{on\_receive@{on\_receive}!connection\_manager\_t@{connection\_manager\_t}}
+\doxysubsubsection{\texorpdfstring{on\_receive}{on\_receive}}
+{\footnotesize\ttfamily \label{structconnection__manager__t_af9ca88acdf0b86f148d3dd2c3ef1575b} 
+void(\texorpdfstring{$\ast$}{*} connection\+\_\+manager\+\_\+t\+::on\+\_\+receive) (void \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} \texorpdfstring{$\ast$}{*}, const void \texorpdfstring{$\ast$}{*}, int)}
+
+The callback for when data is received. \Hypertarget{structconnection__manager__t_ae8f779662bb801cee7719d1b1914acf3}\index{connection\_manager\_t@{connection\_manager\_t}!peer\_count@{peer\_count}}
+\index{peer\_count@{peer\_count}!connection\_manager\_t@{connection\_manager\_t}}
+\doxysubsubsection{\texorpdfstring{peer\_count}{peer\_count}}
+{\footnotesize\ttfamily \label{structconnection__manager__t_ae8f779662bb801cee7719d1b1914acf3} 
+int connection\+\_\+manager\+\_\+t\+::peer\+\_\+count}
+
+The current number of active peers. \Hypertarget{structconnection__manager__t_a3301a3f4452d9718fdbb15b2f68ea006}\index{connection\_manager\_t@{connection\_manager\_t}!peers@{peers}}
+\index{peers@{peers}!connection\_manager\_t@{connection\_manager\_t}}
+\doxysubsubsection{\texorpdfstring{peers}{peers}}
+{\footnotesize\ttfamily \label{structconnection__manager__t_a3301a3f4452d9718fdbb15b2f68ea006} 
+\mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} connection\+\_\+manager\+\_\+t\+::peers\mbox{[}MAX\+\_\+\+PEERS\mbox{]}}
+
+An array of all managed peers. \Hypertarget{structconnection__manager__t_af0574f823127f3481c6ce1b85f61af4a}\index{connection\_manager\_t@{connection\_manager\_t}!user\_data@{user\_data}}
+\index{user\_data@{user\_data}!connection\_manager\_t@{connection\_manager\_t}}
+\doxysubsubsection{\texorpdfstring{user\_data}{user\_data}}
+{\footnotesize\ttfamily \label{structconnection__manager__t_af0574f823127f3481c6ce1b85f61af4a} 
+void\texorpdfstring{$\ast$}{*} connection\+\_\+manager\+\_\+t\+::user\+\_\+data}
+
+User data passed to callbacks 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/connection\+\_\+manager.\+h\end{DoxyCompactItemize}

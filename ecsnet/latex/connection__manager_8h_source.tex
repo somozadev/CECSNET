@@ -1,0 +1,97 @@
+\doxysection{connection\+\_\+manager.\+h}
+\hypertarget{connection__manager_8h_source}{}\label{connection__manager_8h_source}\index{include/connection\_manager.h@{include/connection\_manager.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}net\_socket.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <winsock2.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}config.h"{}}\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Include\ networked\_entity.h\ to\ obtain\ the\ definition\ of\ interest\_mask\_t.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ This\ header\ does\ not\ depend\ on\ connection\_manager,\ so\ including\ it\ here}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ avoids\ circular\ dependencies\ and\ allows\ peers\ to\ have\ an\ interest\ mask.}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{networked__entity_8h}{networked\_entity.h}}"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ PROTOCOL\_COUNT\ 2}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ MAX\_PACKET\_SIZE}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ MAX\_PACKET\_SIZE\ 1024}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#endif}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ MAX\_PEERS\ 32}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structprotocol__handler__t}{protocol\_handler\_t}}\ \mbox{\hyperlink{structprotocol__handler__t}{protocol\_handler\_t}};}
+\DoxyCodeLine{00035\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structnetwork__cs__t}{network\_cs\_t}}\ \mbox{\hyperlink{structnetwork__cs__t}{network\_cs\_t}};}
+\DoxyCodeLine{00036\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}\ \mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpeer__t}{peer\_t}}\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{char}\ \textcolor{keywordtype}{id}[64];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{struct\ }sockaddr\_in\ \mbox{\hyperlink{structpeer__t_a4ad782187490b4192186ee3e0a487b85}{addr\_tcp}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{struct\ }sockaddr\_in\ \mbox{\hyperlink{structpeer__t_a92131b6041cdcd160411b23c8c851930}{addr\_udp}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}\ \mbox{\hyperlink{structpeer__t_a55943a76ea4e47bfdc1ce4d2220d600d}{net\_sockets}}[PROTOCOL\_COUNT];\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structpeer__t_aa3fd6ba9986a83d5c936a7500fe630b4}{is\_connected}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structpeer__t_a9e9419e4d437230d27ce689a6be738b6}{udp\_ready}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{networked__entity_8h_a3c1e1bed74f6ddd84df064e27fa95f24}{interest\_mask\_t}}\ \mbox{\hyperlink{structpeer__t_a29b875ac7ba1b777959adc11be090ef9}{interest\_mask}};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//\ \ TCP\ reassembly\ (used\ for\ framing)}}
+\DoxyCodeLine{00063\ \ \ \ \ uint8\_t\ tcp\_rx\_buf[MAX\_PACKET\_SIZE\ *\ 2];}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ tcp\_rx\_len;}
+\DoxyCodeLine{00065\ \}\ \mbox{\hyperlink{structpeer__t}{peer\_t}};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \mbox{\hyperlink{structpeer__t}{peer\_t}}\ \mbox{\hyperlink{structconnection__manager__t_a3301a3f4452d9718fdbb15b2f68ea006}{peers}}[MAX\_PEERS];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structconnection__manager__t_ae8f779662bb801cee7719d1b1914acf3}{peer\_count}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00077\ \ \ \ \ \mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}\ \mbox{\hyperlink{structconnection__manager__t_a1dd941bba7445cec6e20b9c3838d3c0e}{listen\_sockets}}[PROTOCOL\_COUNT];\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structconnection__manager__t_a2914a23cdcac9a3679de608ddddb2098}{is\_server}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structconnection__manager__t_af0574f823127f3481c6ce1b85f61af4a}{user\_data}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{//\ Callbacks\ for\ different\ network\ events}}
+\DoxyCodeLine{00082\ \ \ \ \ void\ (*\mbox{\hyperlink{structconnection__manager__t_af9ca88acdf0b86f148d3dd2c3ef1575b}{on\_receive}})(\textcolor{keywordtype}{void}*,\ \mbox{\hyperlink{structpeer__t}{peer\_t}}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*,\ int);\ \ \ \ \ \ \ }
+\DoxyCodeLine{00083\ \ \ \ \ void\ (*\mbox{\hyperlink{structconnection__manager__t_a04e76b244146a26b2f4d59bdf0ebb0cb}{on\_connect}})(\textcolor{keywordtype}{void}*,\ \mbox{\hyperlink{structpeer__t}{peer\_t}}*);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00084\ \ \ \ \ void\ (*\mbox{\hyperlink{structconnection__manager__t_a4c6930d1992818f4a1b48d9218ec325a}{on\_disconnect}})(\textcolor{keywordtype}{void}*,\ \mbox{\hyperlink{structpeer__t}{peer\_t}}*);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00085\ \}\ \mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{void}\ connection\_manager\_init(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00099\ \textcolor{keywordtype}{void}\ connection\_manager\_add\_listen\_socket(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager,\ \mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}\ socket,\ socket\_type\_t\ socket\_type);}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00106\ \textcolor{keywordtype}{void}\ connection\_manager\_remove\_peer(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ peer\_id);}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00116\ \textcolor{keywordtype}{int}\ connection\_manager\_send\_to\_peer(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ peer\_id,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ data,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00126\ \textcolor{keywordtype}{int}\ connection\_manager\_send\_to\_peer\_udp(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ peer\_id,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ data,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00135\ \textcolor{keywordtype}{int}\ connection\_manager\_broadcast(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ data,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00144\ \textcolor{keywordtype}{int}\ connection\_manager\_connect\_to\_server(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ ip,\ uint16\_t\ port);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00151\ \textcolor{keywordtype}{void}\ connection\_manager\_update(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager);}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00157\ \textcolor{keywordtype}{void}\ connection\_manager\_destroy(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager);}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00165\ \mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}*\ connection\_manager\_get\_listen\_socket(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager,\ socket\_type\_t\ type);}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ uint16\_t\ connection\_manager\_get\_udp\_local\_port(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager);}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00175\ \textcolor{keywordtype}{int}\ connection\_manager\_set\_peer\_udp\_remote\_port\_by\_id(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ peer\_id,\ uint16\_t\ remote\_udp\_port);}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00184\ \mbox{\hyperlink{structpeer__t}{peer\_t}}*\ find\_peer\_by\_addr(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ sockaddr\_in*\ addr,\ socket\_type\_t\ socket\_type);}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00195\ \mbox{\hyperlink{structpeer__t}{peer\_t}}*\ connection\_manager\_get\_peer(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ peer\_id);}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00207\ \textcolor{keywordtype}{void}\ connection\_manager\_set\_peer\_interest(\mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ connection\_manager,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ peer\_id,\ \mbox{\hyperlink{networked__entity_8h_a3c1e1bed74f6ddd84df064e27fa95f24}{interest\_mask\_t}}\ mask);}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00210\ \}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

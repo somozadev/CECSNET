@@ -1,0 +1,72 @@
+\doxysection{network\+\_\+architecture.\+h}
+\hypertarget{network__architecture_8h_source}{}\label{network__architecture_8h_source}\index{include/network\_architecture.h@{include/network\_architecture.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}connection\_manager.h"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ecs.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00007\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ Forward\ declarations}}
+\DoxyCodeLine{00010\ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structpeer__t}{peer\_t}}\ \mbox{\hyperlink{structpeer__t}{peer\_t}};}
+\DoxyCodeLine{00011\ \textcolor{keyword}{typedef}\ void\ (*on\_receive\_func\_t)(\textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }sockaddr\_in\ *sender\_addr,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ ARCH\_CLIENT\_SERVER,\ \ \ \ \ }
+\DoxyCodeLine{00018\ \ \ \ \ ARCH\_P2P,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00019\ \}\ network\_architecture\_type\_t;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ \ }\{}
+\DoxyCodeLine{00025\ \ \ \ \ network\_architecture\_type\_t\ \mbox{\hyperlink{structnetwork__architecture__config__t_a5c960c529995c7241a28b06eefd8e586}{type}};\ \ \ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structnetwork__architecture__config__t_a5b9b090f1aa7b02e7d77927537ed0153}{ip\_address}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00027\ \ \ \ \ uint16\_t\ \mbox{\hyperlink{structnetwork__architecture__config__t_a11e706141450a39e6bea250dfbd219f4}{port}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structnetwork__architecture__config__t_aa663aab2f9f4e14206e428a1d1b67f57}{is\_server}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00029\ \ \ \ \ uint16\_t\ \mbox{\hyperlink{structnetwork__architecture__config__t_a04bfcd4dfa09ac3048635f47246e97bd}{tcp\_port}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00030\ \ \ \ \ uint16\_t\ \mbox{\hyperlink{structnetwork__architecture__config__t_a3b682fcd652792bcc322d18b3149afde}{udp\_port}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structnetwork__architecture__config__t_ae8b81fcf6beb8c47e475329b571f0183}{ecs\_sync\_hz}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ Unified\ callbacks}}
+\DoxyCodeLine{00035\ \ \ \ \ void\ (*on\_peer\_connected)(\textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c}{user\_data}},\ peer\_t*\ peer);}
+\DoxyCodeLine{00036\ \ \ \ \ void\ (*on\_peer\_disconnected)(\textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c}{user\_data}},\ peer\_t*\ peer);}
+\DoxyCodeLine{00037\ \ \ \ \ void\ (*on\_packet\_received)(\textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c}{user\_data}},\ peer\_t*\ peer,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ data,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00038\ \ \ \ \ void\ (*on\_client\_input)(\textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c}{user\_data}},\ peer\_t*\ from,\ entity\_t\ entity\_id,\ uint8\_t\ cmd,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ extra,\ uint16\_t\ extra\_len);}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c}{user\_data}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00040\ \}\ \mbox{\hyperlink{structnetwork__architecture__config__t}{network\_architecture\_config\_t}};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}}\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ network\_architecture\_type\_t\ type;}
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{structnetwork__architecture__config__t}{network\_architecture\_config\_t}}\ config;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ *impl;\ \textcolor{comment}{//\ A\ pointer\ to\ the\ specific\ network\ implementation\ (e.g.,\ network\_cs\_t).}}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs;\ \textcolor{comment}{//\ A\ pointer\ to\ the\ ECS\ instance.}}
+\DoxyCodeLine{00052\ \}\ \mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00060\ ECSNET\_API\ \textcolor{keywordtype}{void}\ network\_architecture\_init(\mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}}**\ architecture,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structnetwork__architecture__config__t}{network\_architecture\_config\_t}}*\ config,\ \mbox{\hyperlink{structecs__t}{ecs\_t}}*\ ecs);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00067\ ECSNET\_API\ \textcolor{keywordtype}{void}\ network\_architecture\_update(\mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}}*\ architecture,\ \textcolor{keywordtype}{float}\ dt);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00073\ ECSNET\_API\ \textcolor{keywordtype}{void}\ network\_architecture\_destroy(\mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}}*\ architecture);}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00082\ ECSNET\_API\ \textcolor{keywordtype}{bool}\ network\_architecture\_connect\_to\_server(\mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}}*\ architecture,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ ip\_address,\ uint16\_t\ port);}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00092\ ECSNET\_API\ \textcolor{keywordtype}{bool}\ network\_architecture\_send\_to\_peer(\mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}}*\ architecture,\ uint32\_t\ peer\_id,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ data,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00103\ ECSNET\_API\ \textcolor{keywordtype}{bool}\ network\_architecture\_send\_entity\_update(\mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}}*\ architecture,\ uint32\_t\ peer\_id,\ entity\_t\ entity\_id,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ component\_data,\ \textcolor{keywordtype}{int}\ data\_len);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00112\ ECSNET\_API\ \textcolor{keywordtype}{bool}\ network\_architecture\_broadcast(\mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}}*\ architecture,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ data,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00119\ ECSNET\_API\ \textcolor{keywordtype}{int}\ network\_architecture\_get\_peer\_count(\mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}}*\ architecture);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00127\ ECSNET\_API\ \mbox{\hyperlink{structpeer__t}{peer\_t}}*\ network\_architecture\_get\_peer(\mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}}*\ architecture,\ uint32\_t\ peer\_id);}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00134\ ECSNET\_API\ \mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}*\ network\_architecture\_get\_connection\_manager(\mbox{\hyperlink{structnetwork__architecture__t}{network\_architecture\_t}}*\ architecture);}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00137\ \}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00139\ }
+
+\end{DoxyCode}

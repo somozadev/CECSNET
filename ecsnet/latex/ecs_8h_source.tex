@@ -1,0 +1,80 @@
+\doxysection{ecs.\+h}
+\hypertarget{ecs_8h_source}{}\label{ecs_8h_source}\index{include/ecs.h@{include/ecs.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ ECS\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ ECS\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}ecs\_types.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}config.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}ecs\_builtin.h"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#endif}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00019\ \ \ \ \ component\_t\ component\_id;}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data;}
+\DoxyCodeLine{00021\ \}\ \mbox{\hyperlink{structdirty__component__t}{dirty\_component\_t}};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00026\ ECSNET\_API\ \mbox{\hyperlink{structecs__t}{ecs\_t}}*\ ecs\_create();}
+\DoxyCodeLine{00031\ ECSNET\_API\ \textcolor{keywordtype}{void}\ ecs\_destroy(\mbox{\hyperlink{structecs__t}{ecs\_t}}*\ ecs);}
+\DoxyCodeLine{00036\ ECSNET\_API\ \textcolor{keywordtype}{void}\ ecs\_init(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00043\ ECSNET\_API\ entity\_t\ ecs\_create\_entity(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs);}
+\DoxyCodeLine{00050\ ECSNET\_API\ entity\_t\ ecs\_try\_create\_entity\_by\_id(\mbox{\hyperlink{structecs__t}{ecs\_t}}*\ ecs,\ entity\_t\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00057\ ECSNET\_API\ \textcolor{keywordtype}{void}\ ecs\_destroy\_entity(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ entity\_t\ entity);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00068\ ECSNET\_API\ \textcolor{keywordtype}{bool}\ ecs\_serialize\_entity(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ entity\_t\ entity,\ uint8\_t\ *out\_buffer,\ \textcolor{keywordtype}{size\_t}\ *out\_size,\ \textcolor{keywordtype}{size\_t}\ max\_out\_size);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00076\ ECSNET\_API\ entity\_t\ ecs\_deserialize\_entity(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ \textcolor{keyword}{const}\ uint8\_t\ *in\_buffer);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00086\ ECSNET\_API\ \textcolor{keywordtype}{bool}\ ecs\_add\_component(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ entity\_t\ entity,\ component\_t\ component,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00095\ ECSNET\_API\ \textcolor{keywordtype}{void}\ *ecs\_get\_component(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ entity\_t\ entity,\ component\_t\ component);}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00103\ ECSNET\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *ecs\_get\_component\_name(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ component\_t\ component);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00112\ ECSNET\_API\ \textcolor{keywordtype}{bool}\ ecs\_has\_component(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ entity\_t\ entity,\ component\_t\ component);}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00121\ ECSNET\_API\ \ \textcolor{keywordtype}{bool}\ ecs\_is\_component\_dirty(\mbox{\hyperlink{structecs__t}{ecs\_t}}*\ ecs,\ entity\_t\ entity,\ component\_t\ component);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00130\ ECSNET\_API\ \textcolor{keywordtype}{bool}\ ecs\_remove\_component(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ entity\_t\ entity,\ component\_t\ component);}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00139\ ECSNET\_API\ \textcolor{keywordtype}{void}\ ecs\_mark\_component\_dirty(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ entity\_t\ entity,\ component\_t\ component);}
+\DoxyCodeLine{00145\ \textcolor{keywordtype}{void}\ ecs\_set\_dirty\_hook(\textcolor{keywordtype}{void}\ (*hook)(entity\_t));}
+\DoxyCodeLine{00153\ ECSNET\_API\ \textcolor{keywordtype}{int}\ ecs\_get\_dirty\_components(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ entity\_t\ entity,\ \mbox{\hyperlink{structdirty__component__t}{dirty\_component\_t}}\ *out\_dirty\_components);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00161\ ECSNET\_API\ \textcolor{keywordtype}{void}\ ecs\_clear\_component\_dirty(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ entity\_t\ entity,\ component\_t\ component);}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00169\ ECSNET\_API\ component\_t\ ecs\_register\_component(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ \mbox{\hyperlink{structcomponent__descriptor__t}{component\_descriptor\_t}}\ component\_descriptor);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00176\ ECSNET\_API\ \textcolor{keywordtype}{void}\ ecs\_register\_system(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ system\_func\_t\ func);}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00183\ ECSNET\_API\ \textcolor{keywordtype}{void}\ ecs\_update(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ \textcolor{keywordtype}{float}\ dt);}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \textcolor{comment}{//\ Default\ components.}}
+\DoxyCodeLine{00187\ ECSNET\_API\ \textcolor{keyword}{extern}\ component\_t\ COMPONENT\_POSITION;}
+\DoxyCodeLine{00188\ ECSNET\_API\ \textcolor{keyword}{extern}\ component\_t\ COMPONENT\_ROTATION;}
+\DoxyCodeLine{00189\ ECSNET\_API\ \textcolor{keyword}{extern}\ component\_t\ COMPONENT\_TRANSFORM;}
+\DoxyCodeLine{00190\ ECSNET\_API\ \textcolor{keyword}{extern}\ component\_t\ COMPONENT\_VELOCITY;}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00197\ ECSNET\_API\ \textcolor{keywordtype}{void}\ ecs\_register\_builtin\_systems(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs);}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00203\ ECSNET\_API\ \textcolor{keywordtype}{void}\ ecs\_register\_builtin\_components(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs);}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00208\ \}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

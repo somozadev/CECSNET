@@ -1,0 +1,99 @@
+\doxysection{peer\+\_\+t Struct Reference}
+\hypertarget{structpeer__t}{}\label{structpeer__t}\index{peer\_t@{peer\_t}}
+
+
+Represents a connected network peer.  
+
+
+
+
+{\ttfamily \#include $<$connection\+\_\+manager.\+h$>$}
+
+
+
+Collaboration diagram for peer\+\_\+t\+:
+% FIG 0
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+char \mbox{\hyperlink{structpeer__t_af392f206083846c4a0ab9a31b7a7cc94}{id}} \mbox{[}64\mbox{]}
+\item 
+struct sockaddr\+\_\+in \mbox{\hyperlink{structpeer__t_a4ad782187490b4192186ee3e0a487b85}{addr\+\_\+tcp}}
+\item 
+struct sockaddr\+\_\+in \mbox{\hyperlink{structpeer__t_a92131b6041cdcd160411b23c8c851930}{addr\+\_\+udp}}
+\item 
+\mbox{\hyperlink{structnet__socket__t}{net\+\_\+socket\+\_\+t}} \mbox{\hyperlink{structpeer__t_a55943a76ea4e47bfdc1ce4d2220d600d}{net\+\_\+sockets}} \mbox{[}PROTOCOL\+\_\+\+COUNT\mbox{]}
+\item 
+bool \mbox{\hyperlink{structpeer__t_aa3fd6ba9986a83d5c936a7500fe630b4}{is\+\_\+connected}}
+\item 
+bool \mbox{\hyperlink{structpeer__t_a9e9419e4d437230d27ce689a6be738b6}{udp\+\_\+ready}}
+\item 
+\mbox{\hyperlink{networked__entity_8h_a3c1e1bed74f6ddd84df064e27fa95f24}{interest\+\_\+mask\+\_\+t}} \mbox{\hyperlink{structpeer__t_a29b875ac7ba1b777959adc11be090ef9}{interest\+\_\+mask}}
+\begin{DoxyCompactList}\small\item\em Bitmask of interest groups for this peer. \end{DoxyCompactList}\item 
+\Hypertarget{structpeer__t_adc05c558231ff31ead0db50170c29842}\label{structpeer__t_adc05c558231ff31ead0db50170c29842} 
+uint8\+\_\+t {\bfseries tcp\+\_\+rx\+\_\+buf} \mbox{[}MAX\+\_\+\+PACKET\+\_\+\+SIZE \texorpdfstring{$\ast$}{*}2\mbox{]}
+\item 
+\Hypertarget{structpeer__t_a2a39182fa45a6c3e4e87cc6a1591bfc7}\label{structpeer__t_a2a39182fa45a6c3e4e87cc6a1591bfc7} 
+int {\bfseries tcp\+\_\+rx\+\_\+len}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a connected network peer. 
+
+This struct contains all the necessary information to identify and communicate with a single remote peer, including its addresses and sockets. 
+
+\label{doc-variable-members}
+\Hypertarget{structpeer__t_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structpeer__t_a4ad782187490b4192186ee3e0a487b85}\index{peer\_t@{peer\_t}!addr\_tcp@{addr\_tcp}}
+\index{addr\_tcp@{addr\_tcp}!peer\_t@{peer\_t}}
+\doxysubsubsection{\texorpdfstring{addr\_tcp}{addr\_tcp}}
+{\footnotesize\ttfamily \label{structpeer__t_a4ad782187490b4192186ee3e0a487b85} 
+struct sockaddr\+\_\+in peer\+\_\+t\+::addr\+\_\+tcp}
+
+The TCP address of the peer. \Hypertarget{structpeer__t_a92131b6041cdcd160411b23c8c851930}\index{peer\_t@{peer\_t}!addr\_udp@{addr\_udp}}
+\index{addr\_udp@{addr\_udp}!peer\_t@{peer\_t}}
+\doxysubsubsection{\texorpdfstring{addr\_udp}{addr\_udp}}
+{\footnotesize\ttfamily \label{structpeer__t_a92131b6041cdcd160411b23c8c851930} 
+struct sockaddr\+\_\+in peer\+\_\+t\+::addr\+\_\+udp}
+
+The UDP address of the peer. \Hypertarget{structpeer__t_af392f206083846c4a0ab9a31b7a7cc94}\index{peer\_t@{peer\_t}!id@{id}}
+\index{id@{id}!peer\_t@{peer\_t}}
+\doxysubsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily \label{structpeer__t_af392f206083846c4a0ab9a31b7a7cc94} 
+char peer\+\_\+t\+::id\mbox{[}64\mbox{]}}
+
+The unique identifier for the peer (e.\+g., "{}\+IP\+:\+PORT"{}). \Hypertarget{structpeer__t_a29b875ac7ba1b777959adc11be090ef9}\index{peer\_t@{peer\_t}!interest\_mask@{interest\_mask}}
+\index{interest\_mask@{interest\_mask}!peer\_t@{peer\_t}}
+\doxysubsubsection{\texorpdfstring{interest\_mask}{interest\_mask}}
+{\footnotesize\ttfamily \label{structpeer__t_a29b875ac7ba1b777959adc11be090ef9} 
+\mbox{\hyperlink{networked__entity_8h_a3c1e1bed74f6ddd84df064e27fa95f24}{interest\+\_\+mask\+\_\+t}} peer\+\_\+t\+::interest\+\_\+mask}
+
+
+
+Bitmask of interest groups for this peer. 
+
+Each bit corresponds to a group; clients will only receive updates for entities whose Networked\+Entity.\+interest\+\_\+groups overlap with this mask. Initialized to all bits set (0x\+FFFFFFFF) for maximum interest. \Hypertarget{structpeer__t_aa3fd6ba9986a83d5c936a7500fe630b4}\index{peer\_t@{peer\_t}!is\_connected@{is\_connected}}
+\index{is\_connected@{is\_connected}!peer\_t@{peer\_t}}
+\doxysubsubsection{\texorpdfstring{is\_connected}{is\_connected}}
+{\footnotesize\ttfamily \label{structpeer__t_aa3fd6ba9986a83d5c936a7500fe630b4} 
+bool peer\+\_\+t\+::is\+\_\+connected}
+
+A flag indicating if the peer connection is currently active. \Hypertarget{structpeer__t_a55943a76ea4e47bfdc1ce4d2220d600d}\index{peer\_t@{peer\_t}!net\_sockets@{net\_sockets}}
+\index{net\_sockets@{net\_sockets}!peer\_t@{peer\_t}}
+\doxysubsubsection{\texorpdfstring{net\_sockets}{net\_sockets}}
+{\footnotesize\ttfamily \label{structpeer__t_a55943a76ea4e47bfdc1ce4d2220d600d} 
+\mbox{\hyperlink{structnet__socket__t}{net\+\_\+socket\+\_\+t}} peer\+\_\+t\+::net\+\_\+sockets\mbox{[}PROTOCOL\+\_\+\+COUNT\mbox{]}}
+
+Sockets used for communication with this peer. \Hypertarget{structpeer__t_a9e9419e4d437230d27ce689a6be738b6}\index{peer\_t@{peer\_t}!udp\_ready@{udp\_ready}}
+\index{udp\_ready@{udp\_ready}!peer\_t@{peer\_t}}
+\doxysubsubsection{\texorpdfstring{udp\_ready}{udp\_ready}}
+{\footnotesize\ttfamily \label{structpeer__t_a9e9419e4d437230d27ce689a6be738b6} 
+bool peer\+\_\+t\+::udp\+\_\+ready}
+
+A flag indicating if the peer udp connection is ready. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/connection\+\_\+manager.\+h\end{DoxyCompactItemize}

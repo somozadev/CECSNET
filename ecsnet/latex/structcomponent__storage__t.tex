@@ -1,0 +1,78 @@
+\doxysection{component\+\_\+storage\+\_\+t Struct Reference}
+\hypertarget{structcomponent__storage__t}{}\label{structcomponent__storage__t}\index{component\_storage\_t@{component\_storage\_t}}
+
+
+Storage container for a single component type. Each registered component type gets its own storage structure. It contains\+:  
+
+
+
+
+{\ttfamily \#include $<$ecs\+\_\+internal.\+h$>$}
+
+
+
+Collaboration diagram for component\+\_\+storage\+\_\+t\+:
+% FIG 0
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structcomponent__descriptor__t}{component\+\_\+descriptor\+\_\+t}} \mbox{\hyperlink{structcomponent__storage__t_ad60e73ea2b06f2e975d8991b2dab6d87}{descriptor}}
+\item 
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structcomponent__storage__t_ac3c51ca30205ff42caeecddb615531d9}{data}}
+\item 
+bool \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structcomponent__storage__t_ad251f12b02eb00117979a0788546e3e7}{used}}
+\item 
+bool \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structcomponent__storage__t_aa51cade89cf627eb464af2c8217142cc}{is\+\_\+dirty}}
+\item 
+size\+\_\+t \mbox{\hyperlink{structcomponent__storage__t_af027cabd637a903ff1259666766358ae}{capacity}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Storage container for a single component type. Each registered component type gets its own storage structure. It contains\+: 
+
+
+\begin{DoxyItemize}
+\item The descriptor describing the component type (size, name, serialization functions).
+\item A contiguous block of memory for all entities\textquotesingle{} data of this component type.
+\item Arrays to track which entities have this component ({\ttfamily used}) and which ones have been modified ({\ttfamily is\+\_\+dirty}). 
+\end{DoxyItemize}
+
+\label{doc-variable-members}
+\Hypertarget{structcomponent__storage__t_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structcomponent__storage__t_af027cabd637a903ff1259666766358ae}\index{component\_storage\_t@{component\_storage\_t}!capacity@{capacity}}
+\index{capacity@{capacity}!component\_storage\_t@{component\_storage\_t}}
+\doxysubsubsection{\texorpdfstring{capacity}{capacity}}
+{\footnotesize\ttfamily \label{structcomponent__storage__t_af027cabd637a903ff1259666766358ae} 
+size\+\_\+t component\+\_\+storage\+\_\+t\+::capacity}
+
+Current capacity for entity slots (matches ecs-\/\texorpdfstring{$>$}{>}entity\+\_\+capacity). \Hypertarget{structcomponent__storage__t_ac3c51ca30205ff42caeecddb615531d9}\index{component\_storage\_t@{component\_storage\_t}!data@{data}}
+\index{data@{data}!component\_storage\_t@{component\_storage\_t}}
+\doxysubsubsection{\texorpdfstring{data}{data}}
+{\footnotesize\ttfamily \label{structcomponent__storage__t_ac3c51ca30205ff42caeecddb615531d9} 
+void\texorpdfstring{$\ast$}{*} component\+\_\+storage\+\_\+t\+::data}
+
+Contiguous memory storing component data for all entities. \Hypertarget{structcomponent__storage__t_ad60e73ea2b06f2e975d8991b2dab6d87}\index{component\_storage\_t@{component\_storage\_t}!descriptor@{descriptor}}
+\index{descriptor@{descriptor}!component\_storage\_t@{component\_storage\_t}}
+\doxysubsubsection{\texorpdfstring{descriptor}{descriptor}}
+{\footnotesize\ttfamily \label{structcomponent__storage__t_ad60e73ea2b06f2e975d8991b2dab6d87} 
+\mbox{\hyperlink{structcomponent__descriptor__t}{component\+\_\+descriptor\+\_\+t}} component\+\_\+storage\+\_\+t\+::descriptor}
+
+Metadata describing the component type. \Hypertarget{structcomponent__storage__t_aa51cade89cf627eb464af2c8217142cc}\index{component\_storage\_t@{component\_storage\_t}!is\_dirty@{is\_dirty}}
+\index{is\_dirty@{is\_dirty}!component\_storage\_t@{component\_storage\_t}}
+\doxysubsubsection{\texorpdfstring{is\_dirty}{is\_dirty}}
+{\footnotesize\ttfamily \label{structcomponent__storage__t_aa51cade89cf627eb464af2c8217142cc} 
+bool\texorpdfstring{$\ast$}{*} component\+\_\+storage\+\_\+t\+::is\+\_\+dirty}
+
+Dynamic array indicating which components have been modified. \Hypertarget{structcomponent__storage__t_ad251f12b02eb00117979a0788546e3e7}\index{component\_storage\_t@{component\_storage\_t}!used@{used}}
+\index{used@{used}!component\_storage\_t@{component\_storage\_t}}
+\doxysubsubsection{\texorpdfstring{used}{used}}
+{\footnotesize\ttfamily \label{structcomponent__storage__t_ad251f12b02eb00117979a0788546e3e7} 
+bool\texorpdfstring{$\ast$}{*} component\+\_\+storage\+\_\+t\+::used}
+
+Dynamic array indicating which entities have this component. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ecs\+\_\+internal.\+h\end{DoxyCompactItemize}

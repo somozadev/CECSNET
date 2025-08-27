@@ -1,0 +1,37 @@
+\doxysection{include/networked\+\_\+entity.h File Reference}
+\hypertarget{networked__entity_8h}{}\label{networked__entity_8h}\index{include/networked\_entity.h@{include/networked\_entity.h}}
+
+
+Defines the Networked\+Entity component used for network replication.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include "{}ecs.\+h"{}}\newline
+Include dependency graph for networked\+\_\+entity.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structnetworked__entity__t}{networked\+\_\+entity\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Component representing network identity and interest groups. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{networked__entity_8h_a3c1e1bed74f6ddd84df064e27fa95f24}\label{networked__entity_8h_a3c1e1bed74f6ddd84df064e27fa95f24} 
+typedef uint32\+\_\+t {\bfseries interest\+\_\+mask\+\_\+t}
+\begin{DoxyCompactList}\small\item\em Bitmask type for representing interest groups (up to 32 groups). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{networked__entity_8h_a2a64632e9c4eb198e431a2d21024e7d2}\label{networked__entity_8h_a2a64632e9c4eb198e431a2d21024e7d2} 
+ECSNET\+\_\+\+API component\+\_\+t {\bfseries COMPONENT\+\_\+\+NETWORKED\+\_\+\+ENTITY}
+\begin{DoxyCompactList}\small\item\em Global component ID for Networked\+Entity. Defined in {\ttfamily ecs\+\_\+builtin.\+c}. Used by the ECS to identify this component type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Defines the Networked\+Entity component used for network replication. 
+
+Each entity that should be replicated across the network includes this component. It stores a globally unique {\ttfamily network\+\_\+id} assigned by the server and a bitmask of {\ttfamily interest\+\_\+groups} which determines which clients should receive updates for this entity. 

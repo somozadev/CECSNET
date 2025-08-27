@@ -1,0 +1,103 @@
+\doxysection{network\+\_\+architecture\+\_\+config\+\_\+t Struct Reference}
+\hypertarget{structnetwork__architecture__config__t}{}\label{structnetwork__architecture__config__t}\index{network\_architecture\_config\_t@{network\_architecture\_config\_t}}
+
+
+Structure for configuring the network architecture.  
+
+
+
+
+{\ttfamily \#include $<$network\+\_\+architecture.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+network\+\_\+architecture\+\_\+type\+\_\+t \mbox{\hyperlink{structnetwork__architecture__config__t_a5c960c529995c7241a28b06eefd8e586}{type}}
+\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structnetwork__architecture__config__t_a5b9b090f1aa7b02e7d77927537ed0153}{ip\+\_\+address}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structnetwork__architecture__config__t_a11e706141450a39e6bea250dfbd219f4}{port}}
+\item 
+bool \mbox{\hyperlink{structnetwork__architecture__config__t_aa663aab2f9f4e14206e428a1d1b67f57}{is\+\_\+server}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structnetwork__architecture__config__t_a04bfcd4dfa09ac3048635f47246e97bd}{tcp\+\_\+port}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structnetwork__architecture__config__t_a3b682fcd652792bcc322d18b3149afde}{udp\+\_\+port}}
+\item 
+float \mbox{\hyperlink{structnetwork__architecture__config__t_ae8b81fcf6beb8c47e475329b571f0183}{ecs\+\_\+sync\+\_\+hz}}
+\item 
+\Hypertarget{structnetwork__architecture__config__t_aa84b2a632432e43e4759225e5e979456}\label{structnetwork__architecture__config__t_aa84b2a632432e43e4759225e5e979456} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries on\+\_\+peer\+\_\+connected} )(void \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c}{user\+\_\+data}}, \mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} \texorpdfstring{$\ast$}{*}peer)
+\item 
+\Hypertarget{structnetwork__architecture__config__t_a258dc5b208dca7a23e131995d75c1fe0}\label{structnetwork__architecture__config__t_a258dc5b208dca7a23e131995d75c1fe0} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries on\+\_\+peer\+\_\+disconnected} )(void \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c}{user\+\_\+data}}, \mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} \texorpdfstring{$\ast$}{*}peer)
+\item 
+\Hypertarget{structnetwork__architecture__config__t_a862c9880fe2fd0f9bf4ae1999aeffe30}\label{structnetwork__architecture__config__t_a862c9880fe2fd0f9bf4ae1999aeffe30} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries on\+\_\+packet\+\_\+received} )(void \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c}{user\+\_\+data}}, \mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} \texorpdfstring{$\ast$}{*}peer, const void \texorpdfstring{$\ast$}{*}data, int len)
+\item 
+\Hypertarget{structnetwork__architecture__config__t_a8d9e9a5098badcc70d8987cfc42a35bc}\label{structnetwork__architecture__config__t_a8d9e9a5098badcc70d8987cfc42a35bc} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries on\+\_\+client\+\_\+input} )(void \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c}{user\+\_\+data}}, \mbox{\hyperlink{structpeer__t}{peer\+\_\+t}} \texorpdfstring{$\ast$}{*}from, entity\+\_\+t entity\+\_\+id, uint8\+\_\+t cmd, const void \texorpdfstring{$\ast$}{*}extra, uint16\+\_\+t extra\+\_\+len)
+\item 
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c}{user\+\_\+data}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Structure for configuring the network architecture. 
+
+\label{doc-variable-members}
+\Hypertarget{structnetwork__architecture__config__t_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structnetwork__architecture__config__t_ae8b81fcf6beb8c47e475329b571f0183}\index{network\_architecture\_config\_t@{network\_architecture\_config\_t}!ecs\_sync\_hz@{ecs\_sync\_hz}}
+\index{ecs\_sync\_hz@{ecs\_sync\_hz}!network\_architecture\_config\_t@{network\_architecture\_config\_t}}
+\doxysubsubsection{\texorpdfstring{ecs\_sync\_hz}{ecs\_sync\_hz}}
+{\footnotesize\ttfamily \label{structnetwork__architecture__config__t_ae8b81fcf6beb8c47e475329b571f0183} 
+float network\+\_\+architecture\+\_\+config\+\_\+t\+::ecs\+\_\+sync\+\_\+hz}
+
+The ECS synchronization frequency in Hz. \Hypertarget{structnetwork__architecture__config__t_a5b9b090f1aa7b02e7d77927537ed0153}\index{network\_architecture\_config\_t@{network\_architecture\_config\_t}!ip\_address@{ip\_address}}
+\index{ip\_address@{ip\_address}!network\_architecture\_config\_t@{network\_architecture\_config\_t}}
+\doxysubsubsection{\texorpdfstring{ip\_address}{ip\_address}}
+{\footnotesize\ttfamily \label{structnetwork__architecture__config__t_a5b9b090f1aa7b02e7d77927537ed0153} 
+const char\texorpdfstring{$\ast$}{*} network\+\_\+architecture\+\_\+config\+\_\+t\+::ip\+\_\+address}
+
+The IP address to bind to or connect to. \Hypertarget{structnetwork__architecture__config__t_aa663aab2f9f4e14206e428a1d1b67f57}\index{network\_architecture\_config\_t@{network\_architecture\_config\_t}!is\_server@{is\_server}}
+\index{is\_server@{is\_server}!network\_architecture\_config\_t@{network\_architecture\_config\_t}}
+\doxysubsubsection{\texorpdfstring{is\_server}{is\_server}}
+{\footnotesize\ttfamily \label{structnetwork__architecture__config__t_aa663aab2f9f4e14206e428a1d1b67f57} 
+bool network\+\_\+architecture\+\_\+config\+\_\+t\+::is\+\_\+server}
+
+A flag indicating if the instance is a server. \Hypertarget{structnetwork__architecture__config__t_a11e706141450a39e6bea250dfbd219f4}\index{network\_architecture\_config\_t@{network\_architecture\_config\_t}!port@{port}}
+\index{port@{port}!network\_architecture\_config\_t@{network\_architecture\_config\_t}}
+\doxysubsubsection{\texorpdfstring{port}{port}}
+{\footnotesize\ttfamily \label{structnetwork__architecture__config__t_a11e706141450a39e6bea250dfbd219f4} 
+uint16\+\_\+t network\+\_\+architecture\+\_\+config\+\_\+t\+::port}
+
+The main port for communication. \Hypertarget{structnetwork__architecture__config__t_a04bfcd4dfa09ac3048635f47246e97bd}\index{network\_architecture\_config\_t@{network\_architecture\_config\_t}!tcp\_port@{tcp\_port}}
+\index{tcp\_port@{tcp\_port}!network\_architecture\_config\_t@{network\_architecture\_config\_t}}
+\doxysubsubsection{\texorpdfstring{tcp\_port}{tcp\_port}}
+{\footnotesize\ttfamily \label{structnetwork__architecture__config__t_a04bfcd4dfa09ac3048635f47246e97bd} 
+uint16\+\_\+t network\+\_\+architecture\+\_\+config\+\_\+t\+::tcp\+\_\+port}
+
+The TCP port to use. \Hypertarget{structnetwork__architecture__config__t_a5c960c529995c7241a28b06eefd8e586}\index{network\_architecture\_config\_t@{network\_architecture\_config\_t}!type@{type}}
+\index{type@{type}!network\_architecture\_config\_t@{network\_architecture\_config\_t}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{structnetwork__architecture__config__t_a5c960c529995c7241a28b06eefd8e586} 
+network\+\_\+architecture\+\_\+type\+\_\+t network\+\_\+architecture\+\_\+config\+\_\+t\+::type}
+
+The type of network architecture to use. \Hypertarget{structnetwork__architecture__config__t_a3b682fcd652792bcc322d18b3149afde}\index{network\_architecture\_config\_t@{network\_architecture\_config\_t}!udp\_port@{udp\_port}}
+\index{udp\_port@{udp\_port}!network\_architecture\_config\_t@{network\_architecture\_config\_t}}
+\doxysubsubsection{\texorpdfstring{udp\_port}{udp\_port}}
+{\footnotesize\ttfamily \label{structnetwork__architecture__config__t_a3b682fcd652792bcc322d18b3149afde} 
+uint16\+\_\+t network\+\_\+architecture\+\_\+config\+\_\+t\+::udp\+\_\+port}
+
+The UDP port to use. \Hypertarget{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c}\index{network\_architecture\_config\_t@{network\_architecture\_config\_t}!user\_data@{user\_data}}
+\index{user\_data@{user\_data}!network\_architecture\_config\_t@{network\_architecture\_config\_t}}
+\doxysubsubsection{\texorpdfstring{user\_data}{user\_data}}
+{\footnotesize\ttfamily \label{structnetwork__architecture__config__t_a6e3cab03a5a91cac860f6d3e298ac14c} 
+void\texorpdfstring{$\ast$}{*} network\+\_\+architecture\+\_\+config\+\_\+t\+::user\+\_\+data}
+
+User data passed to callbacks 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/network\+\_\+architecture.\+h\end{DoxyCompactItemize}

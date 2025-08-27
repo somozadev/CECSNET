@@ -1,0 +1,113 @@
+\doxysection{ecs\+\_\+t Struct Reference}
+\hypertarget{structecs__t}{}\label{structecs__t}\index{ecs\_t@{ecs\_t}}
+
+
+Internal structure representing the ECS world state. This holds\+:  
+
+
+
+
+{\ttfamily \#include $<$ecs\+\_\+internal.\+h$>$}
+
+
+
+Collaboration diagram for ecs\+\_\+t\+:
+% FIG 0
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structentity__meta__t}{entity\+\_\+meta\+\_\+t}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structecs__t_a2831990b809e143226138f13f1318835}{entities}}
+\item 
+component\+\_\+signature\+\_\+t \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structecs__t_a6ea050b1baefb4d805c3a465541e0205}{signatures}}
+\item 
+size\+\_\+t \mbox{\hyperlink{structecs__t_a8546e7a4d3214a78f56ddec890a15f9c}{entity\+\_\+capacity}}
+\item 
+\mbox{\hyperlink{structcomponent__storage__t}{component\+\_\+storage\+\_\+t}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structecs__t_a66c931ae7aee64af4917c92a6c7fca2e}{components}}
+\item 
+size\+\_\+t \mbox{\hyperlink{structecs__t_a8394f334914c41873bb405a9e3397a09}{component\+\_\+capacity}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structecs__t_a3950588ef2731c3eb4521da611a8e15d}{registered\+\_\+entities\+\_\+count}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structecs__t_a673a421e5e3c0a20e9b2c6c6a8670d3b}{registered\+\_\+component\+\_\+count}}
+\item 
+system\+\_\+func\+\_\+t \mbox{\hyperlink{structecs__t_a384a11e8906a2b0c6614da42b9ce600e}{systems}} \mbox{[}MAX\+\_\+\+SYSTEMS\mbox{]}
+\item 
+int \mbox{\hyperlink{structecs__t_aaea3f9ec4258e5865ba6c7ba41a85f81}{system\+\_\+count}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Internal structure representing the ECS world state. This holds\+: 
+
+
+\begin{DoxyItemize}
+\item All entity metadata.
+\item Component storage for every registered component type.
+\item A list of registered systems and the total count.
+\item The number of registered components.
+\end{DoxyItemize}
+
+This is the core ECS structure passed to all internal and public ECS functions. 
+
+\label{doc-variable-members}
+\Hypertarget{structecs__t_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structecs__t_a8394f334914c41873bb405a9e3397a09}\index{ecs\_t@{ecs\_t}!component\_capacity@{component\_capacity}}
+\index{component\_capacity@{component\_capacity}!ecs\_t@{ecs\_t}}
+\doxysubsubsection{\texorpdfstring{component\_capacity}{component\_capacity}}
+{\footnotesize\ttfamily \label{structecs__t_a8394f334914c41873bb405a9e3397a09} 
+size\+\_\+t ecs\+\_\+t\+::component\+\_\+capacity}
+
+Current capacity of the component array. \Hypertarget{structecs__t_a66c931ae7aee64af4917c92a6c7fca2e}\index{ecs\_t@{ecs\_t}!components@{components}}
+\index{components@{components}!ecs\_t@{ecs\_t}}
+\doxysubsubsection{\texorpdfstring{components}{components}}
+{\footnotesize\ttfamily \label{structecs__t_a66c931ae7aee64af4917c92a6c7fca2e} 
+\mbox{\hyperlink{structcomponent__storage__t}{component\+\_\+storage\+\_\+t}}\texorpdfstring{$\ast$}{*} ecs\+\_\+t\+::components}
+
+Dynamic array of registered component storages. \Hypertarget{structecs__t_a2831990b809e143226138f13f1318835}\index{ecs\_t@{ecs\_t}!entities@{entities}}
+\index{entities@{entities}!ecs\_t@{ecs\_t}}
+\doxysubsubsection{\texorpdfstring{entities}{entities}}
+{\footnotesize\ttfamily \label{structecs__t_a2831990b809e143226138f13f1318835} 
+\mbox{\hyperlink{structentity__meta__t}{entity\+\_\+meta\+\_\+t}}\texorpdfstring{$\ast$}{*} ecs\+\_\+t\+::entities}
+
+Dynamic array of entity metadata. \Hypertarget{structecs__t_a8546e7a4d3214a78f56ddec890a15f9c}\index{ecs\_t@{ecs\_t}!entity\_capacity@{entity\_capacity}}
+\index{entity\_capacity@{entity\_capacity}!ecs\_t@{ecs\_t}}
+\doxysubsubsection{\texorpdfstring{entity\_capacity}{entity\_capacity}}
+{\footnotesize\ttfamily \label{structecs__t_a8546e7a4d3214a78f56ddec890a15f9c} 
+size\+\_\+t ecs\+\_\+t\+::entity\+\_\+capacity}
+
+Current capacity of the entity arrays. \Hypertarget{structecs__t_a673a421e5e3c0a20e9b2c6c6a8670d3b}\index{ecs\_t@{ecs\_t}!registered\_component\_count@{registered\_component\_count}}
+\index{registered\_component\_count@{registered\_component\_count}!ecs\_t@{ecs\_t}}
+\doxysubsubsection{\texorpdfstring{registered\_component\_count}{registered\_component\_count}}
+{\footnotesize\ttfamily \label{structecs__t_a673a421e5e3c0a20e9b2c6c6a8670d3b} 
+uint32\+\_\+t ecs\+\_\+t\+::registered\+\_\+component\+\_\+count}
+
+Total number of registered component types. \Hypertarget{structecs__t_a3950588ef2731c3eb4521da611a8e15d}\index{ecs\_t@{ecs\_t}!registered\_entities\_count@{registered\_entities\_count}}
+\index{registered\_entities\_count@{registered\_entities\_count}!ecs\_t@{ecs\_t}}
+\doxysubsubsection{\texorpdfstring{registered\_entities\_count}{registered\_entities\_count}}
+{\footnotesize\ttfamily \label{structecs__t_a3950588ef2731c3eb4521da611a8e15d} 
+uint32\+\_\+t ecs\+\_\+t\+::registered\+\_\+entities\+\_\+count}
+
+Total number of registered entities. \Hypertarget{structecs__t_a6ea050b1baefb4d805c3a465541e0205}\index{ecs\_t@{ecs\_t}!signatures@{signatures}}
+\index{signatures@{signatures}!ecs\_t@{ecs\_t}}
+\doxysubsubsection{\texorpdfstring{signatures}{signatures}}
+{\footnotesize\ttfamily \label{structecs__t_a6ea050b1baefb4d805c3a465541e0205} 
+component\+\_\+signature\+\_\+t\texorpdfstring{$\ast$}{*} ecs\+\_\+t\+::signatures}
+
+Dynamic array of component signatures per entity. \Hypertarget{structecs__t_aaea3f9ec4258e5865ba6c7ba41a85f81}\index{ecs\_t@{ecs\_t}!system\_count@{system\_count}}
+\index{system\_count@{system\_count}!ecs\_t@{ecs\_t}}
+\doxysubsubsection{\texorpdfstring{system\_count}{system\_count}}
+{\footnotesize\ttfamily \label{structecs__t_aaea3f9ec4258e5865ba6c7ba41a85f81} 
+int ecs\+\_\+t\+::system\+\_\+count}
+
+Current number of registered systems. \Hypertarget{structecs__t_a384a11e8906a2b0c6614da42b9ce600e}\index{ecs\_t@{ecs\_t}!systems@{systems}}
+\index{systems@{systems}!ecs\_t@{ecs\_t}}
+\doxysubsubsection{\texorpdfstring{systems}{systems}}
+{\footnotesize\ttfamily \label{structecs__t_a384a11e8906a2b0c6614da42b9ce600e} 
+system\+\_\+func\+\_\+t ecs\+\_\+t\+::systems\mbox{[}MAX\+\_\+\+SYSTEMS\mbox{]}}
+
+Array of registered system function pointers. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ecs\+\_\+internal.\+h\end{DoxyCompactItemize}

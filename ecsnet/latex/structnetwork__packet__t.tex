@@ -1,0 +1,47 @@
+\doxysection{network\+\_\+packet\+\_\+t Struct Reference}
+\hypertarget{structnetwork__packet__t}{}\label{structnetwork__packet__t}\index{network\_packet\_t@{network\_packet\_t}}
+
+
+A full network packet structure. This struct combines the header and the data payload, providing a complete packet representation for sending and receiving.  
+
+
+
+
+{\ttfamily \#include $<$protocol\+\_\+handler.\+h$>$}
+
+
+
+Collaboration diagram for network\+\_\+packet\+\_\+t\+:
+% FIG 0
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structpacket__header__t}{packet\+\_\+header\+\_\+t}} \mbox{\hyperlink{structnetwork__packet__t_a0a299a283c9361970dd98ab69e9b49db}{header}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structnetwork__packet__t_ad8d4aa4f6b76a6151c36a0c00c9818bb}{data}} \mbox{[}MAX\+\_\+\+PACKET\+\_\+\+SIZE -\/ sizeof(\mbox{\hyperlink{structpacket__header__t}{packet\+\_\+header\+\_\+t}})\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A full network packet structure. This struct combines the header and the data payload, providing a complete packet representation for sending and receiving. 
+
+\label{doc-variable-members}
+\Hypertarget{structnetwork__packet__t_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structnetwork__packet__t_ad8d4aa4f6b76a6151c36a0c00c9818bb}\index{network\_packet\_t@{network\_packet\_t}!data@{data}}
+\index{data@{data}!network\_packet\_t@{network\_packet\_t}}
+\doxysubsubsection{\texorpdfstring{data}{data}}
+{\footnotesize\ttfamily \label{structnetwork__packet__t_ad8d4aa4f6b76a6151c36a0c00c9818bb} 
+uint8\+\_\+t network\+\_\+packet\+\_\+t\+::data\mbox{[}MAX\+\_\+\+PACKET\+\_\+\+SIZE -\/ sizeof(\mbox{\hyperlink{structpacket__header__t}{packet\+\_\+header\+\_\+t}})\mbox{]}}
+
+The packet payload. \Hypertarget{structnetwork__packet__t_a0a299a283c9361970dd98ab69e9b49db}\index{network\_packet\_t@{network\_packet\_t}!header@{header}}
+\index{header@{header}!network\_packet\_t@{network\_packet\_t}}
+\doxysubsubsection{\texorpdfstring{header}{header}}
+{\footnotesize\ttfamily \label{structnetwork__packet__t_a0a299a283c9361970dd98ab69e9b49db} 
+\mbox{\hyperlink{structpacket__header__t}{packet\+\_\+header\+\_\+t}} network\+\_\+packet\+\_\+t\+::header}
+
+The packet header. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/protocol\+\_\+handler.\+h\end{DoxyCompactItemize}

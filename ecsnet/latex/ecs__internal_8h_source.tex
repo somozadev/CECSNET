@@ -1,0 +1,45 @@
+\doxysection{ecs\+\_\+internal.\+h}
+\hypertarget{ecs__internal_8h_source}{}\label{ecs__internal_8h_source}\index{include/ecs\_internal.h@{include/ecs\_internal.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ ECS\_INTERNAL\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ ECS\_INTERNAL\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ecs\_types.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00006\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#endif}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00013\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structentity__meta__t_a2384deb20904d3c785b8eddcd1dc26b8}{in\_use}};\ }
+\DoxyCodeLine{00015\ \}\ \mbox{\hyperlink{structentity__meta__t}{entity\_meta\_t}};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcomponent__storage__t}{component\_storage\_t}}\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{structcomponent__descriptor__t}{component\_descriptor\_t}}\ \mbox{\hyperlink{structcomponent__storage__t_ad60e73ea2b06f2e975d8991b2dab6d87}{descriptor}};\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structcomponent__storage__t_ac3c51ca30205ff42caeecddb615531d9}{data}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{bool}\ *\mbox{\hyperlink{structcomponent__storage__t_ad251f12b02eb00117979a0788546e3e7}{used}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{bool}\ *\mbox{\hyperlink{structcomponent__storage__t_aa51cade89cf627eb464af2c8217142cc}{is\_dirty}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structcomponent__storage__t_af027cabd637a903ff1259666766358ae}{capacity}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00032\ \};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structecs__t}{ecs\_t}}\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \mbox{\hyperlink{structentity__meta__t}{entity\_meta\_t}}\ *\mbox{\hyperlink{structecs__t_a2831990b809e143226138f13f1318835}{entities}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00046\ \ \ \ \ component\_signature\_t\ *\mbox{\hyperlink{structecs__t_a6ea050b1baefb4d805c3a465541e0205}{signatures}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structecs__t_a8546e7a4d3214a78f56ddec890a15f9c}{entity\_capacity}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{structcomponent__storage__t}{component\_storage\_t}}\ *\mbox{\hyperlink{structecs__t_a66c931ae7aee64af4917c92a6c7fca2e}{components}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structecs__t_a8394f334914c41873bb405a9e3397a09}{component\_capacity}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00050\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{structecs__t_a3950588ef2731c3eb4521da611a8e15d}{registered\_entities\_count}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00051\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{structecs__t_a673a421e5e3c0a20e9b2c6c6a8670d3b}{registered\_component\_count}};\ \ \ \ \ \ }
+\DoxyCodeLine{00052\ \ \ \ \ system\_func\_t\ \mbox{\hyperlink{structecs__t_a384a11e8906a2b0c6614da42b9ce600e}{systems}}[MAX\_SYSTEMS];\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structecs__t_aaea3f9ec4258e5865ba6c7ba41a85f81}{system\_count}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00054\ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ecs\_run\_systems(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ \textcolor{keywordtype}{float}\ dt);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00067\ \}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

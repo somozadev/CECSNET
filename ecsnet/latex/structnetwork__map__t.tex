@@ -1,0 +1,35 @@
+\doxysection{network\+\_\+map\+\_\+t Struct Reference}
+\hypertarget{structnetwork__map__t}{}\label{structnetwork__map__t}\index{network\_map\_t@{network\_map\_t}}
+
+
+Dynamic mapping structure from network IDs to local entity IDs. This map grows dynamically as new network IDs are encountered. Clients rely on this to map persistent server-\/assigned IDs to their local ECS entities.  
+
+
+
+
+{\ttfamily \#include $<$network\+\_\+map.\+h$>$}
+
+
+
+Collaboration diagram for network\+\_\+map\+\_\+t\+:
+% FIG 0
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}\label{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78} 
+\mbox{\hyperlink{structnetwork__id__pair__t}{network\+\_\+id\+\_\+pair\+\_\+t}} \texorpdfstring{$\ast$}{*} {\bfseries pairs}
+\begin{DoxyCompactList}\small\item\em Array of ID pairs. \end{DoxyCompactList}\item 
+\Hypertarget{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}\label{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c} 
+size\+\_\+t {\bfseries count}
+\begin{DoxyCompactList}\small\item\em Array of ID pairs. \end{DoxyCompactList}\item 
+\Hypertarget{structnetwork__map__t_ab3aea1933e1ca6cc844b9ff4dac3300c}\label{structnetwork__map__t_ab3aea1933e1ca6cc844b9ff4dac3300c} 
+size\+\_\+t {\bfseries capacity}
+\begin{DoxyCompactList}\small\item\em Allocated capacity of the pairs array. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Dynamic mapping structure from network IDs to local entity IDs. This map grows dynamically as new network IDs are encountered. Clients rely on this to map persistent server-\/assigned IDs to their local ECS entities. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/network\+\_\+map.\+h\end{DoxyCompactItemize}

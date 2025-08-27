@@ -1,0 +1,43 @@
+\doxysection{networked\+\_\+entity.\+h}
+\hypertarget{networked__entity_8h_source}{}\label{networked__entity_8h_source}\index{include/networked\_entity.h@{include/networked\_entity.h}}
+\mbox{\hyperlink{networked__entity_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ networked\_entity.h}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}ecs.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{typedef}\ uint32\_t\ \mbox{\hyperlink{networked__entity_8h_a3c1e1bed74f6ddd84df064e27fa95f24}{interest\_mask\_t}};}
+\DoxyCodeLine{00031\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00032\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetworked__entity__t_a1e7d6fe82562a397b3e4a172f63fa675}{network\_id}};\ }
+\DoxyCodeLine{00033\ \ \ \ \ \mbox{\hyperlink{networked__entity_8h_a3c1e1bed74f6ddd84df064e27fa95f24}{interest\_mask\_t}}\ \mbox{\hyperlink{structnetworked__entity__t_a8a91ed7649bc28410468886c4ddd5558}{interest\_groups}};\ }
+\DoxyCodeLine{00034\ \}\ \mbox{\hyperlink{structnetworked__entity__t}{networked\_entity\_t}};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00040\ ECSNET\_API\ \textcolor{keyword}{extern}\ component\_t\ COMPONENT\_NETWORKED\_ENTITY;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ networked\_entity\_serialize(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *src,\ uint8\_t\ *dst)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structnetworked__entity__t}{networked\_entity\_t}}\ *ne\ =\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{structnetworked__entity__t}{networked\_entity\_t}}\ *)src;}
+\DoxyCodeLine{00053\ \ \ \ \ memcpy(dst,\ \&ne-\/>\mbox{\hyperlink{structnetworked__entity__t_a1e7d6fe82562a397b3e4a172f63fa675}{network\_id}},\ \textcolor{keyword}{sizeof}(uint32\_t));}
+\DoxyCodeLine{00054\ \ \ \ \ memcpy(dst\ +\ \textcolor{keyword}{sizeof}(uint32\_t),\ \&ne-\/>\mbox{\hyperlink{structnetworked__entity__t_a8a91ed7649bc28410468886c4ddd5558}{interest\_groups}},\ \textcolor{keyword}{sizeof}(uint32\_t));}
+\DoxyCodeLine{00055\ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ networked\_entity\_deserialize(\textcolor{keyword}{const}\ uint8\_t\ *buffer\_in,\ \textcolor{keywordtype}{void}\ *data\_out)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \mbox{\hyperlink{structnetworked__entity__t}{networked\_entity\_t}}\ *ne\ =\ (\mbox{\hyperlink{structnetworked__entity__t}{networked\_entity\_t}}\ *)data\_out;}
+\DoxyCodeLine{00067\ \ \ \ \ memcpy(\&ne-\/>\mbox{\hyperlink{structnetworked__entity__t_a1e7d6fe82562a397b3e4a172f63fa675}{network\_id}},\ buffer\_in,\ \textcolor{keyword}{sizeof}(uint32\_t));}
+\DoxyCodeLine{00068\ \ \ \ \ memcpy(\&ne-\/>\mbox{\hyperlink{structnetworked__entity__t_a8a91ed7649bc28410468886c4ddd5558}{interest\_groups}},\ buffer\_in\ +\ \textcolor{keyword}{sizeof}(uint32\_t),\ \textcolor{keyword}{sizeof}(uint32\_t));}
+\DoxyCodeLine{00069\ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ ecs\_register\_networked\_component(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs)\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \mbox{\hyperlink{structcomponent__descriptor__t}{component\_descriptor\_t}}\ desc\ =\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ .size\ =\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structnetworked__entity__t}{networked\_entity\_t}}),}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ .name\ =\ \textcolor{stringliteral}{"{}NetworkedEntity"{}},}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ .serialize\ =\ networked\_entity\_serialize,}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ .deserialize\ =\ networked\_entity\_deserialize,}
+\DoxyCodeLine{00083\ \ \ \ \ \};}
+\DoxyCodeLine{00084\ \ \ \ \ COMPONENT\_NETWORKED\_ENTITY\ =\ ecs\_register\_component(ecs,\ desc);}
+\DoxyCodeLine{00085\ \}}
+
+\end{DoxyCode}

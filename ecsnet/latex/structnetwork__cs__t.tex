@@ -1,0 +1,105 @@
+\doxysection{network\+\_\+cs\+\_\+t Struct Reference}
+\hypertarget{structnetwork__cs__t}{}\label{structnetwork__cs__t}\index{network\_cs\_t@{network\_cs\_t}}
+
+
+Represents the client-\/server network architecture implementation. This struct contains the core components for a client-\/server setup, including the connection manager, protocol handler, and a pointer to the ECS instance.  
+
+
+
+
+{\ttfamily \#include $<$network\+\_\+cs.\+h$>$}
+
+
+
+Collaboration diagram for network\+\_\+cs\+\_\+t\+:
+% FIG 0
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structecs__t}{ecs\+\_\+t}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structnetwork__cs__t_a8fdc2aecda51cc50a1ccdc65761e7184}{ecs}}
+\item 
+\mbox{\hyperlink{structnetwork__architecture__config__t}{network\+\_\+architecture\+\_\+config\+\_\+t}} \mbox{\hyperlink{structnetwork__cs__t_aca7a5c2e8f330a0f99deab068560b45b}{config}}
+\item 
+\mbox{\hyperlink{structconnection__manager__t}{connection\+\_\+manager\+\_\+t}} \mbox{\hyperlink{structnetwork__cs__t_a3c636451083126f55f542c8a93b56b3e}{connection\+\_\+manager}}
+\item 
+\mbox{\hyperlink{structprotocol__handler__t}{protocol\+\_\+handler\+\_\+t}} \mbox{\hyperlink{structnetwork__cs__t_a1476528fd38676aaef23a72a28f3fd80}{protocol\+\_\+handler}}
+\item 
+float \mbox{\hyperlink{structnetwork__cs__t_a1a70859583f53c58c585adf0f41f76a1}{sync\+\_\+acc}}
+\item 
+\mbox{\hyperlink{structnetwork__map__t}{network\+\_\+map\+\_\+t}} \mbox{\hyperlink{structnetwork__cs__t_a521d65b395f3bcb7835491fa53a1bae8}{network\+\_\+map}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structnetwork__cs__t_ac8f3d7b9b4fa750e1a7d7bdcd8f57790}{next\+\_\+network\+\_\+id}}
+\item 
+uint32\+\_\+t \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structnetwork__cs__t_af6438aacc986435068172258aa8119a4}{pending\+\_\+destroy\+\_\+ids}}
+\begin{DoxyCompactList}\small\item\em Pending destroy list for server‑side entity removal. \end{DoxyCompactList}\item 
+\Hypertarget{structnetwork__cs__t_ad1c5f41c212cc4e626abe6d589eae6fa}\label{structnetwork__cs__t_ad1c5f41c212cc4e626abe6d589eae6fa} 
+size\+\_\+t {\bfseries pending\+\_\+destroy\+\_\+count}
+\item 
+\Hypertarget{structnetwork__cs__t_a83280664d6245947958fca28dc31da65}\label{structnetwork__cs__t_a83280664d6245947958fca28dc31da65} 
+size\+\_\+t {\bfseries pending\+\_\+destroy\+\_\+capacity}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the client-\/server network architecture implementation. This struct contains the core components for a client-\/server setup, including the connection manager, protocol handler, and a pointer to the ECS instance. 
+
+\label{doc-variable-members}
+\Hypertarget{structnetwork__cs__t_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structnetwork__cs__t_aca7a5c2e8f330a0f99deab068560b45b}\index{network\_cs\_t@{network\_cs\_t}!config@{config}}
+\index{config@{config}!network\_cs\_t@{network\_cs\_t}}
+\doxysubsubsection{\texorpdfstring{config}{config}}
+{\footnotesize\ttfamily \label{structnetwork__cs__t_aca7a5c2e8f330a0f99deab068560b45b} 
+\mbox{\hyperlink{structnetwork__architecture__config__t}{network\+\_\+architecture\+\_\+config\+\_\+t}} network\+\_\+cs\+\_\+t\+::config}
+
+Configuration for this network instance. \Hypertarget{structnetwork__cs__t_a3c636451083126f55f542c8a93b56b3e}\index{network\_cs\_t@{network\_cs\_t}!connection\_manager@{connection\_manager}}
+\index{connection\_manager@{connection\_manager}!network\_cs\_t@{network\_cs\_t}}
+\doxysubsubsection{\texorpdfstring{connection\_manager}{connection\_manager}}
+{\footnotesize\ttfamily \label{structnetwork__cs__t_a3c636451083126f55f542c8a93b56b3e} 
+\mbox{\hyperlink{structconnection__manager__t}{connection\+\_\+manager\+\_\+t}} network\+\_\+cs\+\_\+t\+::connection\+\_\+manager}
+
+The connection manager instance. \Hypertarget{structnetwork__cs__t_a8fdc2aecda51cc50a1ccdc65761e7184}\index{network\_cs\_t@{network\_cs\_t}!ecs@{ecs}}
+\index{ecs@{ecs}!network\_cs\_t@{network\_cs\_t}}
+\doxysubsubsection{\texorpdfstring{ecs}{ecs}}
+{\footnotesize\ttfamily \label{structnetwork__cs__t_a8fdc2aecda51cc50a1ccdc65761e7184} 
+\mbox{\hyperlink{structecs__t}{ecs\+\_\+t}}\texorpdfstring{$\ast$}{*} network\+\_\+cs\+\_\+t\+::ecs}
+
+A pointer to the ECS instance. \Hypertarget{structnetwork__cs__t_a521d65b395f3bcb7835491fa53a1bae8}\index{network\_cs\_t@{network\_cs\_t}!network\_map@{network\_map}}
+\index{network\_map@{network\_map}!network\_cs\_t@{network\_cs\_t}}
+\doxysubsubsection{\texorpdfstring{network\_map}{network\_map}}
+{\footnotesize\ttfamily \label{structnetwork__cs__t_a521d65b395f3bcb7835491fa53a1bae8} 
+\mbox{\hyperlink{structnetwork__map__t}{network\+\_\+map\+\_\+t}} network\+\_\+cs\+\_\+t\+::network\+\_\+map}
+
+Mapping of remote network IDs to local entity IDs on the client. Initialized on both client and server but only used on the client side when applying network updates. On the server this remains empty. \Hypertarget{structnetwork__cs__t_ac8f3d7b9b4fa750e1a7d7bdcd8f57790}\index{network\_cs\_t@{network\_cs\_t}!next\_network\_id@{next\_network\_id}}
+\index{next\_network\_id@{next\_network\_id}!network\_cs\_t@{network\_cs\_t}}
+\doxysubsubsection{\texorpdfstring{next\_network\_id}{next\_network\_id}}
+{\footnotesize\ttfamily \label{structnetwork__cs__t_ac8f3d7b9b4fa750e1a7d7bdcd8f57790} 
+uint32\+\_\+t network\+\_\+cs\+\_\+t\+::next\+\_\+network\+\_\+id}
+
+Next network identifier to assign when the server spawns a new networked entity. Each server instance is responsible for guaranteeing uniqueness of network IDs across the lifetime of the session. Clients leave this at zero. \Hypertarget{structnetwork__cs__t_af6438aacc986435068172258aa8119a4}\index{network\_cs\_t@{network\_cs\_t}!pending\_destroy\_ids@{pending\_destroy\_ids}}
+\index{pending\_destroy\_ids@{pending\_destroy\_ids}!network\_cs\_t@{network\_cs\_t}}
+\doxysubsubsection{\texorpdfstring{pending\_destroy\_ids}{pending\_destroy\_ids}}
+{\footnotesize\ttfamily \label{structnetwork__cs__t_af6438aacc986435068172258aa8119a4} 
+uint32\+\_\+t\texorpdfstring{$\ast$}{*} network\+\_\+cs\+\_\+t\+::pending\+\_\+destroy\+\_\+ids}
+
+
+
+Pending destroy list for server‑side entity removal. 
+
+When an entity with a Networked\+Entity component is destroyed on the server, its network\+\_\+id should be queued here via network\+\_\+cs\+\_\+mark\+\_\+entity\+\_\+destroy(). During the next network tick the queued IDs will be sent to all clients as part of the delta snapshot with a zero component count, signalling clients to destroy their corresponding local entity and remove the mapping. After transmitting to all peers the list is cleared. \Hypertarget{structnetwork__cs__t_a1476528fd38676aaef23a72a28f3fd80}\index{network\_cs\_t@{network\_cs\_t}!protocol\_handler@{protocol\_handler}}
+\index{protocol\_handler@{protocol\_handler}!network\_cs\_t@{network\_cs\_t}}
+\doxysubsubsection{\texorpdfstring{protocol\_handler}{protocol\_handler}}
+{\footnotesize\ttfamily \label{structnetwork__cs__t_a1476528fd38676aaef23a72a28f3fd80} 
+\mbox{\hyperlink{structprotocol__handler__t}{protocol\+\_\+handler\+\_\+t}} network\+\_\+cs\+\_\+t\+::protocol\+\_\+handler}
+
+The protocol handler instance. \Hypertarget{structnetwork__cs__t_a1a70859583f53c58c585adf0f41f76a1}\index{network\_cs\_t@{network\_cs\_t}!sync\_acc@{sync\_acc}}
+\index{sync\_acc@{sync\_acc}!network\_cs\_t@{network\_cs\_t}}
+\doxysubsubsection{\texorpdfstring{sync\_acc}{sync\_acc}}
+{\footnotesize\ttfamily \label{structnetwork__cs__t_a1a70859583f53c58c585adf0f41f76a1} 
+float network\+\_\+cs\+\_\+t\+::sync\+\_\+acc}
+
+The synchronization accuracy factor. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/network\+\_\+cs.\+h\end{DoxyCompactItemize}

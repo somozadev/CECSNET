@@ -1,0 +1,65 @@
+\doxysection{ecs\+\_\+builtin.\+h}
+\hypertarget{ecs__builtin_8h_source}{}\label{ecs__builtin_8h_source}\index{include/ecs\_builtin.h@{include/ecs\_builtin.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ ECS\_BUILTIN\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ ECS\_BUILTIN\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ecs\_types.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00009\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#endif}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00014\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structposition__t_a3b0c5e19ad0e45d0df658e98dfc955b3}{x}};\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structposition__t_a04429d5c3ab4480069b5c593eee79d56}{y}};\ }
+\DoxyCodeLine{00017\ \}\ \mbox{\hyperlink{structposition__t}{position\_t}};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structrotation__t_a37121d0fe886836a936d289d0c039c88}{x}};\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structrotation__t_af2f0ae00c3d1a84c9ff56d4aa148e2a9}{y}};\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structrotation__t_a9f1bbc3e7b9d021522fbae15e3adac50}{z}};\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structrotation__t_a81467a94526561f17492fecedb6d6eef}{w}};\ }
+\DoxyCodeLine{00027\ \}\ \mbox{\hyperlink{structrotation__t}{rotation\_t}};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{structposition__t}{position\_t}}\ \mbox{\hyperlink{structtransform__t_a0c95617ddfa08c9af1cc38214a1f8e17}{position}};\ }
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{structrotation__t}{rotation\_t}}\ \mbox{\hyperlink{structtransform__t_a13fbfc6f43a0dae3be7aea1bd3c2719e}{rotation}};\ }
+\DoxyCodeLine{00036\ \}\ \mbox{\hyperlink{structtransform__t}{transform\_t}};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structvelocity__t_ab8a913881b246d7a9c39c2baaccb944a}{x}};\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structvelocity__t_ac9ce079e77bc8d4b531434a35a9a9ffd}{y}};\ }
+\DoxyCodeLine{00044\ \}\ \mbox{\hyperlink{structvelocity__t}{velocity\_t}};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ Forward\ declaration\ of\ the\ NetworkedEntity\ component\ ID\ (defined\ in\ ecs\_builtin.c).}}
+\DoxyCodeLine{00047\ ECSNET\_API\ \textcolor{keyword}{extern}\ component\_t\ COMPONENT\_NETWORKED\_ENTITY;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00054\ ECSNET\_API\ \textcolor{keywordtype}{void}\ system\_movement(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ \textcolor{keywordtype}{float}\ dt);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00061\ ECSNET\_API\ \ \textcolor{keywordtype}{void}\ serialize\_position(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,\ uint8\_t\ *out);}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00068\ ECSNET\_API\ \ \textcolor{keywordtype}{void}\ deserialize\_position(\textcolor{keyword}{const}\ uint8\_t\ *in,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00075\ ECSNET\_API\ \ \textcolor{keywordtype}{void}\ serialize\_rotation(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,\ uint8\_t\ *out);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00082\ ECSNET\_API\ \ \textcolor{keywordtype}{void}\ deserialize\_rotation(\textcolor{keyword}{const}\ uint8\_t\ *in,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00089\ ECSNET\_API\ \ \textcolor{keywordtype}{void}\ serialize\_transform(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,\ uint8\_t\ *out);}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00096\ ECSNET\_API\ \ \textcolor{keywordtype}{void}\ deserialize\_transform(\textcolor{keyword}{const}\ uint8\_t\ *in,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00103\ ECSNET\_API\ \ \textcolor{keywordtype}{void}\ serialize\_velocity(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,\ uint8\_t\ *out);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00110\ ECSNET\_API\ \ \textcolor{keywordtype}{void}\ deserialize\_velocity(\textcolor{keyword}{const}\ uint8\_t\ *in,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00114\ \}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,65 @@
+\doxysection{net\+\_\+socket.\+h}
+\hypertarget{net__socket_8h_source}{}\label{net__socket_8h_source}\index{include/net\_socket.h@{include/net\_socket.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}config.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <winsock2.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <ws2tcpip.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <sys/socket.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <netinet/in.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <arpa/inet.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00020\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00021\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ SOCKET\_TYPE\_TCP,\ \ \ \ }
+\DoxyCodeLine{00023\ \ \ \ \ SOCKET\_TYPE\_UDP,\ \ \ \ }
+\DoxyCodeLine{00024\ \ \ \ \ PROTOCOL\_COUNT\ \ \ \ \ \ }
+\DoxyCodeLine{00025\ \}\ socket\_type\_t;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{struct\ }sockaddr\_in\ \mbox{\hyperlink{structnet__socket__t_a7927a2dc1fe4f27c5ce18514924c740d}{addr}};\ \ \ \ }
+\DoxyCodeLine{00035\ \ \ \ \ socket\_type\_t\ \mbox{\hyperlink{structnet__socket__t_ac865a6fc53a3f1139856f5e3fb663092}{type}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structnet__socket__t_a97fabaa1f8306b04b33e84d7c9f6bbcd}{fd}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00037\ \}\ \mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00044\ \mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}\ net\_socket\_create(socket\_type\_t\ type);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00051\ \textcolor{keywordtype}{int}\ net\_socket\_set\_non\_blocking(\mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}*\ socket);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00060\ \textcolor{keywordtype}{int}\ net\_socket\_connect(\mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}*\ socket,\ \ \textcolor{keywordtype}{char}*\ ip,\ uint16\_t\ port);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00069\ \textcolor{keywordtype}{int}\ net\_socket\_send(\mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}*\ socket,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ data,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00079\ \textcolor{keywordtype}{int}\ net\_socket\_sendto(\mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}*\ socket,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ data,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ sockaddr\_in*\ addr);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00088\ \textcolor{keywordtype}{int}\ net\_socket\_receive(\mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}*\ socket,\ \textcolor{keywordtype}{void}*\ buffer,\ \textcolor{keywordtype}{int}\ max\_len);}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00098\ \textcolor{keywordtype}{int}\ net\_socket\_receive\_from(\mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}*\ socket,\ \textcolor{keywordtype}{void}*\ buffer,\ \textcolor{keywordtype}{int}\ max\_len,\ \textcolor{keyword}{struct}\ sockaddr\_in*\ sender\_addr);}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00107\ \textcolor{keywordtype}{int}\ net\_socket\_bind(\mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}*\ socket,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ ip,\ uint16\_t\ port);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00119\ uint16\_t\ net\_socket\_get\_local\_port(\textcolor{keyword}{const}\ \mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}*\ s);}
+\DoxyCodeLine{00126\ \textcolor{keywordtype}{int}\ net\_socket\_listen(\mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}*\ socket,\ \textcolor{keywordtype}{int}\ backlog);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00133\ \textcolor{keywordtype}{int}\ net\_socket\_close(\mbox{\hyperlink{structnet__socket__t}{net\_socket\_t}}*\ socket);}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00141\ ECSNET\_API\ \textcolor{keywordtype}{void}\ net\_socket\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00149\ ECSNET\_API\ \textcolor{keywordtype}{void}\ net\_socket\_cleanup(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00152\ \}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00154\ }
+
+\end{DoxyCode}

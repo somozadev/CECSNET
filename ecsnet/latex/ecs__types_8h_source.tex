@@ -1,0 +1,44 @@
+\doxysection{ecs\+\_\+types.\+h}
+\hypertarget{ecs__types_8h_source}{}\label{ecs__types_8h_source}\index{include/ecs\_types.h@{include/ecs\_types.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ ECS\_TYPES\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ ECS\_TYPES\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}config.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00007\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00013\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structecs__t}{ecs\_t}}\ \mbox{\hyperlink{structecs__t}{ecs\_t}};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{typedef}\ uint32\_t\ entity\_t;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ uint32\_t\ component\_t;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{typedef}\ uint64\_t\ component\_signature\_t;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ void\ (*system\_func\_t)(\mbox{\hyperlink{structecs__t}{ecs\_t}}\ *ecs,\ \textcolor{keywordtype}{float}\ dt);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{typedef}\ void\ (*serialize\_func\_t)(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data\_in,\ uint8\_t\ *buffer\_out);}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{typedef}\ void\ (*deserialize\_func\_t)(\textcolor{keyword}{const}\ uint8\_t\ *buffer\_in,\ \textcolor{keywordtype}{void}\ *data\_out);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcomponent__descriptor__t}{component\_descriptor\_t}}\ \mbox{\hyperlink{structcomponent__descriptor__t}{component\_descriptor\_t}};}
+\DoxyCodeLine{00077\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcomponent__descriptor__t}{component\_descriptor\_t}}\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structcomponent__descriptor__t_afe4ce1da43e5cdcab104c4f23657e1c0}{size}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structcomponent__descriptor__t_a0b9d1c5490b8235aa19195c6956bfac4}{name}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00080\ \ \ \ \ serialize\_func\_t\ \mbox{\hyperlink{structcomponent__descriptor__t_a3f80570c7e13d34545659958fa942bf4}{serialize}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00081\ \ \ \ \ deserialize\_func\_t\ \mbox{\hyperlink{structcomponent__descriptor__t_a5a1747656106284168d6e5129fe941dd}{deserialize}};\ \ \ \ \ }
+\DoxyCodeLine{00082\ \}\ \mbox{\hyperlink{structcomponent__descriptor__t}{component\_descriptor\_t}};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcomponent__storage__t}{component\_storage\_t}}\ \mbox{\hyperlink{structcomponent__storage__t}{component\_storage\_t}};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00092\ \}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

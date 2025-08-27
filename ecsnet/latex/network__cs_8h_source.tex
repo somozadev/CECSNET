@@ -1,0 +1,67 @@
+\doxysection{network\+\_\+cs.\+h}
+\hypertarget{network__cs_8h_source}{}\label{network__cs_8h_source}\index{include/network\_cs.h@{include/network\_cs.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}network\_architecture.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}connection\_manager.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}protocol\_handler.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}ecs.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}network\_map.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{networked__entity_8h}{networked\_entity.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00010\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#endif}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structnetwork__cs__t}{network\_cs\_t}}\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{structecs__t}{ecs\_t}}*\ \mbox{\hyperlink{structnetwork__cs__t_a8fdc2aecda51cc50a1ccdc65761e7184}{ecs}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{structnetwork__architecture__config__t}{network\_architecture\_config\_t}}\ \mbox{\hyperlink{structnetwork__cs__t_aca7a5c2e8f330a0f99deab068560b45b}{config}};\ \ \ \ \ \ }
+\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{structconnection__manager__t}{connection\_manager\_t}}\ \mbox{\hyperlink{structnetwork__cs__t_a3c636451083126f55f542c8a93b56b3e}{connection\_manager}};\ \ \ \ }
+\DoxyCodeLine{00022\ \ \ \ \ \mbox{\hyperlink{structprotocol__handler__t}{protocol\_handler\_t}}\ \mbox{\hyperlink{structnetwork__cs__t_a1476528fd38676aaef23a72a28f3fd80}{protocol\_handler}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structnetwork__cs__t_a1a70859583f53c58c585adf0f41f76a1}{sync\_acc}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{structnetwork__map__t}{network\_map\_t}}\ \mbox{\hyperlink{structnetwork__cs__t_a521d65b395f3bcb7835491fa53a1bae8}{network\_map}};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00038\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{structnetwork__cs__t_ac8f3d7b9b4fa750e1a7d7bdcd8f57790}{next\_network\_id}};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00051\ \ \ \ \ uint32\_t\ *\mbox{\hyperlink{structnetwork__cs__t_af6438aacc986435068172258aa8119a4}{pending\_destroy\_ids}};}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ pending\_destroy\_count;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ pending\_destroy\_capacity;}
+\DoxyCodeLine{00054\ \}\ \mbox{\hyperlink{structnetwork__cs__t}{network\_cs\_t}};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ network\_cs\_assign\_network\_id(\mbox{\hyperlink{structnetwork__cs__t}{network\_cs\_t}}*\ cs,\ entity\_t\ e,\ \mbox{\hyperlink{networked__entity_8h_a3c1e1bed74f6ddd84df064e27fa95f24}{interest\_mask\_t}}\ interest\_groups)\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{if}\ (!cs\ ||\ !cs-\/>\mbox{\hyperlink{structnetwork__cs__t_a8fdc2aecda51cc50a1ccdc65761e7184}{ecs}})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ Only\ the\ server\ generates\ network\ IDs.\ \ The\ client\ leaves\ next\_network\_id\ at\ 0.}}
+\DoxyCodeLine{00072\ \ \ \ \ uint32\_t\ nid\ =\ cs-\/>\mbox{\hyperlink{structnetwork__cs__t_ac8f3d7b9b4fa750e1a7d7bdcd8f57790}{next\_network\_id}}++;}
+\DoxyCodeLine{00073\ \ \ \ \ \mbox{\hyperlink{structnetworked__entity__t}{networked\_entity\_t}}\ ne\ =\ \{\ .network\_id\ =\ nid,\ .interest\_groups\ =\ interest\_groups\ \};}
+\DoxyCodeLine{00074\ \ \ \ \ ecs\_add\_component(cs-\/>\mbox{\hyperlink{structnetwork__cs__t_a8fdc2aecda51cc50a1ccdc65761e7184}{ecs}},\ e,\ COMPONENT\_NETWORKED\_ENTITY,\ \&ne);}
+\DoxyCodeLine{00075\ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00087\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ network\_cs\_set\_peer\_interest(\mbox{\hyperlink{structnetwork__cs__t}{network\_cs\_t}}*\ cs,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ peer\_id,\ \mbox{\hyperlink{networked__entity_8h_a3c1e1bed74f6ddd84df064e27fa95f24}{interest\_mask\_t}}\ mask)\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordflow}{if}\ (!cs)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00089\ \ \ \ \ connection\_manager\_set\_peer\_interest(\&cs-\/>\mbox{\hyperlink{structnetwork__cs__t_a3c636451083126f55f542c8a93b56b3e}{connection\_manager}},\ peer\_id,\ mask);}
+\DoxyCodeLine{00090\ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{comment}{//\ callbacks}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00101\ \textcolor{keywordtype}{void}\ on\_packet\_received\_cs(\textcolor{keywordtype}{void}*\ user\_data,\ \mbox{\hyperlink{structpeer__t}{peer\_t}}*\ peer,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ data,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00108\ \textcolor{keywordtype}{void}\ on\_peer\_connected\_cs(\textcolor{keywordtype}{void}*\ user\_data,\ \mbox{\hyperlink{structpeer__t}{peer\_t}}*\ peer);}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00115\ \textcolor{keywordtype}{void}\ on\_peer\_disconnected\_cs(\textcolor{keywordtype}{void}*\ user\_data,\ \mbox{\hyperlink{structpeer__t}{peer\_t}}*\ peer);}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00123\ ECSNET\_API\ \mbox{\hyperlink{structnetwork__cs__t}{network\_cs\_t}}*\ network\_cs\_init(\textcolor{keyword}{const}\ \mbox{\hyperlink{structnetwork__architecture__config__t}{network\_architecture\_config\_t}}*\ config,\ \mbox{\hyperlink{structecs__t}{ecs\_t}}*\ ecs);}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00131\ ECSNET\_API\ \textcolor{keywordtype}{void}\ network\_cs\_update(\mbox{\hyperlink{structnetwork__cs__t}{network\_cs\_t}}*\ network\_cs,\ \textcolor{keywordtype}{float}\ dt);}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00137\ ECSNET\_API\ \textcolor{keywordtype}{void}\ network\_cs\_destroy(\mbox{\hyperlink{structnetwork__cs__t}{network\_cs\_t}}*\ network\_cs);}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00150\ ECSNET\_API\ \textcolor{keywordtype}{void}\ network\_cs\_mark\_entity\_destroy(\mbox{\hyperlink{structnetwork__cs__t}{network\_cs\_t}}*\ cs,\ entity\_t\ entity);}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00160\ ECSNET\_API\ \textcolor{keywordtype}{void}\ network\_cs\_mark\_network\_id\_destroy(\mbox{\hyperlink{structnetwork__cs__t}{network\_cs\_t}}*\ cs,\ uint32\_t\ network\_id);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00163\ \}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00165\ }
+
+\end{DoxyCode}

@@ -1,0 +1,56 @@
+\doxysection{config.\+h}
+\hypertarget{config_8h_source}{}\label{config_8h_source}\index{include/config.h@{include/config.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ \#define\ ECSNET\_API}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#if\ defined(\_WIN32)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\ \ \#if\ defined(ECSNET\_STATIC)}}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{comment}{//\ Estamos\ compilando/consumiendo\ la\ versión\ estática\ →\ no\ export/import}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\ \ \ \ \#define\ ECSNET\_API}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\ \ \#elif\ defined(ECSNET\_EXPORTS)}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{//\ Estamos\ construyendo\ la\ DLL\ →\ exportamos\ símbolos}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\ \ \ \ \#define\ ECSNET\_API\ \_\_declspec(dllexport)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\ \ \#else}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ Estamos\ consumiendo\ la\ DLL\ →\ importamos\ símbolos}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\ \ \ \ \#define\ ECSNET\_API\ \_\_declspec(dllimport)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\ \ \#endif}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00030\ \ \ \textcolor{comment}{//\ En\ Linux/macOS\ normalmente\ no\ hace\ falta,\ pero\ si\ quieres\ podrías\ usar\ \_\_attribute\_\_((visibility("{}default"{})))}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\ \ \#define\ ECSNET\_API}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{/*\ =========================\ ECS\ CONFIGURATION\ =========================\ */}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ INITIAL\_ENTITY\_CAPACITY\ 1024}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ INITIAL\_COMPONENT\_CAPACITY\ 32}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{/*\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ Compatibility\ macros}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ The\ original\ implementation\ relied\ on\ compile‑time\ constants\ MAX\_ENTITIES}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ and\ MAX\_COMPONENTS.\ \ To\ avoid\ extensive\ refactoring\ of\ all\ modules\ at}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ once,\ these\ macros\ are\ defined\ in\ terms\ of\ the\ initial\ capacities.}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ Network\ and\ legacy\ code\ can\ still\ refer\ to\ MAX\_ENTITIES\ or\ MAX\_COMPONENTS}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ without\ causing\ compilation\ errors.\ \ Dynamic\ growth\ is\ implemented\ in}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ the\ ECS\ core\ and\ can\ exceed\ these\ values;\ network\ modules\ should\ be}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ updated\ to\ use\ ecs-\/>entity\_capacity\ for\ correctness.}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#ifndef\ MAX\_ENTITIES}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ MAX\_ENTITIES\ INITIAL\_ENTITY\_CAPACITY}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#ifndef\ MAX\_COMPONENTS}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ MAX\_COMPONENTS\ INITIAL\_COMPONENT\_CAPACITY}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ MAX\_SYSTEMS\ 64}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{comment}{/*\ =========================\ NET\ CONFIGURATION\ =========================\ */}}
+
+\end{DoxyCode}

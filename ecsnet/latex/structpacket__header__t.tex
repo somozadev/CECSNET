@@ -1,0 +1,43 @@
+\doxysection{packet\+\_\+header\+\_\+t Struct Reference}
+\hypertarget{structpacket__header__t}{}\label{structpacket__header__t}\index{packet\_header\_t@{packet\_header\_t}}
+
+
+The header of a network packet. Contains metadata about the packet, such as its size and type. Note on padding\+: The size is 2 bytes and the enum type is 4 bytes, which results in 2 bytes of padding to align the struct to an 8-\/byte boundary.  
+
+
+
+
+{\ttfamily \#include $<$protocol\+\_\+handler.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structpacket__header__t_a81f8d7474dd3ffcf1f2b5a2f7bf29dfe}{size}}
+\item 
+packet\+\_\+type\+\_\+t \mbox{\hyperlink{structpacket__header__t_a25bd1d181029339202b04898c414c3dc}{type}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The header of a network packet. Contains metadata about the packet, such as its size and type. Note on padding\+: The size is 2 bytes and the enum type is 4 bytes, which results in 2 bytes of padding to align the struct to an 8-\/byte boundary. 
+
+\label{doc-variable-members}
+\Hypertarget{structpacket__header__t_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structpacket__header__t_a81f8d7474dd3ffcf1f2b5a2f7bf29dfe}\index{packet\_header\_t@{packet\_header\_t}!size@{size}}
+\index{size@{size}!packet\_header\_t@{packet\_header\_t}}
+\doxysubsubsection{\texorpdfstring{size}{size}}
+{\footnotesize\ttfamily \label{structpacket__header__t_a81f8d7474dd3ffcf1f2b5a2f7bf29dfe} 
+uint16\+\_\+t packet\+\_\+header\+\_\+t\+::size}
+
+The total size of the packet in bytes. \Hypertarget{structpacket__header__t_a25bd1d181029339202b04898c414c3dc}\index{packet\_header\_t@{packet\_header\_t}!type@{type}}
+\index{type@{type}!packet\_header\_t@{packet\_header\_t}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{structpacket__header__t_a25bd1d181029339202b04898c414c3dc} 
+packet\+\_\+type\+\_\+t packet\+\_\+header\+\_\+t\+::type}
+
+The type of the packet. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/protocol\+\_\+handler.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,76 @@
+\doxysection{network\+\_\+map.\+h}
+\hypertarget{network__map_8h_source}{}\label{network__map_8h_source}\index{include/network\_map.h@{include/network\_map.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ network\_map.h}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}ecs.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00012\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{structnetwork__id__pair__t_ae48e8324a99de60ae9d9b0c78b9df83e}{network\_id}};\ }
+\DoxyCodeLine{00013\ \ \ \ \ entity\_t\ \mbox{\hyperlink{structnetwork__id__pair__t_a23073491334330e6dd7b1487f04b92f2}{local\_id}};\ }
+\DoxyCodeLine{00014\ \}\ \mbox{\hyperlink{structnetwork__id__pair__t}{network\_id\_pair\_t}};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{structnetwork__id__pair__t}{network\_id\_pair\_t}}\ *\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}};\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}{count}};\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structnetwork__map__t_ab3aea1933e1ca6cc844b9ff4dac3300c}{capacity}};\ }
+\DoxyCodeLine{00026\ \}\ \mbox{\hyperlink{structnetwork__map__t}{network\_map\_t}};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ network\_map\_init(\mbox{\hyperlink{structnetwork__map__t}{network\_map\_t}}\ *map)\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}}\ =\ NULL;}
+\DoxyCodeLine{00034\ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}{count}}\ =\ 0;}
+\DoxyCodeLine{00035\ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_ab3aea1933e1ca6cc844b9ff4dac3300c}{capacity}}\ =\ 0;}
+\DoxyCodeLine{00036\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ network\_map\_destroy(\mbox{\hyperlink{structnetwork__map__t}{network\_map\_t}}\ *map)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{if}\ (map\ \&\&\ map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}})\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ free(map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}});}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}}\ =\ NULL;}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}{count}}\ =\ 0;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_ab3aea1933e1ca6cc844b9ff4dac3300c}{capacity}}\ =\ 0;}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ entity\_t\ network\_map\_lookup(\mbox{\hyperlink{structnetwork__map__t}{network\_map\_t}}\ *map,\ uint32\_t\ network\_id)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordflow}{if}\ (!map\ ||\ !map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}})\ \textcolor{keywordflow}{return}\ (entity\_t)-\/1;}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ map-\/>\mbox{\hyperlink{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}{count}};\ ++i)\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}}[i].\mbox{\hyperlink{structnetwork__id__pair__t_ae48e8324a99de60ae9d9b0c78b9df83e}{network\_id}}\ ==\ network\_id)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}}[i].\mbox{\hyperlink{structnetwork__id__pair__t_a23073491334330e6dd7b1487f04b92f2}{local\_id}};}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00064\ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{return}\ (entity\_t)-\/1;}
+\DoxyCodeLine{00066\ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ network\_map\_insert(\mbox{\hyperlink{structnetwork__map__t}{network\_map\_t}}\ *map,\ uint32\_t\ network\_id,\ entity\_t\ local\_id)\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordflow}{if}\ (!map)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordflow}{if}\ (map-\/>\mbox{\hyperlink{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}{count}}\ >=\ map-\/>\mbox{\hyperlink{structnetwork__map__t_ab3aea1933e1ca6cc844b9ff4dac3300c}{capacity}})\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ new\_cap\ =\ map-\/>\mbox{\hyperlink{structnetwork__map__t_ab3aea1933e1ca6cc844b9ff4dac3300c}{capacity}}\ ==\ 0\ ?\ 16\ :\ map-\/>\mbox{\hyperlink{structnetwork__map__t_ab3aea1933e1ca6cc844b9ff4dac3300c}{capacity}}\ *\ 2;}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnetwork__id__pair__t}{network\_id\_pair\_t}}\ *new\_pairs\ =\ (\mbox{\hyperlink{structnetwork__id__pair__t}{network\_id\_pair\_t}}\ *)realloc(map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}},\ new\_cap\ *\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structnetwork__id__pair__t}{network\_id\_pair\_t}}));}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!new\_pairs)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}}\ =\ new\_pairs;}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_ab3aea1933e1ca6cc844b9ff4dac3300c}{capacity}}\ =\ new\_cap;}
+\DoxyCodeLine{00084\ \ \ \ \ \}}
+\DoxyCodeLine{00085\ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}}[map-\/>\mbox{\hyperlink{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}{count}}].\mbox{\hyperlink{structnetwork__id__pair__t_ae48e8324a99de60ae9d9b0c78b9df83e}{network\_id}}\ =\ network\_id;}
+\DoxyCodeLine{00086\ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}}[map-\/>\mbox{\hyperlink{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}{count}}].\mbox{\hyperlink{structnetwork__id__pair__t_a23073491334330e6dd7b1487f04b92f2}{local\_id}}\ =\ local\_id;}
+\DoxyCodeLine{00087\ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}{count}}++;}
+\DoxyCodeLine{00088\ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00096\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ network\_map\_remove(\mbox{\hyperlink{structnetwork__map__t}{network\_map\_t}}\ *map,\ uint32\_t\ network\_id)\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordflow}{if}\ (!map\ ||\ !map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}})\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ map-\/>\mbox{\hyperlink{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}{count}};\ ++i)\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}}[i].\mbox{\hyperlink{structnetwork__id__pair__t_ae48e8324a99de60ae9d9b0c78b9df83e}{network\_id}}\ ==\ network\_id)\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Move\ the\ last\ element\ into\ this\ position\ and\ shrink\ the\ count}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}}[i]\ =\ map-\/>\mbox{\hyperlink{structnetwork__map__t_a051cb7eafc8948fb9a27360ff400bf78}{pairs}}[map-\/>\mbox{\hyperlink{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}{count}}\ -\/\ 1];}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ map-\/>\mbox{\hyperlink{structnetwork__map__t_a7e1fadd4266630a84dd7905aa59d793c}{count}}-\/-\/;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00105\ \ \ \ \ \}}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00107\ \}}
+
+\end{DoxyCode}
