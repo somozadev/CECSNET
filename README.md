@@ -1,7 +1,7 @@
 # CECSNET
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Build](https://img.shields.io/github/actions/workflow/status/somozadev/CECSNET/build.yml?branch=ECSNET-0.1)](https://github.com/somozadev/CECSNET/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/somozadev/CECSNET/build.yaml?branch=ECSNET-0.1)](https://github.com/somozadev/CECSNET/actions/workflows/build.yml)
 [![Docs](https://img.shields.io/badge/docs-doxygen-blue.svg)](https://somozadev.github.io/CECSNET)
 
 CECSNET is a performant **Entity Component System (ECS)** implemented in C, featuring built-in **client-server networking**, ready‑to‑use examples (SFML and Unity), and both static and dynamic library builds.
