@@ -1,0 +1,16 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-ECSNET4UNREAL.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:\Users\mesom\Documents\GitHub\CECSNET\UNREAL_ECSNET\Uecsnet\Intermediate\Build\Win64\x64\UecsnetEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"C:\Users\mesom\Documents\GitHub\CECSNET\UNREAL_ECSNET\Uecsnet\Plugins\ECSNET4UNREAL\Intermediate\Build\Win64\x64\UnrealEditor\Development\ECSNET4UNREAL\Module.ECSNET4UNREAL.cpp.obj"
+"C:\Users\mesom\Documents\GitHub\CECSNET\UNREAL_ECSNET\Uecsnet\Plugins\ECSNET4UNREAL\Intermediate\Build\Win64\x64\UnrealEditor\Development\ECSNET4UNREAL\DropActor.cpp.obj"
+"C:\Users\mesom\Documents\GitHub\CECSNET\UNREAL_ECSNET\Uecsnet\Plugins\ECSNET4UNREAL\Intermediate\Build\Win64\x64\UnrealEditor\Development\ECSNET4UNREAL\ECSNET4UNREAL.cpp.obj"
+"C:\Users\mesom\Documents\GitHub\CECSNET\UNREAL_ECSNET\Uecsnet\Plugins\ECSNET4UNREAL\Intermediate\Build\Win64\x64\UnrealEditor\Development\ECSNET4UNREAL\RaindropClientActor.cpp.obj"
+"C:\Users\mesom\Documents\GitHub\CECSNET\UNREAL_ECSNET\Uecsnet\Plugins\ECSNET4UNREAL\Intermediate\Build\Win64\x64\UnrealEditor\Development\ECSNET4UNREAL\TestActor.cpp.obj"
+"C:\Users\mesom\Documents\GitHub\CECSNET\UNREAL_ECSNET\Uecsnet\Plugins\ECSNET4UNREAL\Intermediate\Build\Win64\x64\UnrealEditor\Development\ECSNET4UNREAL\Default.rc2.res"
+/OUT:"C:\Users\mesom\Documents\GitHub\CECSNET\UNREAL_ECSNET\Uecsnet\Plugins\ECSNET4UNREAL\Intermediate\Build\Win64\x64\UnrealEditor\Development\ECSNET4UNREAL\UnrealEditor-ECSNET4UNREAL.lib"

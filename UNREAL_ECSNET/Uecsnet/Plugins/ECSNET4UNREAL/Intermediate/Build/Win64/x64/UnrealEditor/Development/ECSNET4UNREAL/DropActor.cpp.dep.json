@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\mesom\\documents\\github\\cecsnet\\unreal_ecsnet\\uecsnet\\plugins\\ecsnet4unreal\\source\\ecsnet4unreal\\private\\dropactor.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\mesom\\documents\\github\\cecsnet\\unreal_ecsnet\\uecsnet\\intermediate\\build\\win64\\x64\\uecsneteditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\mesom\\documents\\github\\cecsnet\\unreal_ecsnet\\uecsnet\\plugins\\ecsnet4unreal\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\ecsnet4unreal\\definitions.ecsnet4unreal.h",
+            "c:\\users\\mesom\\documents\\github\\cecsnet\\unreal_ecsnet\\uecsnet\\plugins\\ecsnet4unreal\\source\\ecsnet4unreal\\public\\dropactor.h",
+            "c:\\users\\mesom\\documents\\github\\cecsnet\\unreal_ecsnet\\uecsnet\\plugins\\ecsnet4unreal\\intermediate\\build\\win64\\unrealeditor\\inc\\ecsnet4unreal\\uht\\dropactor.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

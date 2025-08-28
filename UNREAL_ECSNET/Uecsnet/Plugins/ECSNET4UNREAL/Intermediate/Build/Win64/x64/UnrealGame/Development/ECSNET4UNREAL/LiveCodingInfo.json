@@ -1,0 +1,15 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.ECSNET4UNREAL.cpp.obj": [
+			"DropActor.gen.cpp.obj",
+			"ECSNET4UNREAL.init.gen.cpp.obj",
+			"RaindropClientActor.gen.cpp.obj",
+			"TestActor.gen.cpp.obj",
+			"DropActor.cpp.obj",
+			"ECSNET4UNREAL.cpp.obj",
+			"RaindropClientActor.cpp.obj",
+			"TestActor.cpp.obj"
+		]
+	}
+}

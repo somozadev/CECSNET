@@ -1,4 +1,6 @@
-# Unity generated folders
+# -----------------------
+# UNITY
+# -----------------------
 UNITY_ECSNET/UNITY_ECSNET_PROJECT/[Ll]ibrary/
 UNITY_ECSNET/UNITY_ECSNET_PROJECT/[Tt]emp/
 UNITY_ECSNET/UNITY_ECSNET_PROJECT/[Oo]bj/
@@ -17,23 +19,53 @@ UNITY_ECSNET/UNITY_ECSNET_PROJECT/*.userprefs
 UNITY_ECSNET/UNITY_ECSNET_PROJECT/*.pidb
 UNITY_ECSNET/UNITY_ECSNET_PROJECT/*.booproj
 
-# OS generated files
+# OS generated
 UNITY_ECSNET/UNITY_ECSNET_PROJECT/.DS_Store
 UNITY_ECSNET/UNITY_ECSNET_PROJECT/Thumbs.db
 
 
+# -----------------------
+# UNREAL
+# -----------------------
+UNREAL_ECSNET/Uecsnet/.idea/
+UNREAL_ECSNET/Uecsnet/.vs/
+UNREAL_ECSNET/Uecsnet/Binaries/
+UNREAL_ECSNET/Uecsnet/Build/
+UNREAL_ECSNET/Uecsnet/DerivedDataCache/
+UNREAL_ECSNET/Uecsnet/Intermediate/
+UNREAL_ECSNET/Uecsnet/Saved/
+UNREAL_ECSNET/Uecsnet/Windows/
+
+# Visual Studio / Rider junk
+UNREAL_ECSNET/Uecsnet/*.VC.db
+UNREAL_ECSNET/Uecsnet/*.VC.opendb
+UNREAL_ECSNET/Uecsnet/*.sln
+UNREAL_ECSNET/Uecsnet/*.suo
+UNREAL_ECSNET/Uecsnet/*.user
+UNREAL_ECSNET/Uecsnet/*.userprefs
+UNREAL_ECSNET/Uecsnet/.vsconfig
+UNREAL_ECSNET/Uecsnet/.idea/
+
+# Compiled binaries (too big for git)
+UNREAL_ECSNET/Uecsnet/**/*.exe
+UNREAL_ECSNET/Uecsnet/**/*.dll
+UNREAL_ECSNET/Uecsnet/**/*.pdb
+UNREAL_ECSNET/Uecsnet/**/*.pak
+UNREAL_ECSNET/Uecsnet/**/*.ucas
+UNREAL_ECSNET/Uecsnet/**/*.utoc
+
+# Shader cache
+UNREAL_ECSNET/Uecsnet/**/*.ushadercode
+UNREAL_ECSNET/Uecsnet/**/*.ushaderbytecode
+UNREAL_ECSNET/Uecsnet/**/*.ushadermap
+UNREAL_ECSNET/Uecsnet/**/*.ushadercache
 
 
-
-
-UNREAL_ECSNET/Uecsnet/.idea/*
-UNREAL_ECSNET/Uecsnet/.vs/*
-UNREAL_ECSNET/Uecsnet/Binaries/*
-UNREAL_ECSNET/Uecsnet/DerivedDataCache/*
-UNREAL_ECSNET/Uecsnet/Intermediate/*
-UNREAL_ECSNET/Uecsnet/Saved/*
-UNREAL_ECSNET/Uecsnet/
-UNREAL_ECSNET/Uecsnet/
-UNREAL_ECSNET/Uecsnet/
-UNREAL_ECSNET/Uecsnet/
-UNREAL_ECSNET/Uecsnet/
+# -----------------------
+# KEEP (important to commit)
+# -----------------------
+!UNREAL_ECSNET/Uecsnet/Config/Default*.ini
+!UNREAL_ECSNET/Uecsnet/Content/**
+!UNREAL_ECSNET/Uecsnet/Plugins/**
+!UNREAL_ECSNET/Uecsnet/Source/**
+!UNREAL_ECSNET/Uecsnet/Uecsnet.uproject
