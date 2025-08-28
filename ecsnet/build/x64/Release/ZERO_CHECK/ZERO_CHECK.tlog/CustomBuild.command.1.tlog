@@ -1,0 +1,10 @@
+^C:\USERS\MESOM\DOCUMENTS\GITHUB\CECSNET\ECSNET\BUILD\CMAKEFILES\E80A6CCF3D8CFBECF5DF1958544EF9B3\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/mesom/Documents/GitHub/CECSNET/ecsnet -BC:/Users/mesom/Documents/GitHub/CECSNET/ecsnet/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/mesom/Documents/GitHub/CECSNET/ecsnet/build/ecsnet.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

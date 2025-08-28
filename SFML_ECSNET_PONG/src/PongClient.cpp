@@ -30,7 +30,7 @@ namespace config {
     constexpr unsigned kWindowWidth = 800;
     constexpr unsigned kWindowHeight = 600;
     constexpr char kWindowTitle[] = "Pong ECSNet Client";
-    constexpr char kServerIp[] = "192.168.1.232";
+    constexpr char kServerIp[] = "127.0.0.1";
     constexpr uint16_t kTcpPort = 51660;
     constexpr uint16_t kUdpPort = 51660;
     constexpr unsigned kSpawnRateLimitMs = 30; // anti‑spam

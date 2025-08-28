@@ -3,6 +3,10 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BackendCodeEditorMiscSettings">
+    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
+    <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
+  </component>
   <component name="CMakePresetLoader">{
   &quot;useNewFormat&quot;: true
 }</component>
@@ -25,30 +29,168 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="08ebdc84-a846-4c5a-ac8d-4292e4b0002b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/ECSNET.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/ECSNET/ECSNETWrapper.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Pong.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Pong/EcsBootstrap.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Pong/PongClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Pong/PongClient.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Pong/PongComponents.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Pong/PongComponents.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../UNREAL_ECSNET/Uecsnet/Plugins/ECSNet/Source/ECSNet/Private/ECSNetPongClientComponent.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../UNREAL_ECSNET/Uecsnet/Plugins/ECSNet/Source/ECSNet/Private/EcsNetDyn.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../UNREAL_ECSNET/Uecsnet/Plugins/ECSNet/Source/ECSNet/Public/ECSNetPongClientComponent.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../UNREAL_ECSNET/Uecsnet/Plugins/ECSNet/Source/ECSNet/Public/EcsNetDyn.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/ecsnet_unity_shim.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ecsnet_unity_shim.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/ALL_BUILD.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/ALL_BUILD.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/generate.stamp.depend" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/CMakeFiles/generate.stamp.depend" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongClient.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongClient.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongClient.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongClient.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongServer.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongServer.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongServer.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/Debug/PongServer.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.dir/Debug/PongClient.ilk" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.dir/Debug/PongClient.ilk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.dir/Debug/PongClient.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.dir/Debug/PongClient.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.dir/Debug/PongClient.tlog/CustomBuild.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.dir/Debug/PongClient.tlog/CustomBuild.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.dir/Debug/vc143.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.dir/Debug/vc143.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongClient.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.dir/Debug/PongServer.ilk" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.dir/Debug/PongServer.ilk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.dir/Debug/PongServer.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.dir/Debug/PongServer.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.dir/Debug/PongServer.tlog/CustomBuild.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.dir/Debug/PongServer.tlog/CustomBuild.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.dir/Debug/vc143.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.dir/Debug/vc143.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/PongServer.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/ZERO_CHECK.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/ZERO_CHECK.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/Debug/ecsnet.lib" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/Debug/ecsnet.lib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/Debug/ecsnet.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/Debug/ecsnet.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/connection_manager.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/connection_manager.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecs.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecs.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecs_builtin.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecs_builtin.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecsnet.tlog/CL.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecsnet.tlog/CL.command.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecsnet.tlog/CL.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecsnet.tlog/CL.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecsnet.tlog/CL.write.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/ecsnet.tlog/CL.write.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/network_architecture.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/network_architecture.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/network_cs.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/network_cs.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/protocol_handler.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/mylib_build/ecsnet.dir/Debug/protocol_handler.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/x64/Debug/ALL_BUILD/ALL_BUILD.tlog/CustomBuild.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/x64/Debug/ALL_BUILD/ALL_BUILD.tlog/CustomBuild.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/x64/Debug/ZERO_CHECK/ZERO_CHECK.tlog/CustomBuild.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-debug/x64/Debug/ZERO_CHECK/ZERO_CHECK.tlog/CustomBuild.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/ALL_BUILD.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/ALL_BUILD.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/CMakeFiles/generate.stamp.depend" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/CMakeFiles/generate.stamp.depend" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongClient.dir/Release/PongClient.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongClient.dir/Release/PongClient.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongClient.dir/Release/PongClient.tlog/CustomBuild.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongClient.dir/Release/PongClient.tlog/CustomBuild.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongClient.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongClient.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongServer.dir/Release/PongServer.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongServer.dir/Release/PongServer.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongServer.dir/Release/PongServer.tlog/CustomBuild.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongServer.dir/Release/PongServer.tlog/CustomBuild.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongServer.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/PongServer.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/Release/PongClient.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/Release/PongClient.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/Release/PongServer.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/Release/PongServer.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/ZERO_CHECK.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/ZERO_CHECK.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/Release/ecsnet.lib" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/Release/ecsnet.lib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/connection_manager.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/connection_manager.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/ecs.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/ecs.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/ecs_builtin.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/ecs_builtin.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/net_socket.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/net_socket.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/network_architecture.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/network_architecture.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/network_cs.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/network_cs.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/protocol_handler.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/mylib_build/ecsnet.dir/Release/protocol_handler.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/x64/Release/ALL_BUILD/ALL_BUILD.tlog/CustomBuild.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/x64/Release/ALL_BUILD/ALL_BUILD.tlog/CustomBuild.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/x64/Release/ZERO_CHECK/ZERO_CHECK.tlog/CustomBuild.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/cmake-build-release/x64/Release/ZERO_CHECK/ZERO_CHECK.tlog/CustomBuild.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SFML_ECSNET_PONG/src/PongClient.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../SFML_ECSNET_PONG/src/PongClient.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/.idea/.idea.TestECSNET/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/.idea/.idea.TestECSNET/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/.idea/.idea.TestECSNET/.idea/indexLayout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/.idea/.idea.UNITY_ECSNET_WRAPPER/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/.idea/.idea.UNITY_ECSNET_WRAPPER/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/.idea/.idea.UNITY_ECSNET_WRAPPER/.idea/indexLayout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/.idea/.idea.UNITY_ECSNET_WRAPPER/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/.idea/.idea.UNITY_ECSNET_WRAPPER/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/BallController.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/BallController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/DefaultVolumeProfile.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/DefaultVolumeProfile.asset.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/ECSNETWrapper.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/ECSNETWrapper.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/ECSNET/ECSNETWrapper.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/ECSNETWrapper.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/EcsBootstrap.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/EcsBootstrap.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Pong/EcsBootstrap.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/EcsBootstrap.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/EcsSyncTransform.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/EcsSyncTransform.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/InputSystem_Actions.inputactions" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/InputSystem_Actions.inputactions.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/PaddleController.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/PaddleController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Plugins.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Plugins/ecsnet.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Plugins/ecsnet.dll.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Plugins/ecsnet.pdb" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Plugins/ecsnet.pdb.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/ProjectSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/UserSettings/Layouts/default-6000.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/UserSettings/Layouts/default-6000.dwlt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Scenes.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Scenes/SampleScene.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Scenes/SampleScene.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Settings.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Settings/Lit2DSceneTemplate.scenetemplate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Settings/Lit2DSceneTemplate.scenetemplate.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Settings/Renderer2D.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Settings/Renderer2D.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Settings/Scenes.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Settings/Scenes/URP2DSceneTemplate.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Settings/Scenes/URP2DSceneTemplate.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Settings/UniversalRP.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/Settings/UniversalRP.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/UniversalRenderPipelineGlobalSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Assets/UniversalRenderPipelineGlobalSettings.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Packages/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/Packages/packages-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/AudioManager.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/ClusterInputManager.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/DynamicsManager.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/EditorSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/GraphicsSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/InputManager.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/MemorySettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/MultiplayerManager.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/NavMeshAreas.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/NetworkManager.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/PackageManagerSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/Physics2DSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/PresetManager.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/ProjectSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/ProjectVersion.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/QualitySettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/SceneTemplateSettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/TagManager.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/TimeManager.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/TimelineSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/URPProjectSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/UnityConnectSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/VFXManager.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/VersionControlSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/ProjectSettings/XRSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/UserSettings/EditorUserSettings.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/UserSettings/Layouts/default-6000.dwlt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/UserSettings/Search.index" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UNITY_ECSNET_WRAPPER/UserSettings/Search.settings" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/shared/Debug/ecsnet.dll" beforeDir="false" afterPath="$PROJECT_DIR$/build/bin/shared/Debug/ecsnet.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/shared/Debug/ecsnet.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/build/bin/shared/Debug/ecsnet.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet.ilk" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet.ilk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/CL.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/CL.command.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/CL.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/CL.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/CL.write.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/CL.write.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/Cl.items.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/Cl.items.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/link.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/link.command.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/link.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/link.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/link.secondary.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/link.secondary.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/link.write.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/ecsnet_shared.tlog/link.write.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/vc143.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.dir/Debug/vc143.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_shared.vcxproj.filters" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_shared.vcxproj.filters" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/CL.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/CL.command.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/CL.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/CL.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/CL.write.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/CL.write.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/Cl.items.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/Cl.items.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/Lib-link.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/Lib-link.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/Lib-link.write.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/Lib-link.write.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/Lib.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_static.dir/Debug/ecsnet_static.tlog/Lib.command.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_static.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_static.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ecsnet_static.vcxproj.filters" beforeDir="false" afterPath="$PROJECT_DIR$/build/ecsnet_static.vcxproj.filters" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/lib/shared/Debug/ecsnet.exp" beforeDir="false" afterPath="$PROJECT_DIR$/build/lib/shared/Debug/ecsnet.exp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/lib/shared/Debug/ecsnet.lib" beforeDir="false" afterPath="$PROJECT_DIR$/build/lib/shared/Debug/ecsnet.lib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/lib/static/Debug/ecsnet.lib" beforeDir="false" afterPath="$PROJECT_DIR$/build/lib/static/Debug/ecsnet.lib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/lib/static/Debug/ecsnet.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/build/lib/static/Debug/ecsnet.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../idea.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +248,7 @@
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;ECSNET-0.1&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/mesom/Documents/GitHub/CECSNET/ecsnet&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/mesom/Documents/GitHub/CECSNET/ecsnet/include&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -115,12 +257,15 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\include" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src" />
+    </key>
+  </component>
   <component name="RunManager" selected="C/C++ File.test_serialization.c">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ecsnet_shared" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ecsnet" TARGET_NAME="ecsnet_shared" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -166,6 +311,8 @@
       <workItem from="1756001304556" duration="3802000" />
       <workItem from="1756243965206" duration="8940000" />
       <workItem from="1756312596243" duration="237000" />
+      <workItem from="1756317856627" duration="3810000" />
+      <workItem from="1756334586320" duration="947000" />
     </task>
     <servers />
   </component>

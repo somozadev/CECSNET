@@ -10,6 +10,9 @@
     <ClCompile Include="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\ecs_builtin.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\ecsnet_unity_shim.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\net_socket.c">
       <Filter>Source Files</Filter>
     </ClCompile>

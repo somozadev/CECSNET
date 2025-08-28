@@ -1,6 +1,7 @@
 C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\connection_manager.c;C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\build\ecsnet_static.dir\Debug\connection_manager.obj
 C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\ecs.c;C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\build\ecsnet_static.dir\Debug\ecs.obj
 C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\ecs_builtin.c;C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\build\ecsnet_static.dir\Debug\ecs_builtin.obj
+C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\ecsnet_unity_shim.c;C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\build\ecsnet_static.dir\Debug\ecsnet_unity_shim.obj
 C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\net_socket.c;C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\build\ecsnet_static.dir\Debug\net_socket.obj
 C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\network_architecture.c;C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\build\ecsnet_static.dir\Debug\network_architecture.obj
 C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\network_cs.c;C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\build\ecsnet_static.dir\Debug\network_cs.obj

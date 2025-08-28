@@ -279,6 +279,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\connection_manager.c" />
     <ClCompile Include="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\ecs.c" />
     <ClCompile Include="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\ecs_builtin.c" />
+    <ClCompile Include="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\ecsnet_unity_shim.c" />
     <ClCompile Include="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\net_socket.c" />
     <ClCompile Include="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\network_architecture.c" />
     <ClCompile Include="C:\Users\mesom\Documents\GitHub\CECSNET\ecsnet\src\network_cs.c" />
