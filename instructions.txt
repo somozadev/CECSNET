@@ -1,0 +1,94 @@
+ECSNET Library - Instructions
+=============================
+
+1. ECSNET Library
+-----------------
+
+The library files are located in ./ecsnet/
+- Source files (.c) are in ./src/*
+- Header files (.h) are in ./include/*
+
+The ./ecsnet/tests/* folder contains all the scripts used to generate the tests.exe executables, 
+which ensure the correct functioning of the library (C unit tests).
+
+To run the tests without recompiling, simply open a terminal (cmd) in the project root (./) and execute 
+any of the .exe files whose names begin with test_:
+
+    test_dirty_flags.exe
+    test_ecs_basic.exe
+    test_ecs_dynamic.exe
+    test_net_socket.exe
+    test_network_architecture_basic.exe
+    test_network_ecs_integration.exe
+    test_serialization.exe
+
+Compiled library files
+~~~~~~~~~~~~~~~~~~~~~~
+- Static library: ./ecsnet/build/lib/static/Release/ecsnet.lib
+- Shared library: ./ecsnet/build/lib/shared/Release/ecsnet.lib
+- DLL: ./ecsnet/build/bin/Shared/ecsnet.dll
+
+Documentation
+~~~~~~~~~~~~~
+- PDF: ./ecsnet_library_documentation.pdf
+- Online: https://somozadev.github.io/CECSNET/
+
+Integration
+~~~~~~~~~~~
+The library is natively implemented in C and fully compatible with C++.
+
+- Unreal Engine: A plugin has been developed that imports the ECSNET shared library and includes two demonstration scripts.  
+  Location: ./UNREAL_ECSNET/Uecsnet/Plugins/ECSNET4UNREAL/*
+
+- Unity / C#: A wrapper has been created that exposes ECSNET’s exported methods (via ECSNET_API) to C#.  
+  Location: ./UNITY_ECSNET/UNITY_ECSNET_WRAPPER/ECSNETWrapper.cs
+
+
+2. Demos
+--------
+
+2.1 Native C++ + SFML
+~~~~~~~~~~~~~~~~~~~~~
+Two demos have been developed that use ECSNET for entity, component, and system creation, 
+as well as for networking and packet synchronization. SFML is used to create windows and render graphics.
+
+Demo 1: Raindrops
+- Source code:  
+    ./SFML_ECSNET_RAINDROPS/src/RaindropsClient.cpp  
+    ./SFML_ECSNET_RAINDROPS/src/RaindropsServer.cpp
+- Compiled executables: ./SFML_ECSNET_RAINDROPS/cmake-build-release/Release/*
+- Behavior: Clients can spawn new raindrops by clicking.
+
+Demo 2: Pong
+- Source code:  
+    ./SFML_ECSNET_PONG/src/PONGClient.cpp  
+    ./SFML_ECSNET_PONG/src/PONGServer.cpp
+- Compiled executables: ./SFML_ECSNET_PONG/cmake-build-release/Release/*
+- Behavior: Clients can move their paddles using W/S or Arrow Up/Down keys.
+
+Running the demos
+1. Start the Server.exe. (Note: Windows Defender may attempt to block or delete it since it is unsigned. Temporarily disable antivirus protection if needed.)
+2. Launch as many instances of Client.exe as desired.
+
+To change network settings (server/client IP or ports), edit the corresponding .cpp files and recompile the project with the already-generated CMakeLists.txt.
+
+
+2.2 Unreal Engine Plugin
+~~~~~~~~~~~~~~~~~~~~~~~~
+- Executable: ./UNREAL_ECSNET/Uecsnet/Windows/Uecsnet.exe
+- Important: This demo acts as a client for the Raindrops server described above.  
+  First, run RaindropsServer.exe (a convenient copy is also included in ./UNREAL_ECSNET/Uecsnet/RaindropsServer.exe).  
+  Then, launch the Unreal executable.
+
+The result is the same synchronization as the Raindrops demo, now inside Unreal Engine 5.  
+Pressing SPACE spawns new drops where the camera is facing.
+
+
+2.3 Unity C# Wrapper Demo
+~~~~~~~~~~~~~~~~~~~~~~~~~
+A minimal Unity demo is included in ./UNITY_ECSNET/UNITY_ECSNET_DEMO/*.
+
+- First, run PongServer.exe.
+- Then, start the Unity client executable: ./UNITY_ECSNET/UNITY_ECSNET_DEMO/Build/TestECSNET.exe
+
+The Unity client allows entering the server IP (the default placeholders already contain valid test values) and will print the connection result on screen.
