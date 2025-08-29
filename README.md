@@ -20,8 +20,8 @@ CECSNET offers:
   - **UNREAL_ECSNET** – Includes the Unreal Engine plugin importing ECSNET, a Unreal engine demo client project using it with a Raindrops server, and a demo build.
   - **UNITY_ECSNET** – Includes the C# wrapper to integrate ECSNET in Unity, a Unity demo build client using ECSNET networking as well as the project, and a unitypackage with the wrapper.
 - Precompiled library artifacts (static/shared) and DLL. located under:
-  - `ecsnet/build/lib/static/Debug` → static `.lib` / `.a`
-  - `ecsnet/build/bin/shared/Debug` → dynamic `.dll` / `.so`
+  - `ecsnet/build/lib/static/Release` → static `.lib` / `.a`
+  - `ecsnet/build/bin/shared/Release` → dynamic `.dll` / `.so`
 ---
 
 ##  Features
